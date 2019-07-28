@@ -12,7 +12,9 @@
       "type": "cortex-debug",
       "servertype": "openocd",
       "armToolchainPath": "${workspaceRoot}/build",
-      "configFiles": ["${workspaceRoot}/openocd.cfg"],
+      "configFiles": [
+        "${workspaceRoot}/openocd.cfg"
+      ],
       "preLaunchTask": "debug-deps"
     }
   ]
