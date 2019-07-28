@@ -24,9 +24,13 @@ LD := sdcc
 $(shell mkdir -p $(BUILD_DIR))
 
 .PHONY: all
-all: $(BUILD_DIR)/$(TARGET)
+all: $(BUILD_DIR)/$(TARGET).elf
 
-$(BUILD_DIR)/$(TARGET): $(OBJS)
+.PHONY: debug-deps
+debug-deps:
+	@-ln -s `which stm8-gdb` $(BUILD_DIR)/arm-none-eabi-gdb
+
+$(BUILD_DIR)/$(TARGET).elf: $(OBJS)
 	@echo Linking $@...
 	@$(MKDIR_P) $(dir $@)
 	@$(LD) $(OBJS) -o $@ $(LDFLAGS)
