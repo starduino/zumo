@@ -6,7 +6,7 @@
 #include "system_tick.h"
 #include "stm8.h"
 
-static i_tiny_time_source_t instance;
+static i_tiny_time_source_t self;
 static volatile tiny_time_source_ticks_t ticks;
 
 void system_tick_isr(void) __interrupt(TIM2_OVR_UIF_IRQ) {
@@ -32,6 +32,6 @@ i_tiny_time_source_t* system_tick_init(void) {
   TIM2_IER |= TIM_IER_UIE;
   TIM2_CR1 |= TIM_CR1_CEN;
 
-  instance.api = &api;
-  return &instance;
+  self.api = &api;
+  return &self;
 }
