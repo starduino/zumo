@@ -1,6 +1,8 @@
 SRCS := $(shell find $(SRC_DIRS) -not -wholename $(MAIN) -and -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.rel)
 DEPS := $(SRCS:%=$(BUILD_DIR)/%.d)
+ELF_OBJS := $(SRCS:%=$(BUILD_DIR)/%.elf.rel)
+ELF_DEPS := $(SRCS:%=$(BUILD_DIR)/%.elf.d)
 
 INC_DIRS += $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
@@ -12,7 +14,6 @@ CFLAGS += \
   --Werror \
   $(INC_FLAGS) \
   $(DEFINE_FLAGS) \
-	--out-fmt-elf \
   --opt-code-size \
 
 LDFLAGS += \
@@ -24,7 +25,7 @@ AS := sdcc
 LD := sdcc
 
 .PHONY: all
-all: $(BUILD_DIR)/$(TARGET).elf
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex
 
 $(BUILD_DIR)/arm-none-eabi-gdb:
 	@$(MKDIR_P) $(dir $@)
@@ -41,22 +42,36 @@ upload: $(BUILD_DIR)/$(TARGET).hex
 erase:
 	@stm8flash -c stlinkv2 -p $(DEVICE) -u
 
-$(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex: $(OBJS) $(MAIN)
+$(BUILD_DIR)/$(TARGET).elf: $(ELF_OBJS) $(MAIN)
 	@$(MKDIR_P) $(dir $@)
-	@echo Linking $(BUILD_DIR)/$(TARGET).hex...
+	@echo Linking $(notdir $@)...
+	@$(LD) $(LDFLAGS) --out-fmt-elf $(MAIN) $(ELF_OBJS) -o $(BUILD_DIR)/$(TARGET).elf
+
+$(BUILD_DIR)/$(TARGET).hex: $(OBJS) $(MAIN)
+	@$(MKDIR_P) $(dir $@)
+	@echo Linking $(notdir $@)...
 	@$(LD) $(LDFLAGS) --out-fmt-ihx $(MAIN) $(OBJS) -o $(BUILD_DIR)/$(TARGET).hex
-	@echo Linking $(BUILD_DIR)/$(TARGET).elf...
-	@$(LD) $(LDFLAGS) --out-fmt-elf $(MAIN) $(OBJS) -o $(BUILD_DIR)/$(TARGET).elf
 
 $(BUILD_DIR)/%.s.rel: %.s
-	@echo Assembling $<...
+	@echo Assembling $(notdir $@)...
+	@$(MKDIR_P) $(dir $@)
+	@$(AS) $(ASFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.s.elf.rel: %.s
+	@echo Assembling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
 	@$(AS) $(ASFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.c.rel: %.c
-	@echo Compiling $<...
+	@echo Compiling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
 	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^:$(dir $@):' $(@:%.rel=%.d)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.c.elf.rel: %.c
+	@echo Compiling $(notdir $@)...
+	@$(MKDIR_P) $(dir $@)
+	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.elf.rel=%.elf.d) && sed -i '1s:^:$(dir $@):' $(@:%.elf.rel=%.elf.d)
 	@$(CC) $(CFLAGS) -c $< --out-fmt-elf -o $@
 
 .PHONY: clean
@@ -66,4 +81,4 @@ clean:
 
 MKDIR_P ?= mkdir -p
 
--include $(DEPS)
+-include $(DEPS) $(ELF_DEPS)
