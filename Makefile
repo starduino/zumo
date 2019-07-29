@@ -7,6 +7,7 @@ MAIN := src/main.c
 
 SRC_DIRS := \
   src \
+	lib/tiny/src \
 
 INC_DIRS := \
   lib/stm8

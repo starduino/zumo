@@ -1,12 +1,18 @@
 #include <stdbool.h>
+#include <stddef.h>
 #include "clock.h"
-#include "user_led.h"
+#include "system_tick.h"
+#include "heartbeat.h"
+#include "tiny_timer.h"
+
+static tiny_timer_group_t timer_group;
 
 void main(void) {
   clock_init();
-  user_led_init();
-  user_led_write(0);
+  tiny_timer_group_init(&timer_group, system_tick_init());
+  heartbeat_init(&timer_group);
 
   while(true) {
+    tiny_timer_group_run(&timer_group);
   }
 }

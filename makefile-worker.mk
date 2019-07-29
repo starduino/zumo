@@ -13,7 +13,6 @@ CFLAGS += \
   $(INC_FLAGS) \
   $(DEFINE_FLAGS) \
   --opt-code-size \
-  --max-allocs-per-node 50000 \
 
 LDFLAGS += \
   -lstm8 \
