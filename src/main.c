@@ -1,3 +1,8 @@
+/*!
+ * @file
+ * @brief
+ */
+
 #include <stdbool.h>
 #include <stddef.h>
 #include "clock.h"
