@@ -12,6 +12,7 @@ CFLAGS += \
   --Werror \
   $(INC_FLAGS) \
   $(DEFINE_FLAGS) \
+	--out-fmt-elf \
   --opt-code-size \
 
 LDFLAGS += \
@@ -56,7 +57,7 @@ $(BUILD_DIR)/%.c.rel: %.c
 	@echo Compiling $<...
 	@$(MKDIR_P) $(dir $@)
 	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^:$(dir $@):' $(@:%.rel=%.d)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< --out-fmt-elf -o $@
 
 .PHONY: clean
 clean:

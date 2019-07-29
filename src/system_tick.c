@@ -14,12 +14,9 @@ void system_tick_isr(void) __interrupt(TIM2_OVR_UIF_IRQ) {
   ticks++;
 }
 
-static tiny_time_source_ticks_t _ticks(i_tiny_time_source_t* self) {
+static tiny_time_source_ticks_t _ticks(i_tiny_time_source_t* self) __critical {
   (void)self;
-  disableInterrupts();
-  tiny_time_source_ticks_t current = ticks;
-  enableInterrupts();
-  return current;
+  return ticks;
 }
 
 static const i_tiny_time_source_api_t api = { _ticks };
