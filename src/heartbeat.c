@@ -16,7 +16,6 @@ enum {
 static tiny_timer_t timer;
 
 static void blink(tiny_timer_group_t* group, void* context) {
-  (void)group;
   (void)context;
   PB_ODR ^= pin_5;
   tiny_timer_start(group, &timer, half_period_in_msec, blink, NULL);
