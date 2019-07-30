@@ -65,13 +65,13 @@ $(BUILD_DIR)/%.s.elf.rel: %.s
 $(BUILD_DIR)/%.c.rel: %.c
 	@echo Compiling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^:$(dir $@):' $(@:%.rel=%.d)
+	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.rel=%.rel)):$@:' $(@:%.rel=%.d)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.c.elf.rel: %.c
 	@echo Compiling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.elf.rel=%.elf.d) && sed -i '1s:^:$(dir $@):' $(@:%.elf.rel=%.elf.d)
+	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.elf.rel=%.rel)):$@:' $(@:%.rel=%.d)
 	@$(CC) $(CFLAGS) -c $< --out-fmt-elf -o $@
 
 .PHONY: clean
