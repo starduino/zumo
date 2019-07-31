@@ -1,3 +1,6 @@
 [submodule "lib/tiny"]
 	path = lib/tiny
 	url = https://github.com/ryanplusplus/tiny
+[submodule "lib/stm8"]
+	path = lib/stm8
+	url = https://github.com/ryanplusplus/stm8s-header

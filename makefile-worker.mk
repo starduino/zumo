@@ -1,3 +1,5 @@
+DEFINES += $(DEVICE_TYPE)
+
 SRCS := $(shell find $(SRC_DIRS) -not -wholename $(MAIN) -and -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.rel)
 DEPS := $(SRCS:%=$(BUILD_DIR)/%.d)

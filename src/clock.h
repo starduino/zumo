@@ -6,8 +6,8 @@
 #ifndef clock_h
 #define clock_h
 
-#include "stm8.h"
+#include "stm8s.h"
 
-#define clock_init() CLK_CKDIVR = 0
+void clock_init(void);
 
 #endif
