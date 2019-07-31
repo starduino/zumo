@@ -22,7 +22,9 @@ static void blink(tiny_timer_group_t* group, void* context) {
 }
 
 void heartbeat_init(tiny_timer_group_t* timer_group) {
+  // Configure push pull output
   GPIOB->CR1 |= pin_5;
   GPIOB->DDR |= pin_5;
+
   tiny_timer_start(timer_group, &timer, half_period_in_msec, blink, NULL);
 }
