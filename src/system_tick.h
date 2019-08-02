@@ -11,6 +11,6 @@
 
 i_tiny_time_source_t* system_tick_init(void);
 
-void system_tick_isr(void) __interrupt(ITC_IRQ_TIM2_OVF);
+void system_tick_isr(void) __interrupt(ITC_IRQ_TIM4_OVF);
 
 #endif

@@ -9,9 +9,9 @@
 static i_tiny_time_source_t self;
 static volatile tiny_time_source_ticks_t ticks;
 
-void system_tick_isr(void) __interrupt(ITC_IRQ_TIM2_OVF) {
+void system_tick_isr(void) __interrupt(ITC_IRQ_TIM4_OVF) {
   // Clear interrupt flag
-  TIM2->SR1 &= ~TIM2_SR1_UIF;
+  TIM4->SR1 &= ~TIM4_SR1_UIF;
   ticks++;
 }
 
@@ -23,21 +23,20 @@ static tiny_time_source_ticks_t _ticks(i_tiny_time_source_t* self) __critical {
 static const i_tiny_time_source_api_t api = { _ticks };
 
 i_tiny_time_source_t* system_tick_init(void) {
-  // Un-gate clock for TIM2
-  CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_TIMER2);
+  // Un-gate clock for TIM4
+  CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_TIMER4);
 
-  // 16,000,000 / 2 ^ $PSCR) / ($ARR + 1) = 1000
-  // => $PSCR = 2
-  // => $ARR = 399 = 0xF9F
-  TIM2->PSCR = 2;
-  TIM2->ARRH = 0x0F;
-  TIM2->ARRL = 0x9F;
+  // 16,000,000 / 2 ^ $PSCR / ($ARR + 1) = 1000
+  // => $PSCR = 6
+  // => $ARR = 249
+  TIM4->PSCR = 6;
+  TIM4->ARR = 249;
 
   // Enable interrupt
-  TIM2->IER |= TIM2_IER_UIE;
+  TIM4->IER |= TIM4_IER_UIE;
 
   // Enable counter
-  TIM2->CR1 |= TIM2_CR1_CEN;
+  TIM4->CR1 |= TIM4_CR1_CEN;
 
   self.api = &api;
 
