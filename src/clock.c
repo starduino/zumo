@@ -3,6 +3,7 @@
  * @brief
  */
 
+#include "stm8s.h"
 #include "clock.h"
 
 void clock_init(void) {
