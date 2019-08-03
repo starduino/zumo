@@ -8,10 +8,10 @@ DEPS := $(SRCS:%=$(BUILD_DIR)/%.d)
 LIB_OBJS := $(LIB_SRCS:%=$(BUILD_DIR)/%.rel)
 LIB_DEPS := $(LIB_SRCS:%=$(BUILD_DIR)/%.d)
 
-ELF_OBJS := $(SRCS:%=$(BUILD_DIR)/%.elf.rel)
-ELF_DEPS := $(SRCS:%=$(BUILD_DIR)/%.elf.d)
-ELF_LIB_OBJS := $(LIB_SRCS:%=$(BUILD_DIR)/%.elf.rel)
-ELF_LIB_DEPS := $(LIB_SRCS:%=$(BUILD_DIR)/%.elf.d)
+DEBUG_OBJS := $(SRCS:%=$(BUILD_DIR)/%.debug.rel)
+DEBUG_DEPS := $(SRCS:%=$(BUILD_DIR)/%.debug.d)
+DEBUG_LIB_OBJS := $(LIB_SRCS:%=$(BUILD_DIR)/%.debug.rel)
+DEBUG_LIB_DEPS := $(LIB_SRCS:%=$(BUILD_DIR)/%.debug.d)
 
 INC_DIRS += $(shell find $(SRC_DIRS) -type d)
 ifneq ($(LIB_DIRS),)
@@ -39,14 +39,14 @@ LD := sdcc
 AR := sdar
 
 .PHONY: all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex
+all: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/$(TARGET).hex
 
 $(BUILD_DIR)/arm-none-eabi-gdb:
 	@$(MKDIR_P) $(dir $@)
 	@-ln -s `which stm8-gdb` $(BUILD_DIR)/arm-none-eabi-gdb
 
 .PHONY: debug-deps
-debug-deps: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/arm-none-eabi-gdb
+debug-deps: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/arm-none-eabi-gdb
 
 .PHONY: upload
 upload: $(BUILD_DIR)/$(TARGET).hex
@@ -59,29 +59,29 @@ erase:
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).lib $(OBJS) $(MAIN)
 	@echo Linking $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(LD) $(LDFLAGS) --out-fmt-ihx $(MAIN) $(OBJS) $(BUILD_DIR)/$(TARGET).lib -o $(BUILD_DIR)/$(TARGET).hex
+	@$(LD) $(LDFLAGS) --out-fmt-ihx $(MAIN) $(OBJS) $(BUILD_DIR)/$(TARGET).lib -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: $(BUILD_DIR)/$(TARGET).elf.lib $(ELF_OBJS) $(MAIN)
+$(BUILD_DIR)/$(TARGET)-debug.elf: $(BUILD_DIR)/$(TARGET)-debug.lib $(DEBUG_OBJS) $(MAIN)
 	@echo Linking $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(LD) $(LDFLAGS) --out-fmt-elf $(MAIN) $(ELF_OBJS) $(BUILD_DIR)/$(TARGET).elf.lib -o $(BUILD_DIR)/$(TARGET).elf
+	@$(LD) $(LDFLAGS) --out-fmt-elf $(MAIN) $(DEBUG_OBJS) $(BUILD_DIR)/$(TARGET)-debug.lib -o $@
 
 $(BUILD_DIR)/$(TARGET).lib: $(LIB_OBJS)
 	@echo Building $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
 	@$(AR) -rc $@ $(LIB_OBJS)
 
-$(BUILD_DIR)/$(TARGET).elf.lib: $(ELF_LIB_OBJS)
+$(BUILD_DIR)/$(TARGET)-debug.lib: $(DEBUG_LIB_OBJS)
 	@echo Building $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(AR) -rc $@ $(ELF_LIB_OBJS)
+	@$(AR) -rc $@ $(DEBUG_LIB_OBJS)
 
 $(BUILD_DIR)/%.s.rel: %.s
 	@echo Assembling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
 	@$(AS) $(ASFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.s.elf.rel: %.s
+$(BUILD_DIR)/%.s.debug.rel: %.s
 	@echo Assembling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
 	@$(AS) $(ASFLAGS) -c $< -o $@
@@ -92,10 +92,10 @@ $(BUILD_DIR)/%.c.rel: %.c
 	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.rel=%.rel)):$@:' $(@:%.rel=%.d)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.c.elf.rel: %.c
+$(BUILD_DIR)/%.c.debug.rel: %.c
 	@echo Compiling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.elf.rel=%.rel)):$@:' $(@:%.rel=%.d)
+	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.debug.rel=%.rel)):$@:' $(@:%.rel=%.d)
 	@$(CC) $(CFLAGS) -c $< --out-fmt-elf -o $@
 
 .PHONY: clean
@@ -105,4 +105,4 @@ clean:
 
 MKDIR_P ?= mkdir -p
 
--include $(DEPS) $(ELF_DEPS) $(LIB_DEPS) $(ELF_LIB_DEPS)
+-include $(DEPS) $(DEBUG_DEPS) $(LIB_DEPS) $(DEBUG_LIB_DEPS)

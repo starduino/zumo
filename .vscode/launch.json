@@ -7,7 +7,7 @@
     {
       "name": "Debug",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/stm8-tiny.elf",
+      "executable": "${workspaceFolder}/build/stm8-tiny-debug.elf",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",
