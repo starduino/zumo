@@ -1,12 +1,23 @@
 DEFINES += $(DEVICE_TYPE)
 
 SRCS := $(shell find $(SRC_DIRS) -not -wholename $(MAIN) -and -name *.c -or -name *.s)
+LIB_SRCS := $(shell find $(LIB_DIRS) -name *.c -or -name *.s)
+
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.rel)
 DEPS := $(SRCS:%=$(BUILD_DIR)/%.d)
+LIB_OBJS := $(LIB_SRCS:%=$(BUILD_DIR)/%.rel)
+LIB_DEPS := $(LIB_SRCS:%=$(BUILD_DIR)/%.d)
+
 ELF_OBJS := $(SRCS:%=$(BUILD_DIR)/%.elf.rel)
 ELF_DEPS := $(SRCS:%=$(BUILD_DIR)/%.elf.d)
+ELF_LIB_OBJS := $(LIB_SRCS:%=$(BUILD_DIR)/%.elf.rel)
+ELF_LIB_DEPS := $(LIB_SRCS:%=$(BUILD_DIR)/%.elf.d)
 
 INC_DIRS += $(shell find $(SRC_DIRS) -type d)
+ifneq ($(LIB_DIRS),)
+INC_DIRS += $(shell find $(LIB_DIRS) -type d)
+endif
+
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 DEFINE_FLAGS := $(addprefix -D,$(DEFINES))
 
@@ -25,6 +36,7 @@ LDFLAGS += \
 CC := sdcc
 AS := sdcc
 LD := sdcc
+AR := sdar
 
 .PHONY: all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex
@@ -44,15 +56,25 @@ upload: $(BUILD_DIR)/$(TARGET).hex
 erase:
 	@stm8flash -c stlinkv2 -p $(DEVICE) -u
 
-$(BUILD_DIR)/$(TARGET).elf: $(ELF_OBJS) $(MAIN)
-	@$(MKDIR_P) $(dir $@)
+$(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).lib $(OBJS) $(MAIN)
 	@echo Linking $(notdir $@)...
-	@$(LD) $(LDFLAGS) --out-fmt-elf $(MAIN) $(ELF_OBJS) -o $(BUILD_DIR)/$(TARGET).elf
+	@$(MKDIR_P) $(dir $@)
+	@$(LD) $(LDFLAGS) --out-fmt-ihx $(MAIN) $(OBJS) $(BUILD_DIR)/$(TARGET).lib -o $(BUILD_DIR)/$(TARGET).hex
 
-$(BUILD_DIR)/$(TARGET).hex: $(OBJS) $(MAIN)
-	@$(MKDIR_P) $(dir $@)
+$(BUILD_DIR)/$(TARGET).elf: $(BUILD_DIR)/$(TARGET).elf.lib $(ELF_OBJS) $(MAIN)
 	@echo Linking $(notdir $@)...
-	@$(LD) $(LDFLAGS) --out-fmt-ihx $(MAIN) $(OBJS) -o $(BUILD_DIR)/$(TARGET).hex
+	@$(MKDIR_P) $(dir $@)
+	@$(LD) $(LDFLAGS) --out-fmt-elf $(MAIN) $(ELF_OBJS) $(BUILD_DIR)/$(TARGET).elf.lib -o $(BUILD_DIR)/$(TARGET).elf
+
+$(BUILD_DIR)/$(TARGET).lib: $(LIB_OBJS)
+	@echo Building $(notdir $@)...
+	@$(MKDIR_P) $(dir $@)
+	@$(AR) -rc $@ $(LIB_OBJS)
+
+$(BUILD_DIR)/$(TARGET).elf.lib: $(ELF_LIB_OBJS)
+	@echo Building $(notdir $@)...
+	@$(MKDIR_P) $(dir $@)
+	@$(AR) -rc $@ $(ELF_LIB_OBJS)
 
 $(BUILD_DIR)/%.s.rel: %.s
 	@echo Assembling $(notdir $@)...
@@ -83,4 +105,4 @@ clean:
 
 MKDIR_P ?= mkdir -p
 
--include $(DEPS) $(ELF_DEPS)
+-include $(DEPS) $(ELF_DEPS) $(LIB_DEPS) $(ELF_LIB_DEPS)

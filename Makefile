@@ -8,6 +8,8 @@ MAIN := src/main.c
 
 SRC_DIRS := \
   src \
+
+LIB_DIRS := \
   lib/tiny/src \
 
 INC_DIRS := \
