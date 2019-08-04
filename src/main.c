@@ -5,14 +5,17 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "stm8s.h"
 #include "clock.h"
 #include "system_tick.h"
 #include "heartbeat.h"
 #include "tiny_timer.h"
 #include "watchdog.h"
+#include "uart1.h"
 
 static tiny_timer_group_t timer_group;
 static tiny_timer_t timer;
+static i_tiny_uart_t* uart;
 
 static void kick_watchdog(tiny_timer_group_t* _timer_group, void* context) {
   (void)context;
@@ -22,10 +25,15 @@ static void kick_watchdog(tiny_timer_group_t* _timer_group, void* context) {
 }
 
 void main(void) {
-  watchdog_init();
-  clock_init();
-  tiny_timer_group_init(&timer_group, system_tick_init());
-  heartbeat_init(&timer_group);
+  disableInterrupts();
+  {
+    watchdog_init();
+    clock_init();
+    tiny_timer_group_init(&timer_group, system_tick_init());
+    uart = uart1_init();
+    heartbeat_init(&timer_group);
+  }
+  enableInterrupts();
 
   tiny_timer_start(&timer_group, &timer, 1, kick_watchdog, NULL);
 
