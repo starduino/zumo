@@ -6,7 +6,6 @@
 #include "stm8s.h"
 #include "stm8s_clk.h"
 #include "adc1.h"
-#include "tiny_utils.h"
 
 static i_tiny_adc_group_t self;
 
