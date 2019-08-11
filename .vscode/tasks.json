@@ -6,7 +6,15 @@
     {
       "label": "debug-deps",
       "type": "shell",
-      "command": "make debug-deps"
+      "command": "make debug-deps",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
     }
   ]
 }

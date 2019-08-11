@@ -43,10 +43,14 @@ all: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/$(TARGET).hex
 
 $(BUILD_DIR)/arm-none-eabi-gdb:
 	@$(MKDIR_P) $(dir $@)
-	@-ln -s `which stm8-gdb` $(BUILD_DIR)/arm-none-eabi-gdb
+	@-ln -s `which stm8-gdb` $@
+
+$(BUILD_DIR)/arm-none-eabi-objdump:
+	@$(MKDIR_P) $(dir $@)
+	@-ln -s `which stm8-objdump` $@
 
 .PHONY: debug-deps
-debug-deps: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/arm-none-eabi-gdb
+debug-deps: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/arm-none-eabi-gdb $(BUILD_DIR)/arm-none-eabi-objdump
 
 .PHONY: upload
 upload: $(BUILD_DIR)/$(TARGET).hex
