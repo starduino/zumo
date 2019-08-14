@@ -124,7 +124,7 @@ static void write(
   self.callback = callback;
   self.context = context;
 
-  // Begin transmission by preparing to ACK and generating a start condition
+  // Begin transmission by generating a start condition
   I2C->CR2 |= I2C_CR2_START;
 }
 

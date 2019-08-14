@@ -4,4 +4,7 @@
     "editor.insertSpaces": true
   },
   "editor.formatOnSave": true,
+  "files.associations": {
+    "stm8s_rst.h": "c"
+  },
 }
