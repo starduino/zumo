@@ -6,7 +6,7 @@
 #include "stm8s.h"
 #include <stddef.h>
 #include <stdbool.h>
-#include "heartbeat.h"
+#include "pb5_heartbeat.h"
 
 enum {
   half_period_in_msec = 500,
@@ -21,7 +21,7 @@ static void blink(tiny_timer_group_t* group, void* context) {
   tiny_timer_start(group, &timer, half_period_in_msec, blink, NULL);
 }
 
-void heartbeat_init(tiny_timer_group_t* timer_group) {
+void pb5_heartbeat_init(tiny_timer_group_t* timer_group) {
   // Configure push pull output
   GPIOB->CR1 |= pin_5;
   GPIOB->DDR |= pin_5;
