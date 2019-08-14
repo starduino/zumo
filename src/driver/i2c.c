@@ -13,7 +13,9 @@
 
 enum {
   mode_write = I2C_DIRECTION_TX,
-  mode_read = I2C_DIRECTION_RX
+  mode_write_with_restart = 0x10 + I2C_DIRECTION_TX,
+  mode_read = I2C_DIRECTION_RX,
+  mode_read_with_restart = 0x10 + I2C_DIRECTION_RX,
 };
 typedef uint8_t mode_t;
 
@@ -44,7 +46,7 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
     dummy = I2C->SR1;
 
     // Send the slave address and R/W bit
-    I2C->DR = (self.address << 1) | self.mode;
+    I2C->DR = (self.address << 1) | (self.mode & 0x01);
 
     return;
   }
@@ -65,9 +67,11 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
       I2C->DR = self.buffer.write[self.buffer_offset++];
     }
     else {
-      // Send stop condition
-      I2C->CR2 &= ~I2C_CR2_ACK;
-      I2C->CR2 |= I2C_CR2_STOP;
+      if(self.mode == mode_write) {
+        // Send stop condition
+        I2C->CR2 &= ~I2C_CR2_ACK;
+        I2C->CR2 |= I2C_CR2_STOP;
+      }
 
       self.callback(self.context, true);
     }
@@ -81,9 +85,14 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
     self.buffer.read[self.buffer_offset++] = I2C->DR;
 
     if(self.buffer_offset + 1 == self.buffer_size) {
-      // Stop ACKing and send stop condition
-      I2C->CR2 &= ~I2C_CR2_ACK;
-      I2C->CR2 |= I2C_CR2_STOP;
+      if(self.mode == mode_read) {
+        // Stop ACKing and send stop condition
+        I2C->CR2 &= ~I2C_CR2_ACK;
+        I2C->CR2 |= I2C_CR2_STOP;
+      }
+      else {
+        self.callback(self.context, true);
+      }
     }
     else if(self.buffer_offset == self.buffer_size) {
       self.callback(self.context, true);
@@ -100,6 +109,7 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
 static void write(
   i_tiny_i2c_t* _self,
   uint8_t address,
+  bool prepare_for_restart,
   const uint8_t* buffer,
   uint8_t buffer_size,
   tiny_i2c_callback_t callback,
@@ -110,17 +120,18 @@ static void write(
   self.buffer.write = buffer;
   self.buffer_size = buffer_size;
   self.buffer_offset = 0;
-  self.mode = mode_write;
+  self.mode = prepare_for_restart ? mode_write_with_restart : mode_write;
   self.callback = callback;
   self.context = context;
 
   // Begin transmission by preparing to ACK and generating a start condition
-  I2C->CR2 |= I2C_CR2_ACK | I2C_CR2_START;
+  I2C->CR2 |= I2C_CR2_START;
 }
 
 static void read(
   i_tiny_i2c_t* _self,
   uint8_t address,
+  bool prepare_for_restart,
   uint8_t* buffer,
   uint8_t buffer_size,
   tiny_i2c_callback_t callback,
@@ -131,7 +142,7 @@ static void read(
   self.buffer.read = buffer;
   self.buffer_size = buffer_size;
   self.buffer_offset = 0;
-  self.mode = mode_read;
+  self.mode = prepare_for_restart ? mode_read_with_restart : mode_read;
   self.callback = callback;
   self.context = context;
 
