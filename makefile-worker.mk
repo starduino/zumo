@@ -58,6 +58,8 @@ upload: $(BUILD_DIR)/$(TARGET).hex
 
 .PHONY: erase
 erase:
+	@echo "AA" | xxd -r -p > $(BUILD_DIR)/rop.bin
+	@stm8flash -c stlinkv2 -p $(DEVICE) -s opt -w $(BUILD_DIR)/rop.bin
 	@stm8flash -c stlinkv2 -p $(DEVICE) -u
 
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).lib $(OBJS) $(MAIN)

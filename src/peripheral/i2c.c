@@ -87,21 +87,26 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
 
   // Receive buffer is not empty
   if(I2C->SR1 & I2C_SR1_RXNE) {
-    // Clear event by reading received byte
-    self.buffer.read[self.buffer_offset++] = I2C->DR;
+    do {
+      // Clear event by reading received byte
+      self.buffer.read[self.buffer_offset++] = I2C->DR;
 
-    if(self.buffer_offset + 1 == self.buffer_size) {
-      if(self.mode == mode_read) {
-        I2C->CR2 = I2C_CR2_STOP;
+      if(self.buffer_offset + 1 == self.buffer_size) {
+        if(self.mode == mode_read) {
+          I2C->CR2 = I2C_CR2_STOP;
+        }
+        else {
+          I2C->CR2 = 0;
+          self.callback(self.context, true);
+        }
       }
-      else {
-        I2C->CR2 = 0;
+      else if(self.buffer_offset == self.buffer_size) {
         self.callback(self.context, true);
       }
-    }
-    else if(self.buffer_offset == self.buffer_size) {
-      self.callback(self.context, true);
-    }
+
+      // Byte transfer finished
+      // This means we got two bytes before we could read the first out
+    } while(I2C->SR1 & I2C_SR1_BTF);
 
     return;
   }
