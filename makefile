@@ -7,10 +7,11 @@ DEVICE_TYPE := STM8S103
 MAIN := src/main.c
 
 SRC_DIRS := \
-  src \
 
 LIB_DIRS := \
   lib/tiny/src \
+	src/device \
+	src/peripheral \
 
 INC_DIRS := \
   lib/stm8/inc \

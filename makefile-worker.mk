@@ -1,7 +1,17 @@
 DEFINES += $(DEVICE_TYPE)
 
+ifneq ($(SRC_DIRS),)
 SRCS := $(shell find $(SRC_DIRS) -not -wholename $(MAIN) -and -name *.c -or -name *.s)
+else
+SRCS :=
+endif
+
+
+ifneq ($(LIB_DIRS),)
 LIB_SRCS := $(shell find $(LIB_DIRS) -name *.c -or -name *.s)
+else
+LIB_SRCS :=
+endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.rel)
 DEPS := $(SRCS:%=$(BUILD_DIR)/%.d)
@@ -13,7 +23,10 @@ DEBUG_DEPS := $(SRCS:%=$(BUILD_DIR)/%.debug.d)
 DEBUG_LIB_OBJS := $(LIB_SRCS:%=$(BUILD_DIR)/%.debug.rel)
 DEBUG_LIB_DEPS := $(LIB_SRCS:%=$(BUILD_DIR)/%.debug.d)
 
+ifneq ($(SRC_DIRS),)
 INC_DIRS += $(shell find $(SRC_DIRS) -type d)
+endif
+
 ifneq ($(LIB_DIRS),)
 INC_DIRS += $(shell find $(LIB_DIRS) -type d)
 endif
@@ -101,7 +114,7 @@ $(BUILD_DIR)/%.c.rel: %.c
 $(BUILD_DIR)/%.c.debug.rel: %.c
 	@echo Compiling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.debug.rel=%.rel)):$@:' $(@:%.rel=%.d)
+	$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.debug.rel=%.rel)):$@:' $(@:%.rel=%.d)
 	@$(CC) $(CFLAGS) -c $< --out-fmt-elf -o $@
 
 .PHONY: clean
