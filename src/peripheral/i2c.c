@@ -53,10 +53,18 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
 
   // Address sent
   if(I2C->SR1 & I2C_SR1_ADDR) {
-    // Clear address sent event by reading SR3
+    // Clear address sent event by reading SR1 and then SR3
+    dummy = I2C->SR1;
     dummy = I2C->SR3;
 
-    // Interestingly, we're done because we still need to wait for TXE
+    if(self.buffer_size == 1) {
+      if(self.mode == mode_read) {
+        I2C->CR2 = I2C_CR2_STOP;
+      }
+      else if(self.mode == mode_read_with_restart) {
+        I2C->CR2 &= ~I2C_CR2_ACK;
+      }
+    }
 
     return;
   }
@@ -68,9 +76,7 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
     }
     else {
       if(self.mode == mode_write) {
-        // Send stop condition
-        I2C->CR2 &= ~I2C_CR2_ACK;
-        I2C->CR2 |= I2C_CR2_STOP;
+        I2C->CR2 = I2C_CR2_STOP;
       }
 
       self.callback(self.context, true);
@@ -86,11 +92,10 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
 
     if(self.buffer_offset + 1 == self.buffer_size) {
       if(self.mode == mode_read) {
-        // Stop ACKing and send stop condition
-        I2C->CR2 &= ~I2C_CR2_ACK;
-        I2C->CR2 |= I2C_CR2_STOP;
+        I2C->CR2 = I2C_CR2_STOP;
       }
       else {
+        I2C->CR2 = 0;
         self.callback(self.context, true);
       }
     }
@@ -124,8 +129,7 @@ static void write(
   self.callback = callback;
   self.context = context;
 
-  // Begin transmission by generating a start condition
-  I2C->CR2 |= I2C_CR2_START;
+  I2C->CR2 = I2C_CR2_START;
 }
 
 static void read(
@@ -146,8 +150,7 @@ static void read(
   self.callback = callback;
   self.context = context;
 
-  // Begin reception by preparing to ACK and generating a start condition
-  I2C->CR2 |= I2C_CR2_ACK | I2C_CR2_START;
+  I2C->CR2 = I2C_CR2_START | I2C_CR2_ACK;
 }
 
 static void reset(i_tiny_i2c_t* _self) {
@@ -162,10 +165,10 @@ i_tiny_i2c_t* i2c_init(void) {
   CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_I2C);
 
   // Set peripheral clock frequency to 16 MHz
-  I2C->FREQR = 16; //  Set the internal clock frequency (MHz).
+  I2C->FREQR = 16;
 
   // Standard mode
-  // SCL frequency = 1 / (2 * CCR * tMASTER) = 1 / (2 * 0x50 * 1/16,000,000) = 100 KHz
+  // SCL frequency = 1 / (2 * CCR * tMASTER) = 1 / (2 * 0x50 * 1/16,000,000) = 100 kHz
   I2C->CCRH = 0;
   I2C->CCRL = 0x50;
 
