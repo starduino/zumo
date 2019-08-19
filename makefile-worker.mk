@@ -1,16 +1,15 @@
 DEFINES += $(DEVICE_TYPE)
 
+SRCS := $(SRC_FILES)
+
 ifneq ($(SRC_DIRS),)
-SRCS := $(shell find $(SRC_DIRS) -not -wholename $(MAIN) -and -name *.c -or -name *.s)
-else
-SRCS :=
+SRCS += $(shell find $(SRC_DIRS) -not -wholename $(MAIN) -and -name *.c -or -name *.s)
 endif
 
+LIB_SRCS := $(LIB_FILES)
 
 ifneq ($(LIB_DIRS),)
-LIB_SRCS := $(shell find $(LIB_DIRS) -name *.c -or -name *.s)
-else
-LIB_SRCS :=
+LIB_SRCS += $(shell find $(LIB_DIRS) -name *.c -or -name *.s)
 endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.rel)
@@ -62,18 +61,21 @@ $(BUILD_DIR)/arm-none-eabi-objdump:
 	@$(MKDIR_P) $(dir $@)
 	@-ln -s `which stm8-objdump` $@
 
+$(BUILD_DIR)/openocd.cfg:
+	@cp $(OPENOCD_CFG) $@
+
 .PHONY: debug-deps
-debug-deps: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/arm-none-eabi-gdb $(BUILD_DIR)/arm-none-eabi-objdump
+debug-deps: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/arm-none-eabi-gdb $(BUILD_DIR)/arm-none-eabi-objdump $(BUILD_DIR)/openocd.cfg
 
 .PHONY: upload
 upload: $(BUILD_DIR)/$(TARGET).hex
-	@stm8flash -c stlinkv2 -p $(DEVICE) -w $<
+	@stm8flash -c $(STLINK) -p $(DEVICE) -w $<
 
 .PHONY: erase
 erase:
 	@echo "AA" | xxd -r -p > $(BUILD_DIR)/rop.bin
-	@stm8flash -c stlinkv2 -p $(DEVICE) -s opt -w $(BUILD_DIR)/rop.bin
-	@stm8flash -c stlinkv2 -p $(DEVICE) -u
+	@stm8flash -c $(STLINK) -p $(DEVICE) -s opt -w $(BUILD_DIR)/rop.bin
+	@stm8flash -c $(STLINK) -p $(DEVICE) -u
 
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).lib $(OBJS) $(MAIN)
 	@echo Linking $(notdir $@)...
@@ -114,7 +116,7 @@ $(BUILD_DIR)/%.c.rel: %.c
 $(BUILD_DIR)/%.c.debug.rel: %.c
 	@echo Compiling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.debug.rel=%.rel)):$@:' $(@:%.rel=%.d)
+	@$(CC) $(CFLAGS) -MM -c $< -o $(@:%.rel=%.d) && sed -i '1s:^$(notdir $(@:%.c.debug.rel=%.rel)):$@:' $(@:%.rel=%.d)
 	@$(CC) $(CFLAGS) -c $< --out-fmt-elf -o $@
 
 .PHONY: clean

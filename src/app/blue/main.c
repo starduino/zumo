@@ -11,9 +11,6 @@
 #include "pb5_heartbeat.h"
 #include "tiny_timer.h"
 #include "watchdog.h"
-#include "uart1.h"
-#include "spi.h"
-#include "i2c.h"
 
 static tiny_timer_group_t timer_group;
 static tiny_timer_t timer;

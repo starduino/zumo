@@ -5,18 +5,46 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug",
+      "name": "Blue",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/stm8-tiny-debug.elf",
+      "executable": "${workspaceFolder}/build/blue/tiny-debug.elf",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",
       "runToMain": true,
-      "armToolchainPath": "${workspaceRoot}/build",
+      "armToolchainPath": "${workspaceRoot}/build/blue",
       "configFiles": [
-        "${workspaceRoot}/openocd.cfg"
+        "${workspaceRoot}/build/blue/openocd.cfg"
       ],
-      "preLaunchTask": "debug-deps"
+      "preLaunchTask": "debug-deps-blue"
+    },
+    {
+      "name": "Discovery",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/discovery/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/discovery",
+      "configFiles": [
+        "${workspaceRoot}/build/discovery/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-discovery"
+    },
+    {
+      "name": "Disco-S001",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/disco-s001/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/disco-s001",
+      "configFiles": [
+        "${workspaceRoot}/build/disco-s001/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-disco-s001"
     }
   ]
 }
