@@ -8,10 +8,12 @@ https://tenbaht.github.io/sduino/hardware/stm8blue/
 ### Discovery (STM8-DISCOVERY STM8S105C6T6 Development Board)
 https://www.st.com/en/evaluation-tools/stm8s-discovery.html
 
+Note: don't use the built-in ST-Link because `openocd` doesn't like it.
+
 ### Disco-S001 (STM8-SO8-DISCO STM8S001J3M3 Development Board)
 https://www.st.com/en/evaluation-tools/stm8-so8-disco.html
 
-### STLink v2 Programmer/Debugger
+### ST-Link v2 Programmer/Debugger
 https://www.adafruit.com/product/2548
 
 ## Setup

@@ -3,7 +3,7 @@ BUILD_DIR = ./build/discovery
 
 DEVICE := stm8s105c6
 DEVICE_TYPE := STM8S105
-STLINK := stlink
+STLINK := stlinkv2
 OPENOCD_CFG := openocd/stm8s105.cfg
 
 MAIN := src/app/discovery/main.c
