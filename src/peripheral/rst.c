@@ -11,7 +11,7 @@ rst_reset_reason_t rst_reset_reason(void) {
   uint8_t status = RST->SR;
 
   while(status) {
-    status <<= 1;
+    status >>= 1;
     reason++;
   }
 
