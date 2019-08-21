@@ -77,6 +77,8 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
     else {
       if(self.mode == mode_write) {
         I2C->CR2 = I2C_CR2_STOP;
+        while(I2C->SR3 & I2C_SR3_MSL) {
+        }
       }
 
       self.callback(self.context, true);
@@ -101,6 +103,8 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
         }
       }
       else if(self.buffer_offset == self.buffer_size) {
+        while(I2C->SR3 & I2C_SR3_MSL) {
+        }
         self.callback(self.context, true);
       }
 
@@ -158,14 +162,7 @@ static void read(
   I2C->CR2 = I2C_CR2_START | I2C_CR2_ACK;
 }
 
-static void reset(i_tiny_i2c_t* _self) {
-  (void)_self;
-  I2C->CR2 = I2C_CR2_SWRST;
-}
-
-static const i_tiny_i2c_api_t api = { write, read, reset };
-
-i_tiny_i2c_t* i2c_init(void) {
+static void configure_peripheral(void) {
   // Un-gate clock for I2C
   CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_I2C);
 
@@ -191,6 +188,18 @@ i_tiny_i2c_t* i2c_init(void) {
 
   // Enable peripheral
   I2C->CR1 = I2C_CR1_PE;
+}
+
+static void reset(i_tiny_i2c_t* _self) {
+  (void)_self;
+  I2C->CR2 = I2C_CR2_SWRST;
+  configure_peripheral();
+}
+
+static const i_tiny_i2c_api_t api = { write, read, reset };
+
+i_tiny_i2c_t* i2c_init(void) {
+  configure_peripheral();
 
   self.interface.api = &api;
 
