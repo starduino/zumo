@@ -8,12 +8,16 @@
 #include "stm8s_tim2.h"
 #include "tim2_pwm.h"
 
+enum {
+  period = 1600
+};
+
 static i_tiny_pwm_t channel1, channel2, channel3;
 
 static void set_duty_cycle_channel1(i_tiny_pwm_t* self, tiny_pwm_duty_cycle_t duty_cycle) {
   (void)self;
 
-  uint16_t compare = ((uint32_t)1600 * duty_cycle) / UINT16_MAX;
+  uint16_t compare = ((uint32_t)period * duty_cycle) / UINT16_MAX;
   TIM2->CCR1H = compare >> 8;
   TIM2->CCR1L = compare & 0xFF;
 }
@@ -21,7 +25,7 @@ static void set_duty_cycle_channel1(i_tiny_pwm_t* self, tiny_pwm_duty_cycle_t du
 static void set_duty_cycle_channel2(i_tiny_pwm_t* self, tiny_pwm_duty_cycle_t duty_cycle) {
   (void)self;
 
-  uint16_t compare = ((uint32_t)1600 * duty_cycle) / UINT16_MAX;
+  uint16_t compare = ((uint32_t)period * duty_cycle) / UINT16_MAX;
   TIM2->CCR2H = compare >> 8;
   TIM2->CCR2L = compare & 0xFF;
 }
@@ -29,7 +33,7 @@ static void set_duty_cycle_channel2(i_tiny_pwm_t* self, tiny_pwm_duty_cycle_t du
 static void set_duty_cycle_channel3(i_tiny_pwm_t* self, tiny_pwm_duty_cycle_t duty_cycle) {
   (void)self;
 
-  uint16_t compare = ((uint32_t)1600 * duty_cycle) / UINT16_MAX;
+  uint16_t compare = ((uint32_t)period * duty_cycle) / UINT16_MAX;
   TIM2->CCR3H = compare >> 8;
   TIM2->CCR3L = compare & 0xFF;
 }
@@ -53,8 +57,8 @@ static void initialize_tim2(void) {
 
   // Set frequency via reload register
   // 1600 => 10KHz
-  TIM2->ARRH = 1600 >> 8;
-  TIM2->ARRL = 1600 & 0xFF;
+  TIM2->ARRH = period >> 8;
+  TIM2->ARRL = period & 0xFF;
 
   // Enable TIM2
   // Use shadow register for ARR in case we unlock frequency

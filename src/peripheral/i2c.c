@@ -168,6 +168,9 @@ static void read(
 }
 
 static void configure_peripheral(void) {
+  // Disable peripheral
+  I2C->CR1 = 0;
+
   // Un-gate clock for I2C
   CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_I2C);
 
