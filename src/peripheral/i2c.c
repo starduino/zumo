@@ -77,8 +77,6 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
     else {
       if(self.mode == mode_write) {
         I2C->CR2 = I2C_CR2_STOP;
-        while(I2C->SR3 & I2C_SR3_MSL) {
-        }
       }
 
       self.callback(self.context, true);
@@ -103,8 +101,6 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
         }
       }
       else if(self.buffer_offset == self.buffer_size) {
-        while(I2C->SR3 & I2C_SR3_MSL) {
-        }
         self.callback(self.context, true);
       }
 
@@ -118,6 +114,11 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
   // If we're still here something is wrong so let's reset and tell the client
   I2C->CR2 = I2C_CR2_SWRST;
   self.callback(self.context, false);
+}
+
+static void wait_for_stop_condition_to_be_sent(void) {
+  while((I2C->CR2 & I2C_CR2_STOP) && (I2C->SR3 & I2C_SR3_MSL)) {
+  }
 }
 
 static void write(
@@ -137,6 +138,8 @@ static void write(
   self.mode = prepare_for_restart ? mode_write_with_restart : mode_write;
   self.callback = callback;
   self.context = context;
+
+  wait_for_stop_condition_to_be_sent();
 
   I2C->CR2 = I2C_CR2_START;
 }
@@ -158,6 +161,8 @@ static void read(
   self.mode = prepare_for_restart ? mode_read_with_restart : mode_read;
   self.callback = callback;
   self.context = context;
+
+  wait_for_stop_condition_to_be_sent();
 
   I2C->CR2 = I2C_CR2_START | I2C_CR2_ACK;
 }
