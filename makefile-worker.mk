@@ -33,6 +33,9 @@ endif
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 DEFINE_FLAGS := $(addprefix -D,$(DEFINES))
 
+ASFLAGS += \
+  -loff
+
 CFLAGS += \
   -mstm8 \
   --debug \
@@ -46,7 +49,7 @@ LDFLAGS += \
   $(CFLAGS) \
 
 CC := sdcc
-AS := sdcc
+AS := sdasstm8
 LD := sdcc
 AR := sdar
 
@@ -100,12 +103,12 @@ $(BUILD_DIR)/$(TARGET)-debug.lib: $(DEBUG_LIB_OBJS)
 $(BUILD_DIR)/%.s.rel: %.s
 	@echo Assembling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(AS) $(ASFLAGS) -c $< -o $@
+	@$(AS) $(ASFLAGS) $@ $<
 
 $(BUILD_DIR)/%.s.debug.rel: %.s
 	@echo Assembling $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(AS) $(ASFLAGS) -c $< -o $@
+	@$(AS) $(ASFLAGS) $@ $<
 
 $(BUILD_DIR)/%.c.rel: %.c
 	@echo Compiling $(notdir $@)...

@@ -19,6 +19,20 @@
       "preLaunchTask": "debug-deps-blue"
     },
     {
+      "name": "Blue Atomic",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/blue-atomic/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/blue-atomic",
+      "configFiles": [
+        "${workspaceRoot}/build/blue-atomic/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-blue-atomic"
+    },
+    {
       "name": "Discovery",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceFolder}/build/discovery/tiny-debug.elf",
