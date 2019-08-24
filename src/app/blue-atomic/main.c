@@ -8,6 +8,7 @@
 #include "stm8s.h"
 #include "clock.h"
 #include "atom.h"
+#include "atomqueue.h"
 #include "atomport-private.h"
 
 enum {
@@ -15,34 +16,44 @@ enum {
   pin_5 = (1 << 5)
 };
 
-static ATOM_TCB on_tcb;
-static uint8_t on_thread_stack[128];
+enum {
+  queue_message_size = sizeof(bool),
+  queue_message_count = 3
+};
 
-static ATOM_TCB off_tcb;
-static uint8_t off_thread_stack[128];
+static ATOM_QUEUE queue;
+static uint8_t queue_buffer[queue_message_size * queue_message_count];
+
+static ATOM_TCB producer_tcb;
+static uint8_t producer_thread_stack[128];
+
+static ATOM_TCB consumer_tcb;
+static uint8_t consumer_thread_stack[128];
+
 static uint8_t idle_thread_stack[128];
 
-static void on_thread_func(uint32_t param) {
+static void producer_thread_func(uint32_t param) {
   (void)param;
 
-  GPIOB->CR1 |= pin_5;
-  GPIOB->DDR |= pin_5;
+  bool state = false;
 
   while(1) {
-    atomTimerDelay(300);
-    GPIOB->ODR = pin_5;
+    (void)atomQueuePut(&queue, 0, &state);
+    state = !state;
+    atomTimerDelay(250);
   }
 }
 
-static void off_thread_func(uint32_t param) {
+static void consumer_thread_func(uint32_t param) {
   (void)param;
 
   GPIOB->CR1 |= pin_5;
   GPIOB->DDR |= pin_5;
 
   while(1) {
-    atomTimerDelay(300);
-    GPIOB->ODR = 0;
+    bool state;
+    (void)atomQueueGet(&queue, 0, &state);
+    GPIOB->ODR = pin_5 * state;
   }
 }
 
@@ -54,24 +65,32 @@ void main(void) {
   clock_init();
 
   if(atomOSInit(&idle_thread_stack, sizeof(idle_thread_stack), true) == ATOM_OK) {
+    int8_t status = ATOM_OK;
+
     archInitSystemTickTimer();
 
-    int8_t status = atomThreadCreate(
-      &on_tcb,
+    status += atomQueueCreate(
+      &queue,
+      queue_buffer,
+      queue_message_size,
+      queue_message_count);
+
+    status += atomThreadCreate(
+      &producer_tcb,
       default_thread_priority,
-      on_thread_func,
+      producer_thread_func,
       0,
-      on_thread_stack,
-      sizeof(on_thread_stack),
+      producer_thread_stack,
+      sizeof(producer_thread_stack),
       true);
 
     status += atomThreadCreate(
-      &off_tcb,
+      &consumer_tcb,
       default_thread_priority,
-      off_thread_func,
+      consumer_thread_func,
       0,
-      off_thread_stack,
-      sizeof(off_thread_stack),
+      consumer_thread_stack,
+      sizeof(consumer_thread_stack),
       true);
 
     if(status == ATOM_OK) {

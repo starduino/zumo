@@ -80,15 +80,15 @@ erase:
 	@stm8flash -c $(STLINK) -p $(DEVICE) -s opt -w $(BUILD_DIR)/rop.bin
 	@stm8flash -c $(STLINK) -p $(DEVICE) -u
 
-$(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).lib $(OBJS) $(MAIN)
+$(BUILD_DIR)/$(TARGET).hex: $(MAIN) $(OBJS) $(BUILD_DIR)/$(TARGET).lib
 	@echo Linking $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(LD) $(LDFLAGS) --out-fmt-ihx $(MAIN) $(OBJS) $(BUILD_DIR)/$(TARGET).lib -o $@
+	@$(LD) $(LDFLAGS) --out-fmt-ihx $^ -o $@
 
-$(BUILD_DIR)/$(TARGET)-debug.elf: $(BUILD_DIR)/$(TARGET)-debug.lib $(DEBUG_OBJS) $(MAIN)
+$(BUILD_DIR)/$(TARGET)-debug.elf: $(MAIN) $(DEBUG_OBJS) $(BUILD_DIR)/$(TARGET)-debug.lib
 	@echo Linking $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(LD) $(LDFLAGS) --out-fmt-elf $(MAIN) $(DEBUG_OBJS) $(BUILD_DIR)/$(TARGET)-debug.lib -o $@
+	@$(LD) $(LDFLAGS) --out-fmt-elf $^ -o $@
 
 $(BUILD_DIR)/$(TARGET).lib: $(LIB_OBJS)
 	@echo Building $(notdir $@)...
