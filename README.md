@@ -1,7 +1,7 @@
 # stm8-tiny
 Sample project using [`tiny`](https://github.com/ryanplusplus/tiny) with STM8.
 
-## Hardware
+## Target Hardware
 ### Blue (STM8S103F3P6 Development Board)
 https://tenbaht.github.io/sduino/hardware/stm8blue/
 
@@ -13,6 +13,7 @@ https://www.st.com/en/evaluation-tools/stm8s-discovery.html
 
 Note: don't use the built-in ST-Link because `openocd` doesn't like it.
 
+## Programmer
 ### ST-Link v2 Programmer/Debugger
 https://www.adafruit.com/product/2548
 
