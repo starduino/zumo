@@ -1,22 +1,23 @@
 TARGET = tiny
-BUILD_DIR = ./build/disco-s001
+BUILD_DIR = ./build/black
 
-DEVICE := stm8s001j3
-DEVICE_TYPE := STM8S001
+DEVICE := stm8s105c6
+DEVICE_TYPE := STM8S105
 STLINK := stlinkv2
-OPENOCD_CFG := openocd/stm8s001.cfg
+OPENOCD_CFG := openocd/stm8s105.cfg
 
-MAIN := src/app/disco-s001/main.c
+MAIN := src/app/black/main.c
 
 SRC_FILES := \
 
 SRC_DIRS := \
-  src/app/disco-s001 \
+  src/app/black \
 
 LIB_FILES := \
   src/peripheral/clock.c \
-  src/peripheral/pb5_heartbeat.c \
+  src/peripheral/pd0_heartbeat.c \
   src/peripheral/tim4_system_tick.c \
+  src/peripheral/uart2.c \
   src/peripheral/watchdog.c \
 
 LIB_DIRS := \

@@ -33,6 +33,20 @@
       "preLaunchTask": "debug-deps-blue-atomic"
     },
     {
+      "name": "Black",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/black/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/black",
+      "configFiles": [
+        "${workspaceRoot}/build/black/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-discovery"
+    },
+    {
       "name": "Discovery",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceFolder}/build/discovery/tiny-debug.elf",
@@ -45,20 +59,6 @@
         "${workspaceRoot}/build/discovery/openocd.cfg"
       ],
       "preLaunchTask": "debug-deps-discovery"
-    },
-    {
-      "name": "Disco-S001",
-      "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/disco-s001/tiny-debug.elf",
-      "request": "launch",
-      "type": "cortex-debug",
-      "servertype": "openocd",
-      "runToMain": true,
-      "armToolchainPath": "${workspaceRoot}/build/disco-s001",
-      "configFiles": [
-        "${workspaceRoot}/build/disco-s001/openocd.cfg"
-      ],
-      "preLaunchTask": "debug-deps-disco-s001"
     }
   ]
 }

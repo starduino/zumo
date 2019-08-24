@@ -3,8 +3,5 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true
   },
-  "editor.formatOnSave": true,
-  "files.associations": {
-    "clock.h": "c"
-  }
+  "editor.formatOnSave": true
 }

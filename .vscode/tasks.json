@@ -30,9 +30,9 @@
       }
     },
     {
-      "label": "debug-deps-discovery",
+      "label": "debug-deps-black",
       "type": "shell",
-      "command": "make -f discovery.mk debug-deps",
+      "command": "make -f black.mk debug-deps",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -43,9 +43,9 @@
       }
     },
     {
-      "label": "debug-deps-disco-s001",
+      "label": "debug-deps-discovery",
       "type": "shell",
-      "command": "make -f disco-s001.mk debug-deps",
+      "command": "make -f discovery.mk debug-deps",
       "presentation": {
         "echo": true,
         "reveal": "silent",
