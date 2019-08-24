@@ -40,6 +40,7 @@ CFLAGS += \
   -mstm8 \
   --debug \
   --Werror \
+	--std-c99 \
   $(INC_FLAGS) \
   $(DEFINE_FLAGS) \
   --opt-code-size \
