@@ -19,6 +19,20 @@
       "preLaunchTask": "debug-deps-blue"
     },
     {
+      "name": "Blue Zumo",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/blue-zumo/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/blue-zumo",
+      "configFiles": [
+        "${workspaceRoot}/build/blue-zumo/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-blue-zumo"
+    },
+    {
       "name": "Blue Atomic",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceFolder}/build/blue-atomic/tiny-debug.elf",

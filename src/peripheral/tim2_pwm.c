@@ -66,6 +66,8 @@ static void initialize_tim2(void) {
 }
 
 i_tiny_pwm_t* tim2_pwm_channel1_init(void) {
+  initialize_tim2();
+
   // Default to 0% duty cycle
   TIM2->CCR1H = 0;
   TIM2->CCR1L = 0;
@@ -77,14 +79,14 @@ i_tiny_pwm_t* tim2_pwm_channel1_init(void) {
   // Enable output for channel 1
   TIM2->CCER1 |= TIM2_CCER1_CC1E;
 
-  initialize_tim2();
-
   channel1.api = &channel1_api;
 
   return &channel1;
 }
 
 i_tiny_pwm_t* tim2_pwm_channel2_init(void) {
+  initialize_tim2();
+
   // Default to 0% duty cycle
   TIM2->CCR2H = 0;
   TIM2->CCR2L = 0;
@@ -96,14 +98,14 @@ i_tiny_pwm_t* tim2_pwm_channel2_init(void) {
   // Enable output for channel 2
   TIM2->CCER1 |= TIM2_CCER1_CC2E;
 
-  initialize_tim2();
-
   channel2.api = &channel2_api;
 
   return &channel2;
 }
 
 i_tiny_pwm_t* tim2_pwm_channel3_init(void) {
+  initialize_tim2();
+
   // Default to 0% duty cycle
   TIM2->CCR3H = 0;
   TIM2->CCR3L = 0;
@@ -114,8 +116,6 @@ i_tiny_pwm_t* tim2_pwm_channel3_init(void) {
 
   // Enable output for channel 3
   TIM2->CCER2 |= TIM2_CCER2_CC3E;
-
-  initialize_tim2();
 
   channel3.api = &channel3_api;
 
