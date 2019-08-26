@@ -19,7 +19,7 @@ enum {
 
 typedef volatile uint8_t reg_t;
 
-static void update_output(int8_t power, uint8_t pin, reg_t* ccrh, reg_t* ccrl) {
+static void update_output(motor_power_t power, uint8_t pin, reg_t* ccrh, reg_t* ccrl) {
   if(power >= 0) {
     GPIOC->ODR &= ~pin;
   }
@@ -28,7 +28,7 @@ static void update_output(int8_t power, uint8_t pin, reg_t* ccrh, reg_t* ccrl) {
     power = -power;
   }
 
-  uint16_t compare = (period * power) / 100;
+  uint16_t compare = (period * power) / motor_power_max;
   *ccrh = compare >> 8;
   *ccrl = compare & 0xFF;
 }
@@ -37,7 +37,7 @@ static void data_changed(void* context, const void* _args) {
   (void)context;
 
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
-  reinterpret(power, args->value, int8_t*);
+  reinterpret(power, args->value, const motor_power_t*);
 
   switch(args->key) {
     case key_left_motor:

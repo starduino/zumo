@@ -9,11 +9,14 @@
 #include <stdint.h>
 #include "tiny_ram_key_value_store.h"
 #include "tiny_ram_key_value_store_macros.h"
+#include "motor_power.h"
+#include "beep.h"
 
 // clang-format off
 #define data_model_key_value_pairs(pair) \
-  pair(key_left_motor,    int8_t) \
-  pair(key_right_motor,   int8_t) \
+  pair(key_left_motor,    motor_power_t) \
+  pair(key_right_motor,   motor_power_t) \
+  pair(key_beep,          beep_t) \
 // clang-format on
 
 enumerate_ram_key_value_pairs(data_model_key_value_pairs);

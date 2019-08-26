@@ -12,7 +12,6 @@
 #ifndef motors_plugin_h
 #define motors_plugin_h
 
-#include "i_tiny_event.h"
 #include "i_tiny_key_value_store.h"
 
 typedef struct {

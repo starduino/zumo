@@ -9,10 +9,12 @@
 #include "tiny_timer.h"
 #include "data_model.h"
 #include "motors_plugin.h"
+#include "beep_plugin.h"
 
 typedef struct {
   data_model_t data_model;
-  motors_plugin_t motors;
+  motors_plugin_t motors_plugin;
+  beep_plugin_t beep_plugin;
 } application_t;
 
 void application_init(application_t* self, tiny_timer_group_t* timer_group);

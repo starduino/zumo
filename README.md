@@ -45,7 +45,7 @@ make <target>.mk upload
 ```
 
 ## Resources
-- [STM8S/STM8AF Reference Manual](https://www.st.com/content/ccc/resource/technical/document/reference_manual/9a/1b/85/07/ca/eb/4f/dd/CD00190271.pdf/files/CD00190271.pdf/jcr:content/translations/en.CD00190271.pdf)
+- [STM8S/STM8AF Reference Manual](https://www.st.com/resource/en/reference_manual/cd00190271.pdf)
 - [STM8S103F3 Datasheet](https://www.st.com/resource/en/datasheet/stm8s103f3.pdf)
 - [STM8S105K4 Datasheet](https://www.st.com/resource/en/datasheet/stm8s105k4.pdf)
 - [STM8S105C6 Datasheet](https://www.st.com/resource/en/datasheet/stm8s105c6.pdf)
