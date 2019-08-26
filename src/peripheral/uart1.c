@@ -21,6 +21,7 @@ void uart1_send_complete_isr(void) __interrupt(ITC_IRQ_UART1_TX) {
 }
 
 void uart1_receive_isr(void) __interrupt(ITC_IRQ_UART1_RX) {
+  volatile uint8_t dummy = UART1->SR;
   tiny_uart_on_receive_args_t args = { UART1->DR };
   tiny_single_subscriber_event_publish(&self.on_receive, &args);
 }
