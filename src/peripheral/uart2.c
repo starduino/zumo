@@ -21,6 +21,7 @@ void uart2_send_complete_isr(void) __interrupt(ITC_IRQ_UART2_TX) {
 }
 
 void uart2_receive_isr(void) __interrupt(ITC_IRQ_UART2_RX) {
+  volatile uint8_t dummy = UART2->SR;
   tiny_uart_on_receive_args_t args = { UART2->DR };
   tiny_single_subscriber_event_publish(&self.on_receive, &args);
 }
@@ -28,10 +29,10 @@ void uart2_receive_isr(void) __interrupt(ITC_IRQ_UART2_RX) {
 void send(i_tiny_uart_t* _self, uint8_t byte) {
   (void)_self;
 
+  UART2->DR = byte;
+
   // Enable TXE (transmit data register empty) interrupt
   UART2->CR2 |= UART2_CR2_TIEN;
-
-  UART2->DR = byte;
 }
 
 i_tiny_event_t* on_send_complete(i_tiny_uart_t* _self) {
