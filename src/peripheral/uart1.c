@@ -28,10 +28,10 @@ void uart1_receive_isr(void) __interrupt(ITC_IRQ_UART1_RX) {
 void send(i_tiny_uart_t* _self, uint8_t byte) {
   (void)_self;
 
+  UART1->DR = byte;
+  
   // Enable TXE (transmit data register empty) interrupt
   UART1->CR2 |= UART1_CR2_TIEN;
-
-  UART1->DR = byte;
 }
 
 i_tiny_event_t* on_send_complete(i_tiny_uart_t* _self) {
