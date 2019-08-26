@@ -53,8 +53,8 @@ i_tiny_uart_t* uart2_init(void) {
 
   // Configure 230.4k
   // 16,000,000 / UART_DIV = 230,400 => UART_DIV ~= 69 = 0x45
-  UART2->BRR1 = 0x4;
   UART2->BRR2 = 0x5;
+  UART2->BRR1 = 0x4;
 
   // Enable TX, RX
   UART2->CR2 |= UART2_CR2_TEN | UART2_CR2_REN;
