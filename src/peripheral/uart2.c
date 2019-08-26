@@ -15,7 +15,7 @@ static struct {
 } self;
 
 void uart2_send_complete_isr(void) __interrupt(ITC_IRQ_UART2_TX) {
-  // Enable TXE (transmit data register empty) interrupt
+  // Disable TXE (transmit data register empty) interrupt
   UART2->CR2 &= ~UART2_CR2_TIEN;
   tiny_single_subscriber_event_publish(&self.on_send_complete, NULL);
 }
