@@ -73,6 +73,20 @@
         "${workspaceRoot}/build/discovery/openocd.cfg"
       ],
       "preLaunchTask": "debug-deps-discovery"
+    },
+    {
+      "name": "Nucleo",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/nucleo/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/nucleo",
+      "configFiles": [
+        "${workspaceRoot}/build/nucleo/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-nucleo"
     }
   ]
 }

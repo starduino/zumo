@@ -13,6 +13,9 @@ https://www.st.com/en/evaluation-tools/stm8s-discovery.html
 
 Note: don't use the built-in ST-Link because `openocd` doesn't like it.
 
+### Nucleo (NUCLEO-8S208RB)
+https://www.st.com/en/evaluation-tools/nucleo-8s208rb.html
+
 ## Programmer
 ### ST-Link v2 Programmer/Debugger
 https://www.adafruit.com/product/2548
@@ -20,7 +23,7 @@ https://www.adafruit.com/product/2548
 ## Setup
 - Install [`sdcc`](http://sdcc.sourceforge.net/)
 - Install [`openocd`](https://github.com/ntfreak/openocd) (may need to build from source to get STM8 support)
-- Install [`stm8flash`](https://github.com/vdudouyt/stm8flash)
+- Install [`stm8flash`](https://github.com/ryanplusplus/stm8flash)
 - Install [`stm8-gdb`](https://stm8-binutils-gdb.sourceforge.io/)
 
 ## Use
@@ -49,4 +52,5 @@ make <target>.mk upload
 - [STM8S103F3 Datasheet](https://www.st.com/resource/en/datasheet/stm8s103f3.pdf)
 - [STM8S105K4 Datasheet](https://www.st.com/resource/en/datasheet/stm8s105k4.pdf)
 - [STM8S105C6 Datasheet](https://www.st.com/resource/en/datasheet/stm8s105c6.pdf)
+- [STM8S208RB Datasheet](https://www.st.com/resource/en/datasheet/stm8s208rb.pdf)
 - lujji's Bare metal programming: STM8 [part 1](https://lujji.github.io/blog/bare-metal-programming-stm8/), [part 2](https://lujji.github.io/blog/bare-metal-programming-stm8-part2/)
