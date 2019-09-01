@@ -69,7 +69,7 @@ $(BUILD_DIR)/openocd.cfg:
 	@cp $(OPENOCD_CFG) $@
 
 .PHONY: debug-deps
-debug-deps: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/arm-none-eabi-gdb $(BUILD_DIR)/arm-none-eabi-objdump $(BUILD_DIR)/openocd.cfg
+debug-deps: erase $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/arm-none-eabi-gdb $(BUILD_DIR)/arm-none-eabi-objdump $(BUILD_DIR)/openocd.cfg
 
 .PHONY: upload
 upload: $(BUILD_DIR)/$(TARGET).hex
@@ -77,6 +77,7 @@ upload: $(BUILD_DIR)/$(TARGET).hex
 
 .PHONY: erase
 erase:
+	@$(MKDIR_P) $(BUILD_DIR)
 	@echo "AA" | xxd -r -p > $(BUILD_DIR)/rop.bin
 	@stm8flash -c $(STLINK) -p $(DEVICE) -s opt -w $(BUILD_DIR)/rop.bin
 	@stm8flash -c $(STLINK) -p $(DEVICE) -u
