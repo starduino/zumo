@@ -15,7 +15,7 @@ SRC_DIRS := \
 
 LIB_FILES := \
   src/peripheral/clock.c \
-  src/peripheral/pd0_heartbeat.c \
+  src/peripheral/pe5_heartbeat.c \
   src/peripheral/tim4_system_tick.c \
   src/peripheral/uart2.c \
   src/peripheral/watchdog.c \

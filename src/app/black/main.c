@@ -8,7 +8,7 @@
 #include "stm8s.h"
 #include "clock.h"
 #include "tim4_system_tick.h"
-#include "pd0_heartbeat.h"
+#include "pe5_heartbeat.h"
 #include "tiny_timer.h"
 #include "watchdog.h"
 
@@ -28,7 +28,7 @@ void main(void) {
     watchdog_init();
     clock_init();
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
-    pd0_heartbeat_init(&timer_group);
+    pe5_heartbeat_init(&timer_group);
   }
   enableInterrupts();
 
