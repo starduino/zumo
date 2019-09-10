@@ -1,7 +1,7 @@
 TARGET = tiny
 BUILD_DIR = ./build/black
 
-DEVICE := stm8s105c6
+DEVICE := stm8s105k4
 DEVICE_TYPE := STM8S105
 STLINK := stlinkv2
 OPENOCD_CFG := openocd/stm8s105.cfg
