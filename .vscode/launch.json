@@ -58,7 +58,7 @@
       "configFiles": [
         "${workspaceRoot}/build/black/openocd.cfg"
       ],
-      "preLaunchTask": "debug-deps-discovery"
+      "preLaunchTask": "debug-deps-black"
     },
     {
       "name": "Discovery",
