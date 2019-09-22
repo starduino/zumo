@@ -16,6 +16,9 @@ Note: don't use the built-in ST-Link because `openocd` doesn't like it.
 ### Nucleo (NUCLEO-8S208RB)
 https://www.st.com/en/evaluation-tools/nucleo-8s208rb.html
 
+### W1209
+https://tenbaht.github.io/sduino/hardware/w1209-thermostat/
+
 ## Programmer
 ### ST-Link v2 Programmer/Debugger
 https://www.adafruit.com/product/2548
