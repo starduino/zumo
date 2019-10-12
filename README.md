@@ -3,25 +3,26 @@ Sample project using [`tiny`](https://github.com/ryanplusplus/tiny) with STM8.
 
 ## Target Hardware
 ### Blue (STM8S103F3P6 Development Board)
-https://tenbaht.github.io/sduino/hardware/stm8blue/
+- https://tenbaht.github.io/sduino/hardware/stm8blue/
 
 ### Black (STM8S105K4T6 Development Board)
-https://github.com/TG9541/stm8ef/wiki/STM8S-Value-Line-Gadgets#stm8s105k4t6-breakout-board
+- https://github.com/TG9541/stm8ef/wiki/STM8S-Value-Line-Gadgets#stm8s105k4t6-breakout-board
 
 ### Discovery (STM8-DISCOVERY STM8S105C6T6 Development Board)
-https://www.st.com/en/evaluation-tools/stm8s-discovery.html
+- https://www.st.com/en/evaluation-tools/stm8s-discovery.html
 
 Note: don't use the built-in ST-Link because `openocd` doesn't like it.
 
 ### Nucleo (NUCLEO-8S208RB)
-https://www.st.com/en/evaluation-tools/nucleo-8s208rb.html
+- https://www.st.com/en/evaluation-tools/nucleo-8s208rb.html
 
-### W1209
-https://tenbaht.github.io/sduino/hardware/w1209-thermostat/
+### W1209 (STM8S103F3P6 Thermostat Board)
+- https://tenbaht.github.io/sduino/hardware/w1209-thermostat/
+- https://vivonomicon.com/2018/07/15/the-w1209-a-sometimes-stm8-based-digital-thermostat/
 
 ## Programmer
 ### ST-Link v2 Programmer/Debugger
-https://www.adafruit.com/product/2548
+- https://www.adafruit.com/product/2548
 
 ## Setup
 - Install [`sdcc`](http://sdcc.sourceforge.net/)

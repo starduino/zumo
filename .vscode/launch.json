@@ -87,6 +87,20 @@
         "${workspaceRoot}/build/nucleo/openocd.cfg"
       ],
       "preLaunchTask": "debug-deps-nucleo"
+    },
+    {
+      "name": "W1209",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/w1209/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/w1209",
+      "configFiles": [
+        "${workspaceRoot}/build/w1209/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-w1209"
     }
   ]
 }
