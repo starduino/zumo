@@ -16,7 +16,7 @@ Note: don't use the built-in ST-Link because `openocd` doesn't like it.
 ### Nucleo (NUCLEO-8S208RB)
 - https://www.st.com/en/evaluation-tools/nucleo-8s208rb.html
 
-### W1209 (STM8S103F3P6 Thermostat Board)
+### W1209 (STM8S003F3P6 Thermostat)
 - https://tenbaht.github.io/sduino/hardware/w1209-thermostat/
 - https://vivonomicon.com/2018/07/15/the-w1209-a-sometimes-stm8-based-digital-thermostat/
 
