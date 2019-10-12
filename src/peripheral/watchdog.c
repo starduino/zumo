@@ -13,9 +13,9 @@ enum {
 };
 
 void watchdog_init(void) {
-  // Unlock the IWDG registers and start watchdog
-  IWDG->KR = unlock;
+  // Start the watchdog and unlock the IWDG registers
   IWDG->KR = start;
+  IWDG->KR = unlock;
 
   // T = 2 * Tlsi * P * R
   // T = timeout
