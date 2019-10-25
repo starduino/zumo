@@ -45,7 +45,7 @@ static void data_changed(void* context, const void* _args) {
       break;
 
     case key_right_motor:
-      // update_output(*power, right_motor_pin, &TIM2->CCR3H, &TIM2->CCR3L);
+      update_output(*power, right_motor_pin, &TIM2->CCR3H, &TIM2->CCR3L);
       break;
   }
 }
