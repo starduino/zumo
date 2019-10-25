@@ -61,6 +61,20 @@
       "preLaunchTask": "debug-deps-black"
     },
     {
+      "name": "Black Zumo",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/black-zumo/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/black-zumo",
+      "configFiles": [
+        "${workspaceRoot}/build/black-zumo/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-black-zumo"
+    },
+    {
       "name": "Discovery",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceFolder}/build/discovery/tiny-debug.elf",
