@@ -56,9 +56,9 @@
       }
     },
     {
-      "label": "debug-deps-black-zumo",
+      "label": "debug-deps-starduino-zumo",
       "type": "shell",
-      "command": "make -j8 -f black-zumo.mk debug-deps",
+      "command": "make -j8 -f starduino-zumo.mk debug-deps",
       "presentation": {
         "echo": true,
         "reveal": "silent",

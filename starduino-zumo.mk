@@ -1,17 +1,17 @@
 TARGET = tiny
-BUILD_DIR = ./build/black-zumo
+BUILD_DIR = ./build/starduino-zumo
 
 DEVICE := stm8s105k4
 DEVICE_TYPE := STM8S105
 STLINK := stlinkv2
 OPENOCD_CFG := openocd/stm8s105.cfg
 
-MAIN := src/app/black-zumo/main.c
+MAIN := src/app/starduino-zumo/main.c
 
 SRC_FILES := \
 
 SRC_DIRS := \
-  src/app/black-zumo \
+  src/app/starduino-zumo \
 
 LIB_FILES := \
   src/peripheral/clock.c \
