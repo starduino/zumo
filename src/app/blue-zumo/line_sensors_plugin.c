@@ -12,7 +12,7 @@
 #include "tiny_utils.h"
 
 enum {
-  setup_period = 1,
+  setup_period = 2,
   sample_period = 9,
   input_filter_8 = (8 << 4),
   pin_3 = (1 << 3),
