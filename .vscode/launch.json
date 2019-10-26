@@ -61,6 +61,20 @@
       "preLaunchTask": "debug-deps-black"
     },
     {
+      "name": "Starduino Zumo",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/starduino-zumo/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/starduino-zumo",
+      "configFiles": [
+        "${workspaceRoot}/build/starduino-zumo/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-starduino-zumo"
+    },
+    {
       "name": "Discovery",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceFolder}/build/discovery/tiny-debug.elf",
