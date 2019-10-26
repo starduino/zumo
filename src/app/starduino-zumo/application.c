@@ -3,10 +3,10 @@
  * @brief
  */
 
-#include "application.h"
-
 #include <stddef.h>
+#include "application.h"
 #include "tiny_utils.h"
+
 static tiny_event_subscription_t derp_sub;
 
 static void derp_change(void* context, const void* _args) {
