@@ -26,4 +26,5 @@ void strategist_init(
   strategist_t* self,
   i_tiny_key_value_store_t* key_value_store,
   const strategist_keys_t* keys);
+
 #endif
