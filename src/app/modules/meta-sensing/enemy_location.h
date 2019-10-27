@@ -8,13 +8,12 @@
 
 #include <stdint.h>
 
-typedef uint8_t enemy_location_t;
-
 enum {
   enemy_location_unknown,
   enemy_location_front_center,
   enemy_location_front_left,
   enemy_location_front_right
 };
+typedef uint8_t enemy_location_t;
 
 #endif

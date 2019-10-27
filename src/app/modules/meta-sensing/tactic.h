@@ -8,11 +8,10 @@
 
 #include <stdint.h>
 
-typedef uint8_t tactic_t;
-
 enum {
   tactic_seeking,
   tactic_charge
 };
+typedef uint8_t tactic_t;
 
 #endif

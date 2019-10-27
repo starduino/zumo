@@ -21,9 +21,9 @@ enum {
 };
 
 // clang-format off
-  #define data_model_key_value_pairs(pair) \
-    pair(key_tactic,            tactic_t) \
-    pair(key_enemy_location,    enemy_location_t)
+#define data_model_key_value_pairs(pair) \
+  pair(key_tactic,            tactic_t) \
+  pair(key_enemy_location,    enemy_location_t)
 // clang-format on
 
 enumerate_ram_key_value_pairs(data_model_key_value_pairs);
