@@ -6,6 +6,7 @@
 extern "C" {
 #include <string.h>
 #include "strategist.h"
+#include "direction.h"
 #include "enemy_location.h"
 #include "tactic.h"
 #include "tiny_utils.h"
@@ -23,7 +24,9 @@ enum {
 // clang-format off
 #define data_model_key_value_pairs(pair) \
   pair(key_tactic,            tactic_t) \
-  pair(key_enemy_location,    enemy_location_t)
+  pair(key_enemy_location,    enemy_location_t) \
+  pair(key_initial_direction, direction_t) \
+  pair(key_robot_running,     bool) \
 // clang-format on
 
 enumerate_ram_key_value_pairs(data_model_key_value_pairs);
@@ -45,7 +48,9 @@ static const tiny_ram_key_value_store_configuration_t store_config = {
 
 static const strategist_keys_t keys = {
   .key_tactic = key_tactic,
-  .key_enemy_location = key_enemy_location
+  .key_enemy_location = key_enemy_location,
+  .key_initial_direction = key_initial_direction,
+  .key_robot_running = key_robot_running
 };
 
 TEST_GROUP(strategist) {
@@ -62,12 +67,21 @@ TEST_GROUP(strategist) {
     strategist_init(&self, i_key_value_store, &keys);
   }
 
+  void given_the_initial_seeking_direction_is(direction_t direction) {
+    tiny_key_value_store_write(i_key_value_store, key_initial_direction, &direction);
+  }
+
   void when_an_enemy_is(enemy_location_t location) {
     tiny_key_value_store_write(i_key_value_store, key_enemy_location, &location);
   }
 
   void given_the_enemy_was(enemy_location_t location) {
     when_an_enemy_is(location);
+  }
+
+  void when_the_robot_starts_running() {
+    bool running = true;
+    tiny_key_value_store_write(i_key_value_store, key_robot_running, &running);
   }
 
   void the_selected_tactic_should_be(tactic_t expected) {
@@ -77,9 +91,27 @@ TEST_GROUP(strategist) {
   }
 };
 
-TEST(strategist, should_seek_on_init) {
+TEST(strategist, should_idle_on_init) {
   given_it_has_been_initialized();
-  the_selected_tactic_should_be(tactic_seeking);
+  the_selected_tactic_should_be(tactic_idle);
+}
+
+TEST(strategist, should_seek_clockwise_when_the_robot_is_running_and_clockwise_is_selected) {
+  given_it_has_been_initialized();
+  given_the_initial_seeking_direction_is(direction_clockwise);
+  the_selected_tactic_should_be(tactic_idle);
+
+  when_the_robot_starts_running();
+  the_selected_tactic_should_be(tactic_seek_clockwise);
+}
+
+TEST(strategist, should_seek_counterclockwise_when_the_robot_is_running_and_counterclockwise_is_selected) {
+  given_it_has_been_initialized();
+  given_the_initial_seeking_direction_is(direction_counterclockwise);
+  the_selected_tactic_should_be(tactic_idle);
+
+  when_the_robot_starts_running();
+  the_selected_tactic_should_be(tactic_seek_counterclockwise);
 }
 
 TEST(strategist, should_charge_when_an_enemy_is_detected) {
@@ -93,5 +125,5 @@ TEST(strategist, should_seek_when_an_enemy_is_no_longer_detected) {
   given_the_enemy_was(in_front);
 
   when_an_enemy_is(not_visible);
-  the_selected_tactic_should_be(tactic_seeking);
+  the_selected_tactic_should_be(tactic_seek_clockwise);
 }
