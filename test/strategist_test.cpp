@@ -18,6 +18,8 @@ extern "C" {
 
 enum {
   in_front = enemy_location_front_center,
+  in_front_left = enemy_location_front_left,
+  in_front_right = enemy_location_front_right,
   not_visible = enemy_location_unknown
 };
 
@@ -118,12 +120,26 @@ TEST(strategist, should_charge_when_an_enemy_is_detected) {
   given_it_has_been_initialized();
   when_an_enemy_is(in_front);
   the_selected_tactic_should_be(tactic_charge);
+
+  when_an_enemy_is(in_front_left);
+  the_selected_tactic_should_be(tactic_charge);
+
+  when_an_enemy_is(in_front_right);
+  the_selected_tactic_should_be(tactic_charge);
 }
 
-TEST(strategist, should_seek_when_an_enemy_is_no_longer_detected) {
+TEST(strategist, should_seek_clockwise_when_the_enemy_was_last_seen_to_the_right) {
   given_it_has_been_initialized();
-  given_the_enemy_was(in_front);
+  given_the_enemy_was(in_front_right);
 
   when_an_enemy_is(not_visible);
   the_selected_tactic_should_be(tactic_seek_clockwise);
+}
+
+TEST(strategist, should_seek_counterclockwise_when_the_enemy_was_last_seen_to_the_left) {
+  given_it_has_been_initialized();
+  given_the_enemy_was(in_front_left);
+
+  when_an_enemy_is(not_visible);
+  the_selected_tactic_should_be(tactic_seek_counterclockwise);
 }
