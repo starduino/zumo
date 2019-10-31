@@ -28,9 +28,18 @@ static void choose_initial_tactic(strategist_t* self) {
 }
 
 static void choose_seeking_tactic(strategist_t* self) {
- bool previously_seen_on_right = self->_private.previous_location == enemy_location_front_right;
- tactic_t tactic = previously_seen_on_right ? tactic_seek_clockwise : tactic_seek_counterclockwise;
+  bool previously_seen_on_right = self->_private.previous_location == enemy_location_front_right;
+  tactic_t tactic = previously_seen_on_right ? tactic_seek_clockwise : tactic_seek_counterclockwise;
   change_tactic_to(self, tactic);
+}
+
+static bool the_enemy_is_visible(strategist_t* self) {
+  enemy_location_t location;
+  tiny_key_value_store_read(
+    self->key_value_store,
+    self->keys->key_enemy_location,
+    &location);
+    return location != enemy_location_unknown;
 }
 
 static void data_changed(void* context, const void* _args) {
@@ -39,16 +48,28 @@ static void data_changed(void* context, const void* _args) {
 
   if(args->key == self->keys->key_enemy_location) {
     reinterpret(location, args->value, const enemy_location_t*);
+
     if(*location == enemy_location_unknown) {
       choose_seeking_tactic(self);
     }
     else {
       change_tactic_to(self, tactic_charge);
+      self->_private.previous_location = *location;
     }
-    self->_private.previous_location = *location;
   }
   else if(args->key == self->keys->key_robot_running) {
     choose_initial_tactic(self);
+  }
+  else if(args->key == self->keys->key_line_detected) {
+    change_tactic_to(self, tactic_avoid_line);
+  }
+  else if(args->key == self->keys->key_tactic_stopped) {
+    if(the_enemy_is_visible(self)) {
+      change_tactic_to(self, tactic_charge);
+    }
+    else {
+      choose_seeking_tactic(self);
+    }
   }
 }
 

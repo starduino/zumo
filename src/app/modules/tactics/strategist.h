@@ -16,6 +16,8 @@ typedef struct {
   tiny_key_value_store_key_t key_enemy_location;
   tiny_key_value_store_key_t key_initial_direction;
   tiny_key_value_store_key_t key_robot_running;
+  tiny_key_value_store_key_t key_line_detected;
+  tiny_key_value_store_key_t key_tactic_stopped;
 } strategist_keys_t;
 
 typedef struct {

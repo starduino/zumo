@@ -12,7 +12,8 @@ enum {
   tactic_idle,
   tactic_seek_clockwise,
   tactic_seek_counterclockwise,
-  tactic_charge
+  tactic_charge,
+  tactic_avoid_line
 };
 typedef uint8_t tactic_t;
 
