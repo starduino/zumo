@@ -28,7 +28,7 @@ static void choose_initial_tactic(strategist_t* self) {
 }
 
 static void choose_seeking_tactic(strategist_t* self) {
-  bool previously_seen_on_right = self->_private.previous_location == enemy_location_front_right;
+  bool previously_seen_on_right = self->previous_location == enemy_location_front_right;
   tactic_t tactic = previously_seen_on_right ? tactic_seek_clockwise : tactic_seek_counterclockwise;
   change_tactic_to(self, tactic);
 }
@@ -39,7 +39,7 @@ static bool the_enemy_is_visible(strategist_t* self) {
     self->key_value_store,
     self->keys->key_enemy_location,
     &location);
-    return location != enemy_location_unknown;
+  return location != enemy_location_unknown;
 }
 
 static void data_changed(void* context, const void* _args) {
@@ -54,7 +54,7 @@ static void data_changed(void* context, const void* _args) {
     }
     else {
       change_tactic_to(self, tactic_charge);
-      self->_private.previous_location = *location;
+      self->previous_location = *location;
     }
   }
   else if(args->key == self->keys->key_robot_running) {
