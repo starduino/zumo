@@ -45,7 +45,7 @@ static const tiny_ram_key_value_store_configuration_t store_config = {
   element_count(key_value_pairs)
 };
 
-static const line_detected_keys = {
+static const line_detected_keys_t line_detected_keys = {
   .key_motors = key_motors,
   .key_last_enemy_location = key_last_enemy_location,
   .key_line_detected = key_line_detected,
