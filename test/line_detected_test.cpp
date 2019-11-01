@@ -8,6 +8,7 @@ extern "C" {
 #include "line_detected.h"
 #include "motors.h"
 #include "tactic.h"
+#include "enemy_location.h"
 #include "tiny_utils.h"
 #include "tiny_ram_key_value_store.h"
 }
@@ -17,6 +18,11 @@ extern "C" {
 
 enum {
   on = true
+};
+
+motors_t some_setting = {
+  .left_power = 70,
+  .right_power = -22
 };
 
 // clang-format off
@@ -45,8 +51,9 @@ static const tiny_ram_key_value_store_configuration_t store_config = {
   element_count(key_value_pairs)
 };
 
-static const line_detected_keys_t line_detected_keys = {
+static const line_detected_keys_t keys = {
   .key_motors = key_motors,
+  .key_tactic = key_tactic,
   .key_last_enemy_location = key_last_enemy_location,
   .key_line_detected = key_line_detected,
   .key_tactic_stopped = key_tactic_stopped
@@ -57,25 +64,20 @@ TEST_GROUP(line_detected) {
   tiny_ram_key_value_store_t ram_key_value_store;
   i_tiny_key_value_store_t* i_key_value_store;
 
-  void given_it_has_been_initialized() {
+  void setup() {
     tiny_ram_key_value_store_init(
       &ram_key_value_store,
       &store_config,
       &storage);
     i_key_value_store = &ram_key_value_store.interface;
+  }
+
+  void given_it_has_been_initialized() {
     line_detected_init(&self, i_key_value_store, &keys);
   }
 
-  void given_the_initial_seeking_direction_is(direction_t direction) {
-    tiny_key_value_store_write(i_key_value_store, key_initial_direction, &direction);
-  }
-
-  void when_the_enemy_is(enemy_location_t location) {
-    tiny_key_value_store_write(i_key_value_store, key_enemy_location, &location);
-  }
-
-  void given_the_enemy_was(enemy_location_t location) {
-    when_the_enemy_is(location);
+  void given_the_motors_were_set_to(motors_t motors) {
+    tiny_key_value_store_write(i_key_value_store, key_motors, &motors);
   }
 
   void when_a_line_is(bool detected) {
@@ -86,26 +88,16 @@ TEST_GROUP(line_detected) {
     when_a_line_is(detected);
   }
 
-  void when_the_tactic_stops() {
-    uint8_t signal;
-    tiny_key_value_store_read(i_key_value_store, key_tactic_stopped, &signal);
-    signal++;
-    tiny_key_value_store_write(i_key_value_store, key_tactic_stopped, &signal);
-  }
-
-  void when_the_robot_starts_running() {
-    bool running = true;
-    tiny_key_value_store_write(i_key_value_store, key_robot_running, &running);
-  }
-
-  void the_selected_tactic_should_be(tactic_t expected) {
-    tactic_t actual;
-    tiny_key_value_store_read(i_key_value_store, key_tactic, &actual);
-    CHECK_EQUAL(expected, actual);
+  void the_motors_should_be_set_to(motors_t expected) {
+    motors_t actual;
+    tiny_key_value_store_read(i_key_value_store, key_motors, &actual);
+    CHECK_EQUAL(expected.left_power, actual.left_power);
+    CHECK_EQUAL(expected.right_power, actual.right_power);
   }
 };
 
-TEST(line_detected, should_idle_on_init) {
-  // given_it_has_been_initialized();
-  // the_selected_tactic_should_be(tactic_idle);
+TEST(line_detected, should_do_nothing_on_init) {
+   given_it_has_been_initialized();
+   given_the_motors_were_set_to(some_setting);
+   the_motors_should_be_set_to(some_setting);
 }

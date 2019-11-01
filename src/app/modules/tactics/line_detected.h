@@ -21,13 +21,8 @@ typedef struct {
 
 typedef struct {
   tiny_event_subscription_t on_change_subscription;
-  tiny_fsm_t fsm;
   i_tiny_key_value_store_t* key_value_store;
   const line_detected_keys_t* keys;
-
-  struct {
-    enemy_location_t previous_location;
-  } _private;
 } line_detected_t;
 
 void line_detected_init(
