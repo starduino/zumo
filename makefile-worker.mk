@@ -56,7 +56,7 @@ LD := sdcc
 AR := sdar
 
 .PHONY: all
-all: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/$(TARGET).hex
+all: $(BUILD_DIR)/$(TARGET).hex
 
 $(BUILD_DIR)/arm-none-eabi-gdb:
 	@$(MKDIR_P) $(dir $@)
