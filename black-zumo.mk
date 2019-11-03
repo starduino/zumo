@@ -11,11 +11,11 @@ MAIN := src/app/starduino-zumo/main.c
 SRC_FILES := \
 
 SRC_DIRS := \
-  src/app/black-zumo \
   src/app/starduino-zumo \
 
 LIB_FILES := \
   src/peripheral/clock.c \
+  src/peripheral/i2c.c \
   src/peripheral/pc5_heartbeat.c \
   src/peripheral/tim4_system_tick.c \
   src/peripheral/watchdog.c \
