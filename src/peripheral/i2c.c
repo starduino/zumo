@@ -7,6 +7,7 @@
  * - https://blog.mark-stevens.co.uk/2015/05/stm8s-i2c-master-devices/
  */
 
+#include <stddef.h>
 #include "stm8s_clk.h"
 #include "stm8s_i2c.h"
 #include "i2c.h"
@@ -36,6 +37,8 @@ static struct {
   tiny_i2c_callback_t callback;
   void* context;
 } self;
+
+static void reset(i_tiny_i2c_t* _self);
 
 void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
   volatile uint8_t dummy;
@@ -112,7 +115,7 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
   }
 
   // If we're still here something is wrong so let's reset and tell the client
-  I2C->CR2 = I2C_CR2_SWRST;
+  reset(NULL);
   self.callback(self.context, false);
 }
 
@@ -170,6 +173,9 @@ static void read(
 static void configure_peripheral(void) {
   // Disable peripheral
   I2C->CR1 = 0;
+
+  // Clear software reset
+  I2C->CR2 = 0;
 
   // Un-gate clock for I2C
   CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_I2C);
