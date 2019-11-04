@@ -7,7 +7,7 @@
 #include "tiny_utils.h"
 
 enum {
-  period = 25,
+  period = 10,
 
   address = 0x1D,
 
@@ -117,7 +117,7 @@ static void initialize_accelerometer(lsm303d_t* self) {
 
   static const uint8_t buffer[] = {
     register_ctrl1,
-    0x57 // 50 Hz, all axes enabled
+    0x77 // 200 Hz, all axes enabled
   };
 
   tiny_i2c_write(
