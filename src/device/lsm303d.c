@@ -42,7 +42,6 @@ static void set_up_acceleration_read_complete(void* context, bool success) {
     tiny_i2c_read(
       self->i2c,
       address,
-      false,
       self->raw,
       sizeof(self->raw),
       read_acceleration_complete,

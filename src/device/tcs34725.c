@@ -83,7 +83,6 @@ static void state_read_value(tiny_fsm_t* fsm, tiny_fsm_signal_t signal, const vo
       tiny_i2c_read(
         self->i2c,
         address,
-        false,
         self->buffer.read_device_id,
         sizeof(self->buffer.read_device_id),
         register_value_read,

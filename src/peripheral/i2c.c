@@ -42,6 +42,8 @@ static void reset(i_tiny_i2c_t* _self);
 void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
   volatile uint8_t dummy;
 
+  // In the case of a restart, TXE and BTF will still be set until start is sent
+  // so we can't really trust SR1 while start is pending
   if(I2C->CR2 & I2C_CR2_START) {
     return;
   }
@@ -125,6 +127,8 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
         return;
       }
       else if((self.buffer_size - self.buffer_offset) == 3) {
+        // Re-enable buffer interrupts so that we can receive the last byte using
+        // RXNE
         I2C->ITR |= I2C_ITR_ITBUFEN;
 
         I2C->CR2 &= ~I2C_CR2_ACK;
@@ -195,13 +199,11 @@ static void write(
 static void read(
   i_tiny_i2c_t* _self,
   uint8_t address,
-  bool prepare_for_restart,
   uint8_t* buffer,
   uint8_t buffer_size,
   tiny_i2c_callback_t callback,
   void* context) {
   (void)_self;
-  (void)prepare_for_restart; // fixme probably don't even need to support this
 
   self.address = address;
   self.buffer.read = buffer;
@@ -213,9 +215,8 @@ static void read(
 
   wait_for_stop_condition_to_be_sent();
 
-  // derp_index = 0;
-
   if(buffer_size > 2) {
+    // Disable buffer interrupts because we will be using BTF instead
     I2C->ITR &= ~I2C_ITR_ITBUFEN;
   }
 
