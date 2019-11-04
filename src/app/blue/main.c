@@ -11,12 +11,12 @@
 #include "pb5_heartbeat.h"
 #include "tiny_timer.h"
 #include "watchdog.h"
-#include "tcs34725.h"
+#include "lsm303d.h"
 #include "i2c.h"
 
 static tiny_timer_group_t timer_group;
 static tiny_timer_t timer;
-static tcs34725_t lsm;
+static lsm303d_t lsm;
 
 static void kick_watchdog(tiny_timer_group_t* _timer_group, void* context) {
   (void)context;
@@ -32,7 +32,7 @@ void main(void) {
     clock_init();
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
     // pb5_heartbeat_init(&timer_group);
-    tcs34725_init(&lsm, &timer_group, i2c_init());
+    lsm303d_init(&lsm, &timer_group, i2c_init());
   }
   enableInterrupts();
 

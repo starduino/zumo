@@ -15,8 +15,7 @@
 enum {
   mode_write = I2C_DIRECTION_TX,
   mode_write_with_restart = 0x10 + I2C_DIRECTION_TX,
-  mode_read = I2C_DIRECTION_RX,
-  mode_read_with_restart = 0x10 + I2C_DIRECTION_RX,
+  mode_read = I2C_DIRECTION_RX
 };
 typedef uint8_t mode_t;
 
@@ -43,6 +42,10 @@ static void reset(i_tiny_i2c_t* _self);
 void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
   volatile uint8_t dummy;
 
+  if(I2C->CR2 & I2C_CR2_START) {
+    return;
+  }
+
   // Start condition generated
   if(I2C->SR1 & I2C_SR1_SB) {
     // Clear start condition by reading SR1
@@ -56,17 +59,34 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
 
   // Address sent
   if(I2C->SR1 & I2C_SR1_ADDR) {
-    // Clear address sent event by reading SR1 and then SR3
-    dummy = I2C->SR1;
-    dummy = I2C->SR3;
+    if(self.mode == mode_read) {
+      if(self.buffer_size == 1) {
+        I2C->CR2 &= ~I2C_CR2_ACK;
 
-    if(self.buffer_size == 1) {
-      if(self.mode == mode_read) {
-        I2C->CR2 = I2C_CR2_STOP;
+        // Clear address sent event by reading SR1 and then SR3
+        dummy = I2C->SR1;
+        dummy = I2C->SR3;
+
+        I2C->CR2 |= I2C_CR2_STOP;
       }
-      else if(self.mode == mode_read_with_restart) {
+      else if(self.buffer_size == 2) {
+        // Clear address sent event by reading SR1 and then SR3
+        dummy = I2C->SR1;
+        dummy = I2C->SR3;
+
+        I2C->CR2 |= I2C_CR2_POS;
         I2C->CR2 &= ~I2C_CR2_ACK;
       }
+      else {
+        // Clear address sent event by reading SR1 and then SR3
+        dummy = I2C->SR1;
+        dummy = I2C->SR3;
+      }
+    }
+    else {
+      // Clear address sent event by reading SR1 and then SR3
+      dummy = I2C->SR1;
+      dummy = I2C->SR3;
     }
 
     return;
@@ -88,30 +108,55 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
     return;
   }
 
-  // Receive buffer is not empty
-  if(I2C->SR1 & I2C_SR1_RXNE) {
-    do {
-      // Clear event by reading received byte
+  // Byte transfer finished
+  if(I2C->SR1 & I2C_SR1_BTF) {
+    if(self.buffer_size == 2) {
+      I2C->CR2 |= I2C_CR2_STOP;
+
+      self.buffer.read[self.buffer_offset++] = I2C->DR;
       self.buffer.read[self.buffer_offset++] = I2C->DR;
 
-      if(self.buffer_offset + 1 == self.buffer_size) {
-        if(self.mode == mode_read) {
-          I2C->CR2 = I2C_CR2_STOP;
-        }
-        else {
-          I2C->CR2 = 0;
-          self.callback(self.context, true);
-        }
+      self.callback(self.context, true);
+      return;
+    }
+    else if(self.buffer_size > 2) {
+      if((self.buffer_size - self.buffer_offset) > 3) {
+        self.buffer.read[self.buffer_offset++] = I2C->DR;
+        return;
       }
-      else if(self.buffer_offset == self.buffer_size) {
-        self.callback(self.context, true);
+      else if((self.buffer_size - self.buffer_offset) == 3) {
+        I2C->ITR |= I2C_ITR_ITBUFEN;
+
+        I2C->CR2 &= ~I2C_CR2_ACK;
+
+        // Timing is sensitive here so read into temporaries
+        volatile uint8_t byte1 = I2C->DR;
+        I2C->CR2 |= I2C_CR2_STOP;
+        volatile uint8_t byte2 = I2C->DR;
+
+        self.buffer.read[self.buffer_offset++] = byte1;
+        self.buffer.read[self.buffer_offset++] = byte2;
+
+        return;
       }
+    }
+  }
 
-      // Byte transfer finished
-      // This means we got two bytes before we could read the first out
-    } while(I2C->SR1 & I2C_SR1_BTF);
-
-    return;
+  // Receive buffer is not empty
+  if(I2C->SR1 & I2C_SR1_RXNE) {
+    if(self.buffer_size == 1) {
+      self.buffer.read[0] = I2C->DR;
+      self.callback(self.context, true);
+      return;
+    }
+    else if(self.buffer_size == 2) {
+      return;
+    }
+    else if((self.buffer_size - self.buffer_offset) == 1) {
+      self.buffer.read[self.buffer_offset++] = I2C->DR;
+      self.callback(self.context, true);
+      return;
+    }
   }
 
   // If we're still here something is wrong so let's reset and tell the client
@@ -156,16 +201,23 @@ static void read(
   tiny_i2c_callback_t callback,
   void* context) {
   (void)_self;
+  (void)prepare_for_restart; // fixme probably don't even need to support this
 
   self.address = address;
   self.buffer.read = buffer;
   self.buffer_size = buffer_size;
   self.buffer_offset = 0;
-  self.mode = prepare_for_restart ? mode_read_with_restart : mode_read;
+  self.mode = mode_read;
   self.callback = callback;
   self.context = context;
 
   wait_for_stop_condition_to_be_sent();
+
+  // derp_index = 0;
+
+  if(buffer_size > 2) {
+    I2C->ITR &= ~I2C_ITR_ITBUFEN;
+  }
 
   I2C->CR2 = I2C_CR2_START | I2C_CR2_ACK;
 }
@@ -213,7 +265,7 @@ static void reset(i_tiny_i2c_t* _self) {
 static const i_tiny_i2c_api_t api = { write, read, reset };
 
 i_tiny_i2c_t* i2c_init(void) {
-  configure_peripheral();
+  reset(NULL);
 
   self.interface.api = &api;
 

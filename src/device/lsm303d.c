@@ -9,7 +9,7 @@
 enum {
   period = 25,
 
-  address = 0x1E,
+  address = 0x1D,
 
   auto_increment = (1 << 7),
 
@@ -84,7 +84,7 @@ static void arm_poll_timer(lsm303d_t* self) {
 }
 
 static void initialize_accelerometer(lsm303d_t* self) {
-  const uint8_t buffer[] = {
+  static const uint8_t buffer[] = {
     register_ctrl1,
     0x57 // 50 Hz, all axes enabled
   };
