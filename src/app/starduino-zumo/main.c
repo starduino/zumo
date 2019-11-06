@@ -13,8 +13,6 @@
 #include "watchdog.h"
 #include "data_model.h"
 #include "application.h"
-#include "i2c.h"
-#include "lsm303d.h"
 
 static application_t application;
 static tiny_timer_group_t timer_group;
@@ -34,8 +32,6 @@ void main(void) {
     clock_init();
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
     pc5_heartbeat_init(&timer_group);
-    static lsm303d_t lsm303d;
-    lsm303d_init(&lsm303d, &timer_group, i2c_init());
     application_init(&application, &timer_group);
   }
   enableInterrupts();
