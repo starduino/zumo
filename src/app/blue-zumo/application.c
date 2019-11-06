@@ -11,20 +11,24 @@ static tiny_event_subscription_t derp_sub;
 
 static void derp_change(void* context, const void* _args) {
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
-  (void)context;
+  reinterpret(store, context, i_tiny_key_value_store_t*);
 
   if(args->key == key_right_line_detected) {
-    volatile uint8_t derpity = 10;
-    derpity++;
+    reinterpret(value, args->value, const uint8_t*);
+    motor_power_t power = *value * 20;
+    tiny_key_value_store_write(store, key_right_motor, &power);
+  }
+
+  if(args->key == key_left_line_detected) {
+    reinterpret(value, args->value, const uint8_t*);
+    motor_power_t power = *value * 20;
+    tiny_key_value_store_write(store, key_left_motor, &power);
   }
 }
 
 static void derp(i_tiny_key_value_store_t* store) {
-  motor_power_t power = 0;
-  tiny_key_value_store_write(store, key_left_motor, &power);
-  tiny_key_value_store_write(store, key_right_motor, &power);
-
-  tiny_event_subscription_init(&derp_sub, NULL, derp_change);
+  tiny_event_subscription_init(&derp_sub, store, derp_change);
+  tiny_event_subscribe(tiny_key_value_store_on_change(store), &derp_sub);
 }
 
 void application_init(application_t* self, tiny_timer_group_t* timer_group) {

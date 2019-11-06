@@ -17,7 +17,7 @@ enum {
   input_filter_8 = (8 << 4),
   pin_3 = (1 << 3),
   pin_4 = (1 << 4),
-  line_threshold = 3500
+  line_threshold = 4000
 };
 
 static void start_charge(void) {
