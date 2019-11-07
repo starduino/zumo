@@ -3,7 +3,7 @@ BUILD_DIR ?= ./build
 
 SRC_DIRS ?= \
 	lib/tiny/src \
-  src/app/modules \
+  src/app/common \
   test \
 
 LDFLAGS := -lstdc++ -lCppUTest -lCppUTestExt -lm

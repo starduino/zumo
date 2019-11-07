@@ -12,10 +12,12 @@
 #include "tiny_fsm.h"
 
 typedef struct {
-  tiny_key_value_store_key_t key_motors;
+  tiny_key_value_store_key_t key_left_motor;
+  tiny_key_value_store_key_t key_right_motor;
   tiny_key_value_store_key_t key_tactic;
   tiny_key_value_store_key_t key_last_enemy_location;
-  tiny_key_value_store_key_t key_line_detected;
+  tiny_key_value_store_key_t key_left_line_detected;
+  tiny_key_value_store_key_t key_right_line_detected;
   tiny_key_value_store_key_t key_tactic_stopped;
 } line_detected_keys_t;
 
