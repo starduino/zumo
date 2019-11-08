@@ -12,7 +12,6 @@
 #include "tiny_timer.h"
 #include "watchdog.h"
 #include "data_model.h"
-#include "i2c.h"
 #include "application.h"
 
 static application_t application;
