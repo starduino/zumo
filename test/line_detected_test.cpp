@@ -15,13 +15,18 @@ extern "C" {
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
+#include "tiny_time_source_double.h"
 
 enum {
+  right,
+  left,
   detected = true,
   not_detected = false,
   some_power = 70,
   some_other_power = -55,
-  back_up = motor_power_min
+  back_up = motor_power_min,
+  back_up_time = 70,
+  some_time_has_passed = 17
 };
 
 // clang-format off
@@ -64,8 +69,12 @@ static const line_detected_keys_t keys = {
 
 TEST_GROUP(line_detected) {
   line_detected_t self;
+
   tiny_ram_key_value_store_t ram_key_value_store;
   i_tiny_key_value_store_t* i_key_value_store;
+
+  tiny_time_source_double_t time_source;
+  tiny_timer_group_t timer_group;
 
   void setup() {
     tiny_ram_key_value_store_init(
@@ -73,10 +82,13 @@ TEST_GROUP(line_detected) {
       &store_config,
       &storage);
     i_key_value_store = &ram_key_value_store.interface;
+
+    tiny_time_source_double_init(&time_source);
+    tiny_timer_group_init(&timer_group, &time_source.interface);
   }
 
   void when_it_is_initialized() {
-    line_detected_init(&self, i_key_value_store, &keys);
+    line_detected_init(&self, i_key_value_store, &keys, &timer_group);
   }
 
   void given_it_has_been_initialized() {
@@ -124,6 +136,22 @@ TEST_GROUP(line_detected) {
     tiny_key_value_store_read(i_key_value_store, key_right_motor, &actual);
     CHECK_EQUAL(expected, actual);
   }
+
+  void the_motors_should_be_turning(uint8_t direction) {
+    if (direction == right) {
+      the_left_motor_should_be_set_to(100);
+      the_right_motor_should_be_set_to(30);
+    }
+    else {
+      the_left_motor_should_be_set_to(30);
+      the_right_motor_should_be_set_to(100);
+    }
+  }
+
+  void after(tiny_time_source_ticks_t ticks) {
+    tiny_time_source_double_tick(&time_source, ticks);
+    tiny_timer_group_run(&timer_group);
+  }
 };
 
 TEST(line_detected, should_do_nothing_on_init) {
@@ -169,8 +197,15 @@ TEST(line_detected, should_do_nothing_when_another_tactic_becomes_active) {
 
 TEST(line_detected, should_turn_right_after_it_has_backed_up_when_the_left_line_is_detected) {
   given_it_has_been_initialized();
+  after(some_time_has_passed);
   given_this_tactic_is_active();
 
+  after(back_up_time - 1);
+  the_left_motor_should_be_set_to(back_up);
+  the_right_motor_should_be_set_to(back_up);
+
+  after(1);
+  the_motors_should_be_turning(right);
 }
 
 TEST(line_detected, should_indicate_that_it_is_complete_after_it_has_finished_turning_right) {

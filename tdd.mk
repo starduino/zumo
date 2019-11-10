@@ -3,6 +3,7 @@ BUILD_DIR ?= ./build
 
 SRC_DIRS ?= \
 	lib/tiny/src \
+	lib/tiny/test/double \
   src/app/common \
   test \
 
