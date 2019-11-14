@@ -8,6 +8,7 @@
 
 enum {
   period = 10,
+  startup_delay = 100,
 
   address = 0x1D,
 
@@ -130,6 +131,12 @@ static void initialize_accelerometer(lsm303d_t* self) {
     self);
 }
 
+static void startup_delay_complete(tiny_timer_group_t* timer_group, void* context) {
+  reinterpret(self, context, lsm303d_t*);
+  initialize_accelerometer(self);
+  arm_poll_timer(self, timer_group);
+}
+
 void lsm303d_init(lsm303d_t* self, tiny_timer_group_t* timer_group, i_tiny_i2c_t* i2c) {
   self->i2c = i2c;
   self->busy = false;
@@ -137,9 +144,7 @@ void lsm303d_init(lsm303d_t* self, tiny_timer_group_t* timer_group, i_tiny_i2c_t
 
   tiny_single_subscriber_event_init(&self->acceleration_update);
 
-  initialize_accelerometer(self);
-
-  arm_poll_timer(self, timer_group);
+  tiny_timer_start(timer_group, &self->timer, startup_delay, startup_delay_complete, self);
 }
 
 i_tiny_event_t* lsm303d_on_acceleration_update(lsm303d_t* self) {
