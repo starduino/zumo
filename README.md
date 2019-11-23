@@ -20,6 +20,9 @@ Note: don't use the built-in ST-Link because `openocd` doesn't like it.
 - https://tenbaht.github.io/sduino/hardware/w1209-thermostat/
 - https://vivonomicon.com/2018/07/15/the-w1209-a-sometimes-stm8-based-digital-thermostat/
 
+### Blue 207 (STM8S207RBT6 Development Board)
+- https://www.aliexpress.com/item/32955583919.html
+
 ## Programmer
 ### ST-Link v2 Programmer/Debugger
 - https://www.adafruit.com/product/2548
@@ -57,5 +60,6 @@ make <target>.mk upload
 - [STM8S103F3 Datasheet](https://www.st.com/resource/en/datasheet/stm8s103f3.pdf)
 - [STM8S105K4 Datasheet](https://www.st.com/resource/en/datasheet/stm8s105k4.pdf)
 - [STM8S105C6 Datasheet](https://www.st.com/resource/en/datasheet/stm8s105c6.pdf)
+- [STM8S207RB Datasheet](https://www.st.com/resource/en/datasheet/stm8s207rb.pdf)
 - [STM8S208RB Datasheet](https://www.st.com/resource/en/datasheet/stm8s208rb.pdf)
 - lujji's Bare metal programming: STM8 [part 1](https://lujji.github.io/blog/bare-metal-programming-stm8/), [part 2](https://lujji.github.io/blog/bare-metal-programming-stm8-part2/)
