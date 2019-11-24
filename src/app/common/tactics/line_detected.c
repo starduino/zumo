@@ -51,6 +51,13 @@ static void back_up_timer_expired(tiny_timer_group_t* group, void* context) {
     self->key_value_store,
     self->keys->key_right_motor,
     &right_power);
+
+  tiny_timer_start(
+    self->timer_group,
+    &self->stop_running_timer,
+    self->config->back_up_time + self->config->turn_time,
+    stop_running_timer_expired,
+    self);
 }
 
 static void data_changed(void* context, const void* _args) {
@@ -71,19 +78,12 @@ static void data_changed(void* context, const void* _args) {
         self->keys->key_right_motor,
         &power);
 
-    tiny_timer_start(
-      self->timer_group,
-      &self->back_up_timer,
-      self->config->back_up_time,
-      back_up_timer_expired,
-      self);
-
-    tiny_timer_start(
-      self->timer_group,
-      &self->stop_running_timer,
-      self->config->back_up_time + self->config->turn_time,
-      stop_running_timer_expired,
-      self);
+      tiny_timer_start(
+        self->timer_group,
+        &self->back_up_timer,
+        self->config->back_up_time,
+        back_up_timer_expired,
+        self);
     }
   }
 }
