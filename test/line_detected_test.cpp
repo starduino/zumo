@@ -26,7 +26,13 @@ enum {
   some_other_power = -55,
   back_up = motor_power_min,
   back_up_time = 70,
-  some_time_has_passed = 17
+  turn_time = 30,
+  some_time_has_passed = 17,
+  is_running = 0,
+  has_stopped,
+  near_wheel_power = 30,
+  far_wheel_power = 100,
+  a_long_time = 200
 };
 
 // clang-format off
@@ -67,6 +73,13 @@ static const line_detected_keys_t keys = {
   .key_tactic_stopped = key_tactic_stopped
 };
 
+static const line_detected_config_t config = {
+  .near_wheel_power = near_wheel_power,
+  .far_wheel_power = far_wheel_power,
+  .back_up_time = back_up_time,
+  .turn_time = turn_time,
+};
+
 TEST_GROUP(line_detected) {
   line_detected_t self;
 
@@ -88,7 +101,7 @@ TEST_GROUP(line_detected) {
   }
 
   void when_it_is_initialized() {
-    line_detected_init(&self, i_key_value_store, &keys, &timer_group);
+    line_detected_init(&self, i_key_value_store, &keys, &config, &timer_group);
   }
 
   void given_it_has_been_initialized() {
@@ -121,8 +134,16 @@ TEST_GROUP(line_detected) {
     tiny_key_value_store_write(i_key_value_store, key_left_line_detected, &detected);
   }
 
+  void given_the_left_line_has_been(bool detected) {
+    when_the_left_line_is(detected);
+  }
+
   void when_the_right_line_is(bool detected) {
     tiny_key_value_store_write(i_key_value_store, key_right_line_detected, &detected);
+  }
+
+  void given_the_right_line_has_been(bool detected) {
+    when_the_right_line_is(detected);
   }
 
   void the_left_motor_should_be_set_to(motor_power_t expected) {
@@ -137,14 +158,20 @@ TEST_GROUP(line_detected) {
     CHECK_EQUAL(expected, actual);
   }
 
+  void the_tactic_should_indicate_that_it(uint8_t expected) {
+    uint8_t actual;
+    tiny_key_value_store_read(i_key_value_store, key_tactic_stopped, &actual);
+    CHECK_EQUAL(expected, actual);
+  }
+
   void the_motors_should_be_turning(uint8_t direction) {
     if (direction == right) {
-      the_left_motor_should_be_set_to(100);
-      the_right_motor_should_be_set_to(30);
+      the_left_motor_should_be_set_to(far_wheel_power);
+      the_right_motor_should_be_set_to(near_wheel_power);
     }
     else {
-      the_left_motor_should_be_set_to(30);
-      the_right_motor_should_be_set_to(100);
+      the_left_motor_should_be_set_to(near_wheel_power);
+      the_right_motor_should_be_set_to(far_wheel_power);
     }
   }
 
@@ -191,6 +218,7 @@ TEST(line_detected, should_do_nothing_when_another_tactic_becomes_active) {
   given_the_right_motor_has_been_set_to(some_other_power);
 
   when_another_tactic_is_selected();
+  after(a_long_time);
   the_left_motor_should_be_set_to(some_power);
   the_right_motor_should_be_set_to(some_other_power);
 }
@@ -198,6 +226,7 @@ TEST(line_detected, should_do_nothing_when_another_tactic_becomes_active) {
 TEST(line_detected, should_turn_right_after_it_has_backed_up_when_the_left_line_is_detected) {
   given_it_has_been_initialized();
   after(some_time_has_passed);
+  given_the_left_line_has_been(detected);
   given_this_tactic_is_active();
 
   after(back_up_time - 1);
@@ -210,24 +239,46 @@ TEST(line_detected, should_turn_right_after_it_has_backed_up_when_the_left_line_
 
 TEST(line_detected, should_indicate_that_it_is_complete_after_it_has_finished_turning_right) {
   given_it_has_been_initialized();
+  after(some_time_has_passed);
+  given_the_left_line_has_been(detected);
   given_this_tactic_is_active();
 
-}
+  after(back_up_time);
+  the_tactic_should_indicate_that_it(is_running);
 
-TEST(line_detected, should_back_up_for_a_moment_when_the_right_line_is_detected) {
-  given_it_has_been_initialized();
-  given_this_tactic_is_active();
+  after(turn_time - 1);
+  the_tactic_should_indicate_that_it(is_running);
 
+  after(1);
+  the_tactic_should_indicate_that_it(has_stopped);
 }
 
 TEST(line_detected, should_turn_left_after_it_has_backed_up_when_the_right_line_is_detected) {
   given_it_has_been_initialized();
+  after(some_time_has_passed);
+  given_the_right_line_has_been(detected);
   given_this_tactic_is_active();
 
+  after(back_up_time - 1);
+  the_left_motor_should_be_set_to(back_up);
+  the_right_motor_should_be_set_to(back_up);
+
+  after(1);
+  the_motors_should_be_turning(left);
 }
 
 TEST(line_detected, should_indicate_that_it_is_complete_after_it_has_finished_turning_left) {
   given_it_has_been_initialized();
+  after(some_time_has_passed);
+  given_the_right_line_has_been(detected);
   given_this_tactic_is_active();
 
+  after(back_up_time);
+  the_tactic_should_indicate_that_it(is_running);
+
+  after(turn_time - 1);
+  the_tactic_should_indicate_that_it(is_running);
+
+  after(1);
+  the_tactic_should_indicate_that_it(has_stopped);
 }
