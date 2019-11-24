@@ -1,12 +1,6 @@
 /*!
  * @file
  * @brief
- *
- * PC6          => Left motor direction
- * PD3/TIM2_CH2 => Left motor PWM
- *
- * PC7          => Right motor direction
- * PA3/TIM2_CH3 => Right motor PWM
  */
 
 #ifndef motors_plugin_h

@@ -5,6 +5,7 @@ SRC_DIRS ?= \
 	lib/tiny/src \
 	lib/tiny/test/double \
   src/app/common \
+  src/app/modules \
   test \
 
 LDFLAGS := -lstdc++ -lCppUTest -lCppUTestExt -lm

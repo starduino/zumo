@@ -20,7 +20,7 @@ enum {
   in_front = enemy_location_front_center,
   in_front_left = enemy_location_front_left,
   in_front_right = enemy_location_front_right,
-  not_visible = enemy_location_unknown,
+  out_of_view = enemy_location_unknown,
   detected = true,
   been_detected = true
 };
@@ -79,20 +79,20 @@ TEST_GROUP(strategist) {
     tiny_key_value_store_write(i_key_value_store, key_initial_direction, &direction);
   }
 
-  void when_the_enemy_is(enemy_location_t location) {
+  void when_the_enemy_moves(enemy_location_t location) {
     tiny_key_value_store_write(i_key_value_store, key_enemy_location, &location);
   }
 
   void given_the_enemy_was(enemy_location_t location) {
-    when_the_enemy_is(location);
+    when_the_enemy_moves(location);
   }
 
-  void when_a_line_is(bool detected) {
+  void when_a_line_becomes(bool detected) {
     tiny_key_value_store_write(i_key_value_store, key_line_detected, &detected);
   }
 
   void given_a_line_has(bool detected) {
-    when_a_line_is(detected);
+    when_a_line_becomes(detected);
   }
 
   void when_the_tactic_stops() {
@@ -112,6 +112,10 @@ TEST_GROUP(strategist) {
     tiny_key_value_store_read(i_key_value_store, key_tactic, &actual);
     CHECK_EQUAL(expected, actual);
   }
+
+  void the_selected_tactic_should_become(tactic_t expected) {
+    the_selected_tactic_should_be(expected);
+  }
 };
 
 TEST(strategist, should_idle_on_init) {
@@ -125,7 +129,7 @@ TEST(strategist, should_seek_clockwise_when_the_robot_is_running_and_clockwise_i
   the_selected_tactic_should_be(tactic_idle);
 
   when_the_robot_starts_running();
-  the_selected_tactic_should_be(tactic_seek_clockwise);
+  the_selected_tactic_should_become(tactic_seek_clockwise);
 }
 
 TEST(strategist, should_seek_counterclockwise_when_the_robot_is_running_and_counterclockwise_is_selected) {
@@ -134,67 +138,67 @@ TEST(strategist, should_seek_counterclockwise_when_the_robot_is_running_and_coun
   the_selected_tactic_should_be(tactic_idle);
 
   when_the_robot_starts_running();
-  the_selected_tactic_should_be(tactic_seek_counterclockwise);
+  the_selected_tactic_should_become(tactic_seek_counterclockwise);
 }
 
-TEST(strategist, should_charge_when_the_enemy_is_detected) {
+TEST(strategist, should_charge_when_the_enemy_moves_detected) {
   given_it_has_been_initialized();
-  when_the_enemy_is(in_front);
-  the_selected_tactic_should_be(tactic_charge);
+  when_the_enemy_moves(in_front);
+  the_selected_tactic_should_become(tactic_charge);
 
-  when_the_enemy_is(in_front_left);
-  the_selected_tactic_should_be(tactic_charge);
+  when_the_enemy_moves(in_front_left);
+  the_selected_tactic_should_become(tactic_charge);
 
-  when_the_enemy_is(in_front_right);
-  the_selected_tactic_should_be(tactic_charge);
+  when_the_enemy_moves(in_front_right);
+  the_selected_tactic_should_become(tactic_charge);
 }
 
 TEST(strategist, should_seek_clockwise_when_the_enemy_was_last_seen_to_the_right) {
   given_it_has_been_initialized();
   given_the_enemy_was(in_front_right);
 
-  when_the_enemy_is(not_visible);
-  the_selected_tactic_should_be(tactic_seek_clockwise);
+  when_the_enemy_moves(out_of_view);
+  the_selected_tactic_should_become(tactic_seek_clockwise);
 }
 
 TEST(strategist, should_seek_counterclockwise_when_the_enemy_was_last_seen_to_the_left) {
   given_it_has_been_initialized();
   given_the_enemy_was(in_front_left);
 
-  when_the_enemy_is(not_visible);
-  the_selected_tactic_should_be(tactic_seek_counterclockwise);
+  when_the_enemy_moves(out_of_view);
+  the_selected_tactic_should_become(tactic_seek_counterclockwise);
 }
 
-TEST(strategist, should_stop_charging_when_a_line_is_detected) {
+TEST(strategist, should_stop_charging_when_a_line_becomes_detected) {
   given_it_has_been_initialized();
   given_the_enemy_was(in_front);
 
-  when_a_line_is(detected);
-  the_selected_tactic_should_be(tactic_avoid_line);
+  when_a_line_becomes(detected);
+  the_selected_tactic_should_become(tactic_avoid_line);
 }
 
-TEST(strategist, should_stop_charging_when_a_line_is_detected_while_the_enemy_is_left) {
+TEST(strategist, should_stop_charging_when_a_line_becomes_detected_while_the_enemy_is_left) {
   given_it_has_been_initialized();
   given_the_enemy_was(in_front_left);
 
-  when_a_line_is(detected);
-  the_selected_tactic_should_be(tactic_avoid_line);
+  when_a_line_becomes(detected);
+  the_selected_tactic_should_become(tactic_avoid_line);
 }
 
-TEST(strategist, should_stop_charging_when_a_line_is_detected_while_the_enemy_is_right) {
+TEST(strategist, should_stop_charging_when_a_line_becomes_detected_while_the_enemy_is_right) {
   given_it_has_been_initialized();
   given_the_enemy_was(in_front_left);
 
-  when_a_line_is(detected);
-  the_selected_tactic_should_be(tactic_avoid_line);
+  when_a_line_becomes(detected);
+  the_selected_tactic_should_become(tactic_avoid_line);
 }
 
-TEST(strategist, should_stop_charging_when_a_line_is_detected_while_the_enemy_is_not_visible) {
+TEST(strategist, should_stop_charging_when_a_line_becomes_detected_while_the_enemy_is_out_of_view) {
   given_it_has_been_initialized();
-  given_the_enemy_was(not_visible);
+  given_the_enemy_was(out_of_view);
 
-  when_a_line_is(detected);
-  the_selected_tactic_should_be(tactic_avoid_line);
+  when_a_line_becomes(detected);
+  the_selected_tactic_should_become(tactic_avoid_line);
 }
 
 TEST(strategist, should_continue_charging_when_line_avoidance_stops_running) {
@@ -203,34 +207,34 @@ TEST(strategist, should_continue_charging_when_line_avoidance_stops_running) {
   given_a_line_has(been_detected);
 
   when_the_tactic_stops();
-  the_selected_tactic_should_be(tactic_charge);
+  the_selected_tactic_should_become(tactic_charge);
 }
 
-TEST(strategist, should_continue_seeking_when_line_avoidance_stops_running_if_the_enemy_is_not_visible) {
+TEST(strategist, should_continue_seeking_when_line_avoidance_stops_running_if_the_enemy_is_out_of_view) {
   given_it_has_been_initialized();
   given_a_line_has(been_detected);
 
   when_the_tactic_stops();
-  the_selected_tactic_should_be(tactic_seek_counterclockwise);
+  the_selected_tactic_should_become(tactic_seek_counterclockwise);
 }
 
 TEST(strategist, should_continue_seeking_counterclockwise_when_line_avoidance_stops_running_and_the_enemy_was_last_seen_in_that_direction) {
   given_it_has_been_initialized();
   given_the_enemy_was(in_front_left);
-  given_the_enemy_was(not_visible);
+  given_the_enemy_was(out_of_view);
   given_a_line_has(been_detected);
 
   when_the_tactic_stops();
-  the_selected_tactic_should_be(tactic_seek_counterclockwise);
+  the_selected_tactic_should_become(tactic_seek_counterclockwise);
 }
 
 TEST(strategist, should_continue_seeking_clockwise_when_line_avoidance_stops_running_and_the_enemy_was_last_seen_in_that_direction) {
   given_it_has_been_initialized();
   given_the_enemy_was(in_front_right);
-  given_the_enemy_was(not_visible);
+  given_the_enemy_was(out_of_view);
   given_a_line_has(been_detected);
 
   when_the_tactic_stops();
-  the_selected_tactic_should_be(tactic_seek_clockwise);
+  the_selected_tactic_should_become(tactic_seek_clockwise);
 }
 

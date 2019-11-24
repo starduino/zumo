@@ -117,6 +117,20 @@
       "preLaunchTask": "debug-deps-w1209"
     },
     {
+      "name": "Blue 207",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/blue-207/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/blue-207",
+      "configFiles": [
+        "${workspaceRoot}/build/blue-207/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-blue-207"
+    },
+    {
       "name": "TDD",
       "type": "cppdbg",
       "request": "launch",

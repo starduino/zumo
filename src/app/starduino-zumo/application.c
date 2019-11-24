@@ -4,6 +4,7 @@
  */
 
 #include <stddef.h>
+#include <stdlib.h>
 #include "application.h"
 #include "tiny_utils.h"
 
@@ -13,16 +14,23 @@ static void derp_change(void* context, const void* _args) {
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
   reinterpret(store, context, i_tiny_key_value_store_t*);
 
-  if(args->key == key_right_line_detected) {
-    reinterpret(value, args->value, const uint8_t*);
-    motor_power_t power = *value * 10;
-    tiny_key_value_store_write(store, key_right_motor, &power);
-  }
-
-  if(args->key == key_left_line_detected) {
-    reinterpret(value, args->value, const uint8_t*);
-    motor_power_t power = *value * 10;
-    tiny_key_value_store_write(store, key_left_motor, &power);
+  if(args->key == key_acceleration) {
+    reinterpret(value, args->value, const acceleration_t*);
+    if(value->x > 10000) {
+      motor_power_t power = -30;
+      tiny_key_value_store_write(store, key_right_motor, &power);
+      tiny_key_value_store_write(store, key_left_motor, &power);
+    }
+    else if(value->x < -10000) {
+      motor_power_t power = 30;
+      tiny_key_value_store_write(store, key_right_motor, &power);
+      tiny_key_value_store_write(store, key_left_motor, &power);
+    }
+    else if(abs(value->y) > 10000) {
+      motor_power_t power = 0;
+      tiny_key_value_store_write(store, key_right_motor, &power);
+      tiny_key_value_store_write(store, key_left_motor, &power);
+    }
   }
 }
 
@@ -37,6 +45,7 @@ void application_init(application_t* self, tiny_timer_group_t* timer_group) {
 
   motors_plugin_init(&self->motors_plugin, store);
   line_sensors_plugin_init(&self->line_sensors_plugin, store, timer_group);
+  accelerometer_plugin_init(&self->accelerometer_plugin, store, timer_group);
 
   derp(store);
 }
