@@ -55,7 +55,7 @@ static void back_up_timer_expired(tiny_timer_group_t* group, void* context) {
   tiny_timer_start(
     self->timer_group,
     &self->stop_running_timer,
-    self->config->back_up_time + self->config->turn_time,
+    self->config->turn_time,
     stop_running_timer_expired,
     self);
 }
