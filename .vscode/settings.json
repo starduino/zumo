@@ -7,5 +7,11 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "tim4_system_tick.h": "c",
+    "application.h": "c",
+    "tiny_utils.h": "c",
+    "data_model.h": "c"
+  }
 }
