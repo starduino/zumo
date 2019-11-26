@@ -12,6 +12,9 @@
 #include "tiny_ram_key_value_store_macros.h"
 #include "motor_power.h"
 #include "acceleration.h"
+#include "tactic.h"
+#include "enemy_location.h"
+#include "direction.h"
 
 // clang-format off
 #define data_model_key_value_pairs(pair) \
@@ -19,7 +22,13 @@
   pair(key_right_motor,           motor_power_t) \
   pair(key_left_line_detected,    bool) \
   pair(key_right_line_detected,   bool) \
+  pair(key_line_detected,         bool) \
+  pair(key_robot_running,         bool) \
   pair(key_acceleration,          acceleration_t) \
+  pair(key_current_tactic,        tactic_t) \
+  pair(key_tactic_stopped,        bool) \
+  pair(key_enemy_location,        enemy_location_t) \
+  pair(key_initial_direction,     direction_t) \
 // clang-format on
 
 enumerate_ram_key_value_pairs(data_model_key_value_pairs);

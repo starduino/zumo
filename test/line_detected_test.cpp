@@ -43,7 +43,6 @@ enum {
   pair(key_left_line_detected,  bool) \
   pair(key_right_line_detected, bool) \
   pair(key_tactic_stopped,      uint8_t) \
-  pair(key_last_enemy_location, enemy_location_t) \
 // clang-format on
 
 enumerate_ram_key_value_pairs(data_model_key_value_pairs);
@@ -67,7 +66,6 @@ static const line_detected_keys_t keys = {
   .key_left_motor = key_left_motor,
   .key_right_motor = key_right_motor,
   .key_tactic = key_tactic,
-  .key_last_enemy_location = key_last_enemy_location,
   .key_left_line_detected = key_left_line_detected,
   .key_right_line_detected = key_right_line_detected,
   .key_tactic_stopped = key_tactic_stopped
