@@ -29,7 +29,6 @@
   pair(key_tactic_stopped,              bool) \
   pair(key_left_sensor_enemy_detected,  bool) \
   pair(key_right_sensor_enemy_detected, bool) \
-  pair(key_robot_running,               bool) \
   pair(key_enemy_location,              enemy_location_t) \
   pair(key_initial_direction,           direction_t) \
 // clang-format on
