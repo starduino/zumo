@@ -17,8 +17,8 @@ typedef struct {
 } charge_keys_t;
 
 typedef struct {
-  i_tiny_key_value_store_t* key_value_store;
   tiny_event_subscription_t on_change_subscription;
+  i_tiny_key_value_store_t* key_value_store;
   const charge_keys_t* keys;
 } charge_t;
 
