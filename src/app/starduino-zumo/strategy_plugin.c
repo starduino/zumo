@@ -6,7 +6,7 @@
 #include "strategy_plugin.h"
 #include "data_model.h"
 
-const strategist_keys_t strategist_keys = {
+static const strategist_keys_t strategist_keys = {
   .key_tactic = key_current_tactic,
   .key_enemy_location = key_enemy_location,
   .key_initial_direction = key_initial_direction,
@@ -15,7 +15,7 @@ const strategist_keys_t strategist_keys = {
   .key_tactic_stopped = key_tactic_stopped
 };
 
-const line_detected_keys_t line_detected_keys = {
+static const line_detected_keys_t line_detected_keys = {
   .key_left_motor = key_left_motor,
   .key_right_motor = key_right_motor,
   .key_tactic = key_current_tactic,
@@ -24,21 +24,21 @@ const line_detected_keys_t line_detected_keys = {
   .key_tactic_stopped = key_tactic_stopped
 };
 
-const line_detected_config_t line_detected_config = {
+static const line_detected_config_t line_detected_config = {
   .near_wheel_power = 30,
   .far_wheel_power = 100,
   .back_up_time = 200,
   .turn_time = 300
 };
 
-const charge_keys_t charge_keys = {
+static const charge_keys_t charge_keys = {
   .left_motor = key_left_motor,
   .right_motor = key_right_motor,
   .tactic = key_current_tactic,
   .enemy_location = key_enemy_location
 };
 
-const seeking_keys_t seeking_keys = {
+static const seeking_keys_t seeking_keys = {
   .left_motor = key_left_motor,
   .right_motor = key_right_motor,
   .tactic = key_current_tactic
