@@ -1,12 +1,11 @@
 /*!
  * @file
  * @brief
- *
- *
  */
 
 #ifndef start_running_h
 #define start_running_h
+
 #include "i_tiny_key_value_store.h"
 #include "tiny_timer.h"
 
