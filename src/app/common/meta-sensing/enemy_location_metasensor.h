@@ -5,6 +5,7 @@
 
 #ifndef enemy_location_metasensor_h
 #define enemy_location_metasensor_h
+
 #include "i_tiny_key_value_store.h"
 
 typedef struct {
