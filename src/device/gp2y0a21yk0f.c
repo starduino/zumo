@@ -7,8 +7,16 @@
 #include "lookup_table.h"
 #include "tiny_utils.h"
 
+#define Volts(x) (uint16_t)((x / 5) * UINT16_MAX)
+
 static const lookup_table_entry_t entries[] = {
-  { 0, 0 }
+  { Volts(0.5), 60 },
+  { Volts(0.75), 27 },
+  { Volts(1.0), 27 },
+  { Volts(1.5), 17 },
+  { Volts(2.0), 13 },
+  { Volts(2.5), 9 },
+  { Volts(3.0), 7 },
 };
 
 static const lookup_table_t lookup_table = {
