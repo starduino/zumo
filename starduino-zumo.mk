@@ -14,6 +14,7 @@ SRC_DIRS := \
   src/app/starduino-zumo \
 
 LIB_FILES := \
+  src/peripheral/adc1.c \
   src/peripheral/clock.c \
   src/peripheral/i2c.c \
   src/peripheral/pc5_heartbeat.c \

@@ -20,7 +20,6 @@ typedef struct {
 
 void distance_sensors_plugin_init(
   distance_sensors_plugin_t* self,
-  i_tiny_adc_group_t* adc_group,
   i_tiny_key_value_store_t* key_value_store,
   tiny_timer_group_t* timer_group);
 

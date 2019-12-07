@@ -7,6 +7,7 @@
 #include "distance_in_cm.h"
 #include "gp2y0a21yk0f.h"
 #include "data_model.h"
+#include "adc1.h"
 #include "tiny_utils.h"
 
 enum {
@@ -37,11 +38,10 @@ static void poll(tiny_timer_group_t* timer_group, void* context) {
 
 void distance_sensors_plugin_init(
   distance_sensors_plugin_t* self,
-  i_tiny_adc_group_t* adc_group,
   i_tiny_key_value_store_t* key_value_store,
   tiny_timer_group_t* timer_group) {
   self->key_value_store = key_value_store;
-  self->adc_group = adc_group;
+  self->adc_group = adc1_init();
 
   poll(timer_group, self);
 }
