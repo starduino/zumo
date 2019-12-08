@@ -11,6 +11,7 @@
 #include "pa3_heartbeat.h"
 #include "tiny_timer.h"
 #include "watchdog.h"
+#include "seven_segment_display.h"
 
 static tiny_timer_group_t timer_group;
 static tiny_timer_t timer;
@@ -28,6 +29,7 @@ void main(void) {
     clock_init();
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
     pa3_heartbeat_init(&timer_group);
+    seven_segment_display_init();
   }
   enableInterrupts();
 

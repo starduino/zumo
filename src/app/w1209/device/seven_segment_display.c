@@ -30,14 +30,14 @@ void seven_segment_display_init(void) {
   init_output(B, 5); // 2
   init_output(B, 4); // 3
 
-  write_output(D, 5, 1); // A
-  write_output(A, 2, 1); // B
-  write_output(C, 7, 1); // C
-  write_output(D, 3, 1); // D
-  write_output(D, 1, 1); // E
-  write_output(A, 1, 1); // F
-  write_output(C, 6, 1); // G
-  write_output(D, 2, 1); // P
+  write_output(D, 5, 0); // A
+  write_output(A, 2, 0); // B
+  write_output(C, 7, 0); // C
+  write_output(D, 3, 0); // D
+  write_output(D, 1, 0); // E
+  write_output(A, 1, 0); // F
+  write_output(C, 6, 0); // G
+  write_output(D, 2, 0); // P
 
   write_output(D, 4, 1); // 1
   write_output(B, 5, 1); // 2
