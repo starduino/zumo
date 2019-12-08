@@ -1,10 +1,10 @@
 TARGET = tiny
 BUILD_DIR = ./build/starduino-zumo
 
-DEVICE := stm8s105c6
-DEVICE_TYPE := STM8S105
+DEVICE := stm8s207c8
+DEVICE_TYPE := STM8S207
 STLINK := stlinkv2
-OPENOCD_CFG := openocd/stm8s105.cfg
+OPENOCD_CFG := openocd/stm8s207.cfg
 
 MAIN := src/app/starduino-zumo/main.c
 
