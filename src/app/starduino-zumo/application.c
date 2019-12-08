@@ -6,7 +6,6 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "application.h"
-#include "tiny_utils.h"
 
 void application_init(application_t* self, tiny_timer_group_t* timer_group) {
   data_model_init(&self->data_model);

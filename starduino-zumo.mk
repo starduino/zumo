@@ -1,7 +1,7 @@
 TARGET = tiny
 BUILD_DIR = ./build/starduino-zumo
 
-DEVICE := stm8s207c8
+DEVICE := stm8s207cb
 DEVICE_TYPE := STM8S207
 STLINK := stlinkv2
 OPENOCD_CFG := openocd/stm8s207.cfg
@@ -14,7 +14,7 @@ SRC_DIRS := \
   src/app/starduino-zumo \
 
 LIB_FILES := \
-  src/peripheral/adc1.c \
+  src/peripheral/adc2.c \
   src/peripheral/clock.c \
   src/peripheral/i2c.c \
   src/peripheral/pc5_heartbeat.c \
