@@ -56,7 +56,7 @@ LD := sdcc
 AR := sdar
 
 .PHONY: all
-all: $(BUILD_DIR)/$(TARGET)-debug.elf $(BUILD_DIR)/$(TARGET).hex
+all: $(BUILD_DIR)/$(TARGET).hex
 
 $(BUILD_DIR)/arm-none-eabi-gdb:
 	@$(MKDIR_P) $(dir $@)
@@ -83,15 +83,19 @@ erase:
 	@stm8flash -c $(STLINK) -p $(DEVICE) -s opt -w $(BUILD_DIR)/rop.bin
 	@stm8flash -c $(STLINK) -p $(DEVICE) -u
 
-$(BUILD_DIR)/$(TARGET).hex: $(MAIN) $(OBJS) $(BUILD_DIR)/$(TARGET).lib
+TARGET_HEX_DEPS:=$(MAIN) $(OBJS) $(BUILD_DIR)/$(TARGET).lib
+$(BUILD_DIR)/$(TARGET).hex: $(TARGET_HEX_DEPS)
 	@echo Linking $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(LD) $(LDFLAGS) --out-fmt-ihx $^ -o $@
+	@$(LD) $(LDFLAGS) -MM --out-fmt-ihx $(TARGET_HEX_DEPS) -o $@.d && sed -i '1s:^[^:]*:$@:' $@.d
+	@$(LD) $(LDFLAGS) --out-fmt-ihx $(TARGET_HEX_DEPS) -o $@
 
-$(BUILD_DIR)/$(TARGET)-debug.elf: $(MAIN) $(DEBUG_OBJS) $(BUILD_DIR)/$(TARGET)-debug.lib
+TARGET_DEBUG_ELF_DEPS:=$(MAIN) $(DEBUG_OBJS) $(BUILD_DIR)/$(TARGET)-debug.lib
+$(BUILD_DIR)/$(TARGET)-debug.elf: $(TARGET_DEBUG_ELF_DEPS)
 	@echo Linking $(notdir $@)...
 	@$(MKDIR_P) $(dir $@)
-	@$(LD) $(LDFLAGS) --out-fmt-elf $^ -o $@
+	@$(LD) $(LDFLAGS) -MM --out-fmt-elf $(TARGET_DEBUG_ELF_DEPS) -o $@.d && sed -i '1s:^[^:]*:$@:' $@.d
+	@$(LD) $(LDFLAGS) --out-fmt-elf $(TARGET_DEBUG_ELF_DEPS) -o $@
 
 $(BUILD_DIR)/$(TARGET).lib: $(LIB_OBJS)
 	@echo Building $(notdir $@)...
@@ -133,3 +137,5 @@ clean:
 MKDIR_P ?= mkdir -p
 
 -include $(DEPS) $(DEBUG_DEPS) $(LIB_DEPS) $(DEBUG_LIB_DEPS)
+-include $(BUILD_DIR)/$(TARGET).hex.d
+-include $(BUILD_DIR)/$(TARGET)-debug.elf.d

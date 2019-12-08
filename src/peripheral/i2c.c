@@ -7,6 +7,7 @@
  * - https://blog.mark-stevens.co.uk/2015/05/stm8s-i2c-master-devices/
  */
 
+#include <stddef.h>
 #include "stm8s_clk.h"
 #include "stm8s_i2c.h"
 #include "i2c.h"
@@ -14,8 +15,7 @@
 enum {
   mode_write = I2C_DIRECTION_TX,
   mode_write_with_restart = 0x10 + I2C_DIRECTION_TX,
-  mode_read = I2C_DIRECTION_RX,
-  mode_read_with_restart = 0x10 + I2C_DIRECTION_RX,
+  mode_read = I2C_DIRECTION_RX
 };
 typedef uint8_t mode_t;
 
@@ -37,8 +37,16 @@ static struct {
   void* context;
 } self;
 
+static void reset(i_tiny_i2c_t* _self);
+
 void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
   volatile uint8_t dummy;
+
+  // In the case of a restart, TXE and BTF will still be set until start is sent
+  // so we can't really trust SR1 while start is pending
+  if(I2C->CR2 & I2C_CR2_START) {
+    return;
+  }
 
   // Start condition generated
   if(I2C->SR1 & I2C_SR1_SB) {
@@ -53,17 +61,34 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
 
   // Address sent
   if(I2C->SR1 & I2C_SR1_ADDR) {
-    // Clear address sent event by reading SR1 and then SR3
-    dummy = I2C->SR1;
-    dummy = I2C->SR3;
+    if(self.mode == mode_read) {
+      if(self.buffer_size == 1) {
+        I2C->CR2 &= ~I2C_CR2_ACK;
 
-    if(self.buffer_size == 1) {
-      if(self.mode == mode_read) {
-        I2C->CR2 = I2C_CR2_STOP;
+        // Clear address sent event by reading SR1 and then SR3
+        dummy = I2C->SR1;
+        dummy = I2C->SR3;
+
+        I2C->CR2 |= I2C_CR2_STOP;
       }
-      else if(self.mode == mode_read_with_restart) {
+      else if(self.buffer_size == 2) {
+        // Clear address sent event by reading SR1 and then SR3
+        dummy = I2C->SR1;
+        dummy = I2C->SR3;
+
+        I2C->CR2 |= I2C_CR2_POS;
         I2C->CR2 &= ~I2C_CR2_ACK;
       }
+      else {
+        // Clear address sent event by reading SR1 and then SR3
+        dummy = I2C->SR1;
+        dummy = I2C->SR3;
+      }
+    }
+    else {
+      // Clear address sent event by reading SR1 and then SR3
+      dummy = I2C->SR1;
+      dummy = I2C->SR3;
     }
 
     return;
@@ -85,34 +110,61 @@ void i2c_isr(void) __interrupt(ITC_IRQ_I2C) {
     return;
   }
 
-  // Receive buffer is not empty
-  if(I2C->SR1 & I2C_SR1_RXNE) {
-    do {
-      // Clear event by reading received byte
+  // Byte transfer finished
+  if(I2C->SR1 & I2C_SR1_BTF) {
+    if(self.buffer_size == 2) {
+      I2C->CR2 |= I2C_CR2_STOP;
+
+      self.buffer.read[self.buffer_offset++] = I2C->DR;
       self.buffer.read[self.buffer_offset++] = I2C->DR;
 
-      if(self.buffer_offset + 1 == self.buffer_size) {
-        if(self.mode == mode_read) {
-          I2C->CR2 = I2C_CR2_STOP;
-        }
-        else {
-          I2C->CR2 = 0;
-          self.callback(self.context, true);
-        }
+      self.callback(self.context, true);
+      return;
+    }
+    else if(self.buffer_size > 2) {
+      if((self.buffer_size - self.buffer_offset) > 3) {
+        self.buffer.read[self.buffer_offset++] = I2C->DR;
+        return;
       }
-      else if(self.buffer_offset == self.buffer_size) {
-        self.callback(self.context, true);
+      else if((self.buffer_size - self.buffer_offset) == 3) {
+        // Re-enable buffer interrupts so that we can receive the last byte using
+        // RXNE
+        I2C->ITR |= I2C_ITR_ITBUFEN;
+
+        I2C->CR2 &= ~I2C_CR2_ACK;
+
+        // Timing is sensitive here so read into temporaries
+        volatile uint8_t byte1 = I2C->DR;
+        I2C->CR2 |= I2C_CR2_STOP;
+        volatile uint8_t byte2 = I2C->DR;
+
+        self.buffer.read[self.buffer_offset++] = byte1;
+        self.buffer.read[self.buffer_offset++] = byte2;
+
+        return;
       }
+    }
+  }
 
-      // Byte transfer finished
-      // This means we got two bytes before we could read the first out
-    } while(I2C->SR1 & I2C_SR1_BTF);
-
-    return;
+  // Receive buffer is not empty
+  if(I2C->SR1 & I2C_SR1_RXNE) {
+    if(self.buffer_size == 1) {
+      self.buffer.read[0] = I2C->DR;
+      self.callback(self.context, true);
+      return;
+    }
+    else if(self.buffer_size == 2) {
+      return;
+    }
+    else if((self.buffer_size - self.buffer_offset) == 1) {
+      self.buffer.read[self.buffer_offset++] = I2C->DR;
+      self.callback(self.context, true);
+      return;
+    }
   }
 
   // If we're still here something is wrong so let's reset and tell the client
-  I2C->CR2 = I2C_CR2_SWRST;
+  reset(NULL);
   self.callback(self.context, false);
 }
 
@@ -147,7 +199,6 @@ static void write(
 static void read(
   i_tiny_i2c_t* _self,
   uint8_t address,
-  bool prepare_for_restart,
   uint8_t* buffer,
   uint8_t buffer_size,
   tiny_i2c_callback_t callback,
@@ -158,11 +209,16 @@ static void read(
   self.buffer.read = buffer;
   self.buffer_size = buffer_size;
   self.buffer_offset = 0;
-  self.mode = prepare_for_restart ? mode_read_with_restart : mode_read;
+  self.mode = mode_read;
   self.callback = callback;
   self.context = context;
 
   wait_for_stop_condition_to_be_sent();
+
+  if(buffer_size > 2) {
+    // Disable buffer interrupts because we will be using BTF instead
+    I2C->ITR &= ~I2C_ITR_ITBUFEN;
+  }
 
   I2C->CR2 = I2C_CR2_START | I2C_CR2_ACK;
 }
@@ -170,6 +226,9 @@ static void read(
 static void configure_peripheral(void) {
   // Disable peripheral
   I2C->CR1 = 0;
+
+  // Clear software reset
+  I2C->CR2 = 0;
 
   // Un-gate clock for I2C
   CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_I2C);
@@ -207,7 +266,7 @@ static void reset(i_tiny_i2c_t* _self) {
 static const i_tiny_i2c_api_t api = { write, read, reset };
 
 i_tiny_i2c_t* i2c_init(void) {
-  configure_peripheral();
+  reset(NULL);
 
   self.interface.api = &api;
 

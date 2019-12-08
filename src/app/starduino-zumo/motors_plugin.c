@@ -11,20 +11,20 @@
 #include "tiny_utils.h"
 
 enum {
-  pin_6 = 1 << 6,
-  pin_7 = 1 << 7,
+  pin_0 = 1 << 0,
+  pin_3 = 1 << 3,
 
   period = 800
 };
 
 typedef volatile uint8_t reg_t;
 
-static void update_output(motor_power_t power, uint8_t pin, reg_t* ccrh, reg_t* ccrl) {
+static void update_output(motor_power_t power, reg_t* direction, uint8_t direction_pin, reg_t* ccrh, reg_t* ccrl) {
   if(power >= 0) {
-    GPIOC->ODR &= ~pin;
+    *direction &= ~direction_pin;
   }
   else {
-    GPIOC->ODR |= pin;
+    *direction |= direction_pin;
     power = -power;
   }
 
@@ -41,23 +41,23 @@ static void data_changed(void* context, const void* _args) {
 
   switch(args->key) {
     case key_left_motor:
-      update_output(*power, pin_6, &TIM2->CCR2H, &TIM2->CCR2L);
+      update_output(*power, &GPIOD->ODR, pin_0, &TIM2->CCR2H, &TIM2->CCR2L);
       break;
 
     case key_right_motor:
-      update_output(*power, pin_7, &TIM2->CCR1H, &TIM2->CCR1L);
+      update_output(*power, &GPIOE->ODR, pin_3, &TIM2->CCR1H, &TIM2->CCR1L);
       break;
   }
 }
 
 static void initialize_gpio(void) {
-  // PC6 push/pull output
-  GPIOC->CR1 |= pin_6;
-  GPIOC->DDR |= pin_6;
+  // PD0 push/pull output
+  GPIOD->CR1 |= pin_0;
+  GPIOD->DDR |= pin_0;
 
   // PC7 push/pull output
-  GPIOC->CR1 |= pin_7;
-  GPIOC->DDR |= pin_7;
+  GPIOE->CR1 |= pin_3;
+  GPIOE->DDR |= pin_3;
 }
 
 static void initialize_tim2(void) {

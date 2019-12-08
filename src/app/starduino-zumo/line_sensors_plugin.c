@@ -15,27 +15,27 @@ enum {
   setup_period = 2,
   sample_period = 9,
   input_filter_8 = (8 << 4),
-  pin_1 = (1 << 1),
-  pin_2 = (1 << 2),
+  pin_3 = (1 << 3),
+  pin_4 = (1 << 4),
   line_threshold = 6000
 };
 
 static void start_charge(void) {
   // Configure pins as push pull outputs, output high
-  GPIOC->CR1 |= pin_1 | pin_2;
-  GPIOC->ODR |= pin_1 | pin_2;
-  GPIOC->DDR |= pin_1 | pin_2;
+  GPIOC->CR1 |= pin_3 | pin_4;
+  GPIOC->ODR |= pin_3 | pin_4;
+  GPIOC->DDR |= pin_3 | pin_4;
 }
 
 static void stop_charge(void) {
   // Configure pins as floating inputs
-  GPIOC->CR1 &= ~(pin_1 | pin_2);
-  GPIOC->DDR &= ~(pin_1 | pin_2);
+  GPIOC->CR1 &= ~(pin_3 | pin_4);
+  GPIOC->DDR &= ~(pin_3 | pin_4);
 }
 
 static void start_capture(void) {
   // Enable capture on channels 1 and 2
-  TIM1->CCER1 |= TIM1_CCER1_CC1E | TIM1_CCER1_CC2E;
+  TIM1->CCER2 |= TIM1_CCER2_CC3E | TIM1_CCER2_CC4E;
 
   // Reset counter
   TIM1->CNTRH = 0;
@@ -47,28 +47,22 @@ static void start_capture(void) {
 
 static void end_capture(void) {
   // Disable capture on channels 1 and 2
-  TIM1->CCER1 &= ~(TIM1_CCER1_CC1E | TIM1_CCER1_CC2E);
+  TIM1->CCER2 &= ~(TIM1_CCER2_CC3E | TIM1_CCER2_CC4E);
 
   // Stop counting
   TIM1->CR1 &= ~TIM1_CR1_CEN;
 }
 
-// static bool line;
-
 static void measure(line_sensors_plugin_t* self) {
-  bool line;
+  bool line_detected;
 
-  uint16_t left_count = (TIM1->CCR1H << 8) + TIM1->CCR1L;
-  line = left_count < line_threshold;
-  tiny_key_value_store_write(self->key_value_store, key_left_line_detected, &line);
+  uint16_t left_count = (TIM1->CCR3H << 8) + TIM1->CCR3L;
+  line_detected = left_count < line_threshold;
+  tiny_key_value_store_write(self->key_value_store, key_left_line_detected, &line_detected);
 
-  uint16_t right_count = (TIM1->CCR2H << 8) + TIM1->CCR2L;
-  line = right_count < line_threshold;
-  tiny_key_value_store_write(self->key_value_store, key_right_line_detected, &line);
-
-  // line = !line;
-  // tiny_key_value_store_write(self->key_value_store, key_left_line_detected, &line);
-  // tiny_key_value_store_write(self->key_value_store, key_right_line_detected, &line);
+  uint16_t right_count = (TIM1->CCR4H << 8) + TIM1->CCR4L;
+  line_detected = right_count < line_threshold;
+  tiny_key_value_store_write(self->key_value_store, key_right_line_detected, &line_detected);
 }
 
 static void sample(tiny_timer_group_t* timer_group, void* context);
@@ -104,20 +98,20 @@ static void initialize_tim1(void) {
   TIM1->CR1 = TIM1_CR1_UDIS;
 }
 
-static void initialize_tim1_channel1(void) {
+static void initialize_tim1_channel3(void) {
   // Direct input capture, filter of 8, no prescalar
-  TIM1->CCMR1 = TIM1_ICSELECTION_DIRECTTI | input_filter_8;
+  TIM1->CCMR3 = TIM1_ICSELECTION_DIRECTTI | input_filter_8;
 
   // Trigger on falling edge
-  TIM1->CCER1 |= TIM1_CCER1_CC1P;
+  TIM1->CCER2 |= TIM1_CCER2_CC3P;
 }
 
 static void initialize_tim1_channel2(void) {
   // Direct input capture, filter of 8, no prescalar
-  TIM1->CCMR2 = TIM1_ICSELECTION_DIRECTTI | input_filter_8;
+  TIM1->CCMR4 = TIM1_ICSELECTION_DIRECTTI | input_filter_8;
 
   // Trigger on falling edge
-  TIM1->CCER1 |= TIM1_CCER1_CC2P;
+  TIM1->CCER2 |= TIM1_CCER2_CC4P;
 }
 
 void line_sensors_plugin_init(
@@ -127,7 +121,7 @@ void line_sensors_plugin_init(
   self->key_value_store = key_value_store;
 
   initialize_tim1();
-  initialize_tim1_channel1();
+  initialize_tim1_channel3();
   initialize_tim1_channel2();
 
   setup(timer_group, self);

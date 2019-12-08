@@ -115,6 +115,44 @@
         "${workspaceRoot}/build/w1209/openocd.cfg"
       ],
       "preLaunchTask": "debug-deps-w1209"
+    },
+    {
+      "name": "Blue 207",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/blue-207/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/blue-207",
+      "configFiles": [
+        "${workspaceRoot}/build/blue-207/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-blue-207"
+    },
+    {
+      "name": "TDD",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/tiny_tests",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "osx": {
+        "MIMode": "lldb"
+      },
+      "linux": {
+        "MIMode": "gdb"
+      },
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }
