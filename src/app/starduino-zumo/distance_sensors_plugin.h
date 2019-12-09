@@ -1,8 +1,6 @@
 /*!
  * @file
  * @brief
- *
- * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
 #ifndef distance_sensors_plugin_h

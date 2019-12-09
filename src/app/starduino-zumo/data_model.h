@@ -16,6 +16,7 @@
 #include "enemy_location.h"
 #include "direction.h"
 #include "distance_in_cm.h"
+#include "buzzer_frequency.h"
 
 // clang-format off
 #define data_model_key_value_pairs(pair) \
@@ -35,6 +36,7 @@
   pair(key_left_sensor_distance,        distance_in_cm_t) \
   pair(key_center_sensor_distance,      distance_in_cm_t) \
   pair(key_right_sensor_distance,       distance_in_cm_t) \
+  pair(key_buzzer_frequency,            buzzer_frequency_t) \
 // clang-format on
 
 enumerate_ram_key_value_pairs(data_model_key_value_pairs);
