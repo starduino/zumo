@@ -89,18 +89,32 @@
       "preLaunchTask": "debug-deps-discovery"
     },
     {
-      "name": "Nucleo",
+      "name": "Nucleo-32",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/nucleo/tiny-debug.elf",
+      "executable": "${workspaceFolder}/build/nucleo-32/tiny-debug.elf",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",
       "runToMain": true,
-      "armToolchainPath": "${workspaceRoot}/build/nucleo",
+      "armToolchainPath": "${workspaceRoot}/build/nucleo-32",
       "configFiles": [
-        "${workspaceRoot}/build/nucleo/openocd.cfg"
+        "${workspaceRoot}/build/nucleo-32/openocd.cfg"
       ],
-      "preLaunchTask": "debug-deps-nucleo"
+      "preLaunchTask": "debug-deps-nucleo-32"
+    },
+    {
+      "name": "Nucleo-64",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/nucleo-64/tiny-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceRoot}/build/nucleo-64",
+      "configFiles": [
+        "${workspaceRoot}/build/nucleo-64/openocd.cfg"
+      ],
+      "preLaunchTask": "debug-deps-nucleo-64"
     },
     {
       "name": "W1209",

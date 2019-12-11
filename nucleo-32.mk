@@ -1,17 +1,17 @@
 TARGET = tiny
-BUILD_DIR = ./build/nucleo
+BUILD_DIR = ./build/nucleo-32
 
-DEVICE := stm8s208rb
-DEVICE_TYPE := STM8S208
+DEVICE := stm8s207k8
+DEVICE_TYPE := STM8S207
 STLINK := stlinkv21
-OPENOCD_CFG := openocd/stm8s208.cfg
+OPENOCD_CFG := openocd/stm8s207.cfg
 
-MAIN := src/app/nucleo/main.c
+MAIN := src/app/nucleo-32/main.c
 
 SRC_FILES := \
 
 SRC_DIRS := \
-  src/app/nucleo \
+  src/app/nucleo-32 \
 
 LIB_FILES := \
   src/peripheral/clock.c \
@@ -21,7 +21,6 @@ LIB_FILES := \
 
 LIB_DIRS := \
   lib/tiny/src \
-  src/device \
 
 INC_DIRS := \
   lib/stm8/inc \

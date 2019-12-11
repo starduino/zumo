@@ -13,7 +13,10 @@ Sample project using [`tiny`](https://github.com/ryanplusplus/tiny) with STM8.
 
 Note: don't use the built-in ST-Link because `openocd` doesn't like it.
 
-### Nucleo (NUCLEO-8S208RB)
+### Nucleo-32 (NUCLEO-8S207K8)
+- https://www.st.com/en/evaluation-tools/nucleo-8s207k8.html
+
+### Nucleo-64 (NUCLEO-8S208RB)
 - https://www.st.com/en/evaluation-tools/nucleo-8s208rb.html
 
 ### W1209 (STM8S003F3P6 Thermostat)
@@ -60,6 +63,6 @@ make <target>.mk upload
 - [STM8S103F3 Datasheet](https://www.st.com/resource/en/datasheet/stm8s103f3.pdf)
 - [STM8S105K4 Datasheet](https://www.st.com/resource/en/datasheet/stm8s105k4.pdf)
 - [STM8S105C6 Datasheet](https://www.st.com/resource/en/datasheet/stm8s105c6.pdf)
-- [STM8S207RB Datasheet](https://www.st.com/resource/en/datasheet/stm8s207rb.pdf)
-- [STM8S208RB Datasheet](https://www.st.com/resource/en/datasheet/stm8s208rb.pdf)
+- [STM8S207xx Datasheet](https://www.st.com/resource/en/datasheet/stm8s207rb.pdf)
+- [STM8S208xx Datasheet](https://www.st.com/resource/en/datasheet/stm8s208rb.pdf)
 - lujji's Bare metal programming: STM8 [part 1](https://lujji.github.io/blog/bare-metal-programming-stm8/), [part 2](https://lujji.github.io/blog/bare-metal-programming-stm8-part2/)
