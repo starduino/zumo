@@ -10,15 +10,24 @@ enum {
   size = FLASH_DATA_END_PHYSICAL_ADDRESS - FLASH_DATA_START_PHYSICAL_ADDRESS + 1
 };
 
-static void unlock_eeprom(void) {
+inline void unlock_eeprom(void) {
   FLASH->DUKR = FLASH_RASS_KEY2;
   FLASH->DUKR = FLASH_RASS_KEY1;
   while(!(FLASH->IAPSR & FLASH_FLAG_DUL)) {
   }
 }
 
-static void lock_eeprom(void) {
+inline void lock_eeprom(void) {
   FLASH->IAPSR &= ~FLASH_FLAG_DUL;
+}
+
+inline void write(uint16_t offset, const void* buffer, uint16_t buffer_size) {
+  for(uint16_t i = 0; i < buffer_size; i++) {
+    *((uint8_t*)FLASH_DATA_START_PHYSICAL_ADDRESS + offset + i) = ((const uint8_t*)buffer)[i];
+  }
+
+  while(!(FLASH->IAPSR & FLASH_FLAG_EOP)) {
+  }
 }
 
 uint16_t eeprom_size(void) {
@@ -31,8 +40,6 @@ const void* eeprom_read(uint16_t offset) {
 
 void eeprom_write(uint16_t offset, const void* buffer, uint16_t buffer_size) {
   unlock_eeprom();
-  for(uint16_t i = 0; i < buffer_size; i++) {
-    *((uint8_t*)FLASH_DATA_START_PHYSICAL_ADDRESS + offset + i) = ((const uint8_t*)buffer)[i];
-  }
+  write(offset, buffer, buffer_size);
   lock_eeprom();
 }
