@@ -18,6 +18,7 @@ LIB_FILES := \
   src/peripheral/clock.c \
   src/peripheral/i2c.c \
   src/peripheral/pa3_heartbeat.c \
+  src/peripheral/pc5_heartbeat.c \
   src/peripheral/tim4_system_tick.c \
   src/peripheral/watchdog.c \
 

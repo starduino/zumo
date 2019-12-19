@@ -9,6 +9,7 @@
 #include "clock.h"
 #include "tim4_system_tick.h"
 #include "pa3_heartbeat.h"
+#include "pc5_heartbeat.h"
 #include "tiny_timer.h"
 #include "watchdog.h"
 #include "data_model.h"
@@ -31,6 +32,7 @@ void main(void) {
     clock_init();
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
     pa3_heartbeat_init(&timer_group);
+    pc5_heartbeat_init(&timer_group);
     application_init(&application, &timer_group);
   }
   enableInterrupts();
