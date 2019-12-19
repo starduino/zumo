@@ -17,6 +17,16 @@ enum {
   right_channel = 3
 };
 
+static const detect_enemy_keys_t detect_left_keys = {
+  .sensor_distance = key_left_sensor_distance,
+  .sensor_active = key_left_sensor_enemy_detected
+};
+
+static const detect_enemy_keys_t detect_right_keys = {
+  .sensor_distance = key_right_sensor_distance,
+  .sensor_active = key_right_sensor_enemy_detected
+};
+
 static void read_sensor(
   distance_sensors_plugin_t* self,
   tiny_adc_channel_t channel,
@@ -44,4 +54,6 @@ void distance_sensors_plugin_init(
   self->adc_group = adc2_init();
 
   poll(timer_group, self);
+  detect_enemy_init(&self->detect_left, key_value_store, &detect_left_keys);
+  detect_enemy_init(&self->detect_right, key_value_store, &detect_right_keys);
 }
