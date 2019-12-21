@@ -14,6 +14,7 @@ enum {
 static void data_changed(void* context, const void* _args) {
   reinterpret(self, context, detect_enemy_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
+
   if(args->key == self->keys->sensor_distance) {
     reinterpret(distance, args->value, distance_in_cm_t*);
     bool is_active = *distance <= threshold;
