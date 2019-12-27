@@ -16,9 +16,9 @@ static void data_changed(void* context, const void* _args) {
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
 
   if(args->key == self->keys->sensor_distance) {
-    reinterpret(distance, args->value, distance_in_cm_t*);
+    reinterpret(distance, args->value, const distance_in_cm_t*);
     bool is_active = *distance <= threshold;
-    tiny_key_value_store_write(self->key_value_store, self->keys->sensor_active, &is_active);
+    tiny_key_value_store_write(self->key_value_store, self->keys->enemy_detected, &is_active);
   }
 }
 

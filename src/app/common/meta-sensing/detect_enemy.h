@@ -10,7 +10,7 @@
 
 typedef struct {
   tiny_key_value_store_key_t sensor_distance;
-  tiny_key_value_store_key_t sensor_active;
+  tiny_key_value_store_key_t enemy_detected;
 } detect_enemy_keys_t;
 
 typedef struct {
