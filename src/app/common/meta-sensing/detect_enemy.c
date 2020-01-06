@@ -8,7 +8,7 @@
 #include "tiny_utils.h"
 
 enum {
-  threshold = 20
+  threshold = 30
 };
 
 static void data_changed(void* context, const void* _args) {
