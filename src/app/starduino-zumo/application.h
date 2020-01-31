@@ -15,6 +15,7 @@
 #include "buzzer_plugin.h"
 #include "strategy_plugin.h"
 #include "metasensor_plugin.h"
+#include "tactic_feedback_plugin.h"
 
 typedef struct {
   data_model_t data_model;
@@ -25,6 +26,7 @@ typedef struct {
   buzzer_plugin_t buzzer_plugin;
   strategy_plugin_t strategy_plugin;
   metasensor_plugin_t metasensor_plugin;
+  tactic_feedback_plugin_t tactic_feedback_plugin;
 } application_t;
 
 void application_init(application_t* self, tiny_timer_group_t* timer_group);
