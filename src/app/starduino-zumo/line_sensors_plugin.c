@@ -54,15 +54,16 @@ static void end_capture(void) {
 }
 
 static void measure(line_sensors_plugin_t* self) {
-  bool line_detected;
-
   uint16_t left_count = (TIM1->CCR3H << 8) + TIM1->CCR3L;
-  line_detected = left_count < line_threshold;
-  tiny_key_value_store_write(self->key_value_store, key_left_line_detected, &line_detected);
+  bool left_line_detected = left_count < line_threshold;
+  tiny_key_value_store_write(self->key_value_store, key_left_line_detected, &left_line_detected);
 
   uint16_t right_count = (TIM1->CCR4H << 8) + TIM1->CCR4L;
-  line_detected = right_count < line_threshold;
-  tiny_key_value_store_write(self->key_value_store, key_right_line_detected, &line_detected);
+  bool right_line_detected = right_count < line_threshold;
+  tiny_key_value_store_write(self->key_value_store, key_right_line_detected, &right_line_detected);
+
+  bool line_detected = left_line_detected || right_line_detected;
+  tiny_key_value_store_write(self->key_value_store, key_line_detected, &line_detected);
 }
 
 static void sample(tiny_timer_group_t* timer_group, void* context);

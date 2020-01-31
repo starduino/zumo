@@ -33,20 +33,29 @@ static void update_output(motor_power_t power, reg_t* direction, uint8_t directi
   *ccrl = compare & 0xFF;
 }
 
-static void data_changed(void* context, const void* _args) {
-  (void)context;
+static bool the_robot_is_running(motors_plugin_t* self) {
+  bool is_running;
+  tiny_key_value_store_read(
+    self->key_value_store,
+    key_robot_running,
+    &is_running);
+  return is_running;
+}
 
+static void data_changed(void* self, const void* _args) {
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
   reinterpret(power, args->value, const motor_power_t*);
 
-  switch(args->key) {
-    case key_left_motor:
-      update_output(*power, &GPIOD->ODR, pin_0, &TIM2->CCR2H, &TIM2->CCR2L);
-      break;
+  if(the_robot_is_running(self)) {
+    switch(args->key) {
+      case key_left_motor:
+        update_output(*power, &GPIOD->ODR, pin_0, &TIM2->CCR2H, &TIM2->CCR2L);
+        break;
 
-    case key_right_motor:
-      update_output(*power, &GPIOE->ODR, pin_3, &TIM2->CCR1H, &TIM2->CCR1L);
-      break;
+      case key_right_motor:
+        update_output(*power, &GPIOE->ODR, pin_3, &TIM2->CCR1H, &TIM2->CCR1L);
+        break;
+    }
   }
 }
 
@@ -104,6 +113,7 @@ void initialize_tim2_channel1(void) {
 }
 
 void motors_plugin_init(motors_plugin_t* self, i_tiny_key_value_store_t* key_value_store) {
+  self->key_value_store = key_value_store;
   initialize_gpio();
   initialize_tim2();
   initialize_tim2_channel2();

@@ -12,10 +12,25 @@
 
 enum {
   period = 100,
-  left_channel = 1,
+  left_channel = 3,
   center_channel = 2,
-  right_channel = 3
+  right_channel = 4
 };
+
+static const detect_enemy_keys_t detect_left_keys = {
+  .sensor_distance = key_left_sensor_distance,
+  .enemy_detected = key_left_sensor_enemy_detected
+};
+
+static const detect_enemy_keys_t detect_right_keys = {
+  .sensor_distance = key_right_sensor_distance,
+  .enemy_detected = key_right_sensor_enemy_detected
+};
+
+static volatile tiny_adc_counts_t temp[6] = { 0 };
+static volatile distance_in_cm_t temp2[6] = { 0 };
+static volatile distance_in_cm_t temp3[6] = { 0 };
+static volatile uint8_t i = 0;
 
 static void read_sensor(
   distance_sensors_plugin_t* self,
@@ -24,6 +39,10 @@ static void read_sensor(
   tiny_adc_counts_t counts = tiny_adc_group_read(self->adc_group, channel);
   distance_in_cm_t distance = gp2y0a21yk0f_counts_to_distance(counts);
   tiny_key_value_store_write(self->key_value_store, key, &distance);
+  // if(channel == 5) {
+  temp[channel] = counts;
+  temp2[channel] = distance;
+  // }
 }
 
 static void poll(tiny_timer_group_t* timer_group, void* context) {
@@ -44,4 +63,6 @@ void distance_sensors_plugin_init(
   self->adc_group = adc2_init();
 
   poll(timer_group, self);
+  detect_enemy_init(&self->detect_left, key_value_store, &detect_left_keys);
+  detect_enemy_init(&self->detect_right, key_value_store, &detect_right_keys);
 }
