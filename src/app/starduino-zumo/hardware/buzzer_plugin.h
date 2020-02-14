@@ -1,8 +1,6 @@
 /*!
  * @file
  * @brief
- *
- * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
 #ifndef buzzer_plugin_h

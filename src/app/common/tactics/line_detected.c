@@ -10,7 +10,7 @@
 static void stop_running_timer_expired(tiny_timer_group_t* group, void* context) {
   reinterpret(self, context, line_detected_t*);
   (void)group;
-  bool stopped;
+  uint8_t stopped;
   tiny_key_value_store_read(
     self->key_value_store,
     self->keys->key_tactic_stopped,

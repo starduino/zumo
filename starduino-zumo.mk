@@ -11,7 +11,8 @@ MAIN := src/app/starduino-zumo/main.c
 SRC_FILES := \
 
 SRC_DIRS := \
-  src/app/starduino-zumo \
+  src/app/starduino-zumo/application \
+  src/app/starduino-zumo/hardware \
 
 LIB_FILES := \
   src/peripheral/adc2.c \

@@ -30,7 +30,7 @@ enum {
   some_time_has_passed = 17,
   is_running = 0,
   has_stopped,
-  near_wheel_power = 30,
+  near_wheel_power = -30,
   far_wheel_power = 100,
   a_long_time = 200
 };
