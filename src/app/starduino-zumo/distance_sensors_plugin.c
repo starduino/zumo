@@ -12,9 +12,9 @@
 
 enum {
   period = 100,
-  left_channel = 3,
-  center_channel = 2,
-  right_channel = 4
+  left_channel = 2,
+  center_channel = 4, // this is unused currently
+  right_channel = 3
 };
 
 static const detect_enemy_keys_t detect_left_keys = {

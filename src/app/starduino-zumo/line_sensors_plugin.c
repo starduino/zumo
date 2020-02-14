@@ -17,7 +17,7 @@ enum {
   input_filter_8 = (8 << 4),
   pin_3 = (1 << 3),
   pin_4 = (1 << 4),
-  line_threshold = 6000
+  line_threshold = 10000
 };
 
 static void start_charge(void) {
@@ -53,6 +53,8 @@ static void end_capture(void) {
   TIM1->CR1 &= ~TIM1_CR1_CEN;
 }
 
+static volatile uint16_t a;
+static volatile uint16_t b;
 static void measure(line_sensors_plugin_t* self) {
   uint16_t left_count = (TIM1->CCR3H << 8) + TIM1->CCR3L;
   bool left_line_detected = left_count < line_threshold;
@@ -62,6 +64,8 @@ static void measure(line_sensors_plugin_t* self) {
   bool right_line_detected = right_count < line_threshold;
   tiny_key_value_store_write(self->key_value_store, key_right_line_detected, &right_line_detected);
 
+  a = left_count;
+  b = right_count;
   bool line_detected = left_line_detected || right_line_detected;
   tiny_key_value_store_write(self->key_value_store, key_line_detected, &line_detected);
 }

@@ -8,7 +8,7 @@
 #include "tiny_utils.h"
 
 enum {
-  half_period = 250
+  half_period = 50
 };
 
 static const buzzer_frequency_t base_frequency = 440;
