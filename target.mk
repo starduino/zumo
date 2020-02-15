@@ -1,28 +1,32 @@
-TARGET = tiny
-BUILD_DIR = ./build/blue-zumo
+TARGET = zumo
+BUILD_DIR = ./build/target
 
-DEVICE := stm8s103f3
-DEVICE_TYPE := STM8S103
+DEVICE := stm8s207cb
+DEVICE_TYPE := STM8S207
 STLINK := stlinkv2
-OPENOCD_CFG := openocd/stm8s103.cfg
+OPENOCD_CFG := openocd/stm8s207.cfg
 
-MAIN := src/app/blue-zumo/main.c
+MAIN := src/main.c
 
 SRC_FILES := \
 
 SRC_DIRS := \
-  src/app/blue-zumo \
+  src/application \
+  src/bsp \
+	src/common \
+  src/device \
 
 LIB_FILES := \
+  src/peripheral/adc2.c \
   src/peripheral/clock.c \
   src/peripheral/i2c.c \
+  src/peripheral/pa3_heartbeat.c \
   src/peripheral/pc5_heartbeat.c \
   src/peripheral/tim4_system_tick.c \
   src/peripheral/watchdog.c \
 
 LIB_DIRS := \
   lib/tiny/src \
-  src/device \
 
 INC_DIRS := \
   lib/stm8/inc \

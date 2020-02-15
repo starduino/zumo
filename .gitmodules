@@ -4,6 +4,3 @@
 [submodule "lib/stm8"]
 	path = lib/stm8
 	url = https://github.com/ryanplusplus/stm8s-header
-[submodule "lib/atomthreads"]
-	path = lib/atomthreads
-	url = https://github.com/kelvinlawson/atomthreads

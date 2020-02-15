@@ -1,11 +1,18 @@
-TARGET ?= tiny_tests
-BUILD_DIR ?= ./build
+TARGET ?= zumo_tests
+BUILD_DIR ?= ./build/test
 
 SRC_DIRS ?= \
   lib/tiny/src \
   lib/tiny/test/double \
-  src/app/common \
+  src/common \
+  src/application \
   test \
+
+INC_DIRS ?= \
+  src/bsp \
+  src/device \
+  src/double/inc \
+  src/peripheral \
 
 LDFLAGS := -lstdc++ -lCppUTest -lCppUTestExt -lm
 
