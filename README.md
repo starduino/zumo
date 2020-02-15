@@ -55,9 +55,9 @@ make -f test.mk
 | PC3      | 4        | TIM1_CH1   | Left line sensor       |
 | PC4      | 5        | TIM1_CH2   | Right line sensor      |
 | PD2      | 6        | TIM3_CH1   | Buzzer                 |
-| ?        | ?        | AN2        | Left distance sensor   |
-| ?        | ?        | AN4        | Center distance sensor |
-| ?        | ?        | AN3        | Right distance sensor  |
+| PB3      | ?        | AN2        | Left distance sensor   |
+| N/A      | N/A      | AN4        | Center distance sensor |
+| PB2      | ?        | AN3        | Right distance sensor  |
 
 ## Resources
 - [STM8S/STM8AF Reference Manual](https://www.st.com/resource/en/reference_manual/cd00190271.pdf)
