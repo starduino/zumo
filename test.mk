@@ -1,9 +1,11 @@
 TARGET ?= zumo_tests
 BUILD_DIR ?= ./build/test
+STM8_TINY = lib/stm8-tiny
+TINY = $(STM8_TINY)/lib/tiny
 
 SRC_DIRS ?= \
-  lib/tiny/src \
-  lib/tiny/test/double \
+  $(TINY)/src \
+  $(TINY)/test/double \
   src/common \
   src/application \
   test \
@@ -12,7 +14,7 @@ INC_DIRS ?= \
   src/bsp \
   src/device \
   src/double/inc \
-  src/peripheral \
+  $(STM8_TINY)/src/peripheral \
 
 LDFLAGS := -lstdc++ -lCppUTest -lCppUTestExt -lm
 

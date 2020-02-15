@@ -1,5 +1,7 @@
 TARGET = zumo
 BUILD_DIR = ./build/target
+STM8_TINY = lib/stm8-tiny
+TINY = $(STM8_TINY)/lib/tiny
 
 DEVICE := stm8s207cb
 DEVICE_TYPE := STM8S207
@@ -17,19 +19,19 @@ SRC_DIRS := \
   src/device \
 
 LIB_FILES := \
-  src/peripheral/adc2.c \
-  src/peripheral/clock.c \
-  src/peripheral/i2c.c \
-  src/peripheral/pa3_heartbeat.c \
-  src/peripheral/pc5_heartbeat.c \
-  src/peripheral/tim4_system_tick.c \
-  src/peripheral/watchdog.c \
+  $(STM8_TINY)/src/peripheral/adc2.c \
+  $(STM8_TINY)/src/peripheral/clock.c \
+  $(STM8_TINY)/src/peripheral/i2c.c \
+  $(STM8_TINY)/src/peripheral/pa3_heartbeat.c \
+  $(STM8_TINY)/src/peripheral/pc5_heartbeat.c \
+  $(STM8_TINY)/src/peripheral/tim4_system_tick.c \
+  $(STM8_TINY)/src/peripheral/watchdog.c \
 
 LIB_DIRS := \
-  lib/tiny/src \
+  $(TINY)/src \
 
 INC_DIRS := \
   lib/stm8/inc \
-  src/peripheral \
+  $(STM8_TINY)/src/peripheral \
 
 include makefile-worker.mk
