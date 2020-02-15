@@ -14,9 +14,7 @@ SRC_FILES := \
 
 SRC_DIRS := \
   src/application \
-  src/bsp \
-	src/common \
-  src/device \
+  src/hardware \
 
 LIB_FILES := \
   $(STM8_TINY)/src/peripheral/adc2.c \

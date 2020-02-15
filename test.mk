@@ -6,13 +6,13 @@ TINY = $(STM8_TINY)/lib/tiny
 SRC_DIRS ?= \
   $(TINY)/src \
   $(TINY)/test/double \
-  src/common \
   src/application \
   test \
 
 INC_DIRS ?= \
-  src/bsp \
-  src/device \
+  src/hardware \
+  src/hardware/plugin \
+  src/hardware/device \
   src/double/inc \
   $(STM8_TINY)/src/peripheral \
 
