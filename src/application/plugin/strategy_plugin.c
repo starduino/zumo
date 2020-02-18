@@ -25,10 +25,10 @@ static const line_detected_keys_t line_detected_keys = {
 };
 
 static const line_detected_config_t line_detected_config = {
-  .near_wheel_power = 30,
-  .far_wheel_power = 100,
-  .back_up_time = 200,
-  .turn_time = 300
+  .near_wheel_power = 100,
+  .far_wheel_power = -100,
+  .back_up_time = 300,
+  .turn_time = 1000
 };
 
 static const charge_keys_t charge_keys = {

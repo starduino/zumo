@@ -42,6 +42,15 @@ static bool the_enemy_is_visible(strategist_t* self) {
   return location != enemy_location_unknown;
 }
 
+static bool the_current_tactic_is(strategist_t* self, tactic_t expected) {
+  tactic_t actual;
+  tiny_key_value_store_read(
+    self->key_value_store,
+    self->keys->key_enemy_location,
+    &actual);
+  return expected == actual;
+}
+
 static void data_changed(void* context, const void* _args) {
   reinterpret(self, context, strategist_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
@@ -49,12 +58,14 @@ static void data_changed(void* context, const void* _args) {
   if(args->key == self->keys->key_enemy_location) {
     reinterpret(location, args->value, const enemy_location_t*);
 
-    if(*location == enemy_location_unknown) {
-      choose_seeking_tactic(self);
-    }
-    else {
-      change_tactic_to(self, tactic_charge);
-      self->previous_location = *location;
+    if(!the_current_tactic_is(self, tactic_avoid_line)) {
+      if(*location == enemy_location_unknown) {
+        choose_seeking_tactic(self);
+      }
+      else {
+        change_tactic_to(self, tactic_charge);
+        self->previous_location = *location;
+      }
     }
   }
   else if(args->key == self->keys->key_robot_running) {

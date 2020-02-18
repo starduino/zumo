@@ -40,12 +40,12 @@ static void back_up_timer_expired(tiny_timer_group_t* group, void* context) {
   motor_power_t right_power;
 
   if(the_left_line_was_detected(self)) {
-    left_power = 100;
-    right_power = -30;
+    left_power = self->config->near_wheel_power;
+    right_power = self->config->far_wheel_power;
   }
   else {
-    left_power = -30;
-    right_power = 100;
+    left_power = self->config->far_wheel_power;
+    right_power = self->config->near_wheel_power;
   }
 
   tiny_key_value_store_write(

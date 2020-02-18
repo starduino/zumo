@@ -9,7 +9,7 @@
 #include "motor_power.h"
 
 enum {
-  near_wheel_power = 30,
+  near_wheel_power = 40,
   far_wheel_power = 100
 };
 

@@ -10,9 +10,7 @@
 #include "motor_power.h"
 
 enum {
-  near_wheel_power = 30,
-  far_wheel_power = 100,
-  reduced_charge = 80,
+  reduced_charge = 50,
   charge = 100,
   toward_the_left = enemy_location_front_left,
   toward_the_right = enemy_location_front_right
