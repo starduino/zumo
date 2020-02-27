@@ -30,8 +30,8 @@ enum {
   some_time_has_passed = 17,
   is_running = 0,
   has_stopped,
-  near_wheel_power = -30,
-  far_wheel_power = 100,
+  near_wheel_power = 100,
+  far_wheel_power = -100,
   a_long_time = 200
 };
 
@@ -164,12 +164,12 @@ TEST_GROUP(line_detected) {
 
   void the_motors_should_be_turning(uint8_t direction) {
     if (direction == right) {
-      the_left_motor_should_be_set_to(far_wheel_power);
-      the_right_motor_should_be_set_to(near_wheel_power);
-    }
-    else {
       the_left_motor_should_be_set_to(near_wheel_power);
       the_right_motor_should_be_set_to(far_wheel_power);
+    }
+    else {
+      the_left_motor_should_be_set_to(far_wheel_power);
+      the_right_motor_should_be_set_to(near_wheel_power);
     }
   }
 
@@ -227,6 +227,9 @@ TEST(line_detected, should_turn_right_after_it_has_backed_up_when_the_left_line_
   given_the_left_line_has_been(detected);
   given_this_tactic_is_active();
 
+  the_left_motor_should_be_set_to(back_up);
+  the_right_motor_should_be_set_to(back_up);
+
   after(back_up_time - 1);
   the_left_motor_should_be_set_to(back_up);
   the_right_motor_should_be_set_to(back_up);
@@ -256,6 +259,9 @@ TEST(line_detected, should_turn_left_after_it_has_backed_up_when_the_right_line_
   after(some_time_has_passed);
   given_the_right_line_has_been(detected);
   given_this_tactic_is_active();
+
+  the_left_motor_should_be_set_to(back_up);
+  the_right_motor_should_be_set_to(back_up);
 
   after(back_up_time - 1);
   the_left_motor_should_be_set_to(back_up);
