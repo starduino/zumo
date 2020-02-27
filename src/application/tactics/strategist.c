@@ -46,7 +46,7 @@ static bool the_current_tactic_is(strategist_t* self, tactic_t expected) {
   tactic_t actual;
   tiny_key_value_store_read(
     self->key_value_store,
-    self->keys->key_enemy_location,
+    self->keys->key_tactic,
     &actual);
   return expected == actual;
 }

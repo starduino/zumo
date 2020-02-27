@@ -7,6 +7,7 @@ extern "C" {
 #include "application.h"
 #include "tiny_utils.h"
 #include "tactic.h"
+#include "tuning.h"
 #include "data_model.h"
 }
 
@@ -16,7 +17,7 @@ extern "C" {
 
 enum {
   startup_delay = 5 * 1000,
-  line_avoidance_maneuver_time = 500 + 1 // why? no one knows... or cares
+  line_avoidance_maneuver_time = line_detection_back_up_time + line_detection_turn_time + 1 // why? no one knows... or cares
 };
 
 TEST_GROUP(application) {

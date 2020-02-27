@@ -5,6 +5,7 @@
 
 #include "strategy_plugin.h"
 #include "data_model.h"
+#include "tuning.h"
 
 static const strategist_keys_t strategist_keys = {
   .key_tactic = key_current_tactic,
@@ -27,8 +28,8 @@ static const line_detected_keys_t line_detected_keys = {
 static const line_detected_config_t line_detected_config = {
   .near_wheel_power = 100,
   .far_wheel_power = -100,
-  .back_up_time = 300,
-  .turn_time = 1000
+  .back_up_time = line_detection_back_up_time,
+  .turn_time = line_detection_turn_time
 };
 
 static const charge_keys_t charge_keys = {

@@ -16,7 +16,7 @@ extern "C" {
 #include "CppUTestExt/MockSupport.h"
 
 enum {
-  near_wheel_power = 30,
+  near_wheel_power = 40,
   far_wheel_power = 100,
   some_power = 77,
   some_other_power = -22,

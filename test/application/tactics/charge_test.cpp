@@ -20,7 +20,7 @@ enum {
   near_wheel_power = 30,
   far_wheel_power = 100,
   charge = 100,
-  a_reduced_charge = 80,
+  a_reduced_charge = 50,
   some_power = 77,
   some_other_power = -22,
   some_other_tactic = tactic_avoid_line,
