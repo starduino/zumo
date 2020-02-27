@@ -10,6 +10,7 @@ extern "C" {
 #include "tiny_ram_key_value_store.h"
 #include "tiny_utils.h"
 #include "tactic.h"
+#include "tuning.h"
 #include "enemy_location.h"
 }
 
@@ -19,8 +20,8 @@ extern "C" {
 enum {
   near_wheel_power = 30,
   far_wheel_power = 100,
-  charge = 100,
-  a_reduced_charge = 50,
+  charge = charge_full_power,
+  a_reduced_charge = charge_reduced_power,
   some_power = 77,
   some_other_power = -22,
   some_other_tactic = tactic_avoid_line,

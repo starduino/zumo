@@ -6,11 +6,12 @@
 #include "seeking.h"
 #include "tactic.h"
 #include "tiny_utils.h"
+#include "tuning.h"
 #include "motor_power.h"
 
 enum {
-  near_wheel_power = 40,
-  far_wheel_power = 100
+  near_wheel_power = seeking_near_wheel_power,
+  far_wheel_power = seeking_far_wheel_power
 };
 
 static void set_right_motor_to(seeking_t* self, motor_power_t power) {

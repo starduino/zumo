@@ -10,14 +10,15 @@ extern "C" {
 #include "tiny_ram_key_value_store.h"
 #include "tiny_utils.h"
 #include "tactic.h"
+#include "tuning.h"
 }
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
 enum {
-  near_wheel_power = 40,
-  far_wheel_power = 100,
+  near_wheel_power = seeking_near_wheel_power,
+  far_wheel_power = seeking_far_wheel_power,
   some_power = 77,
   some_other_power = -22,
   some_other_tactic = tactic_charge
