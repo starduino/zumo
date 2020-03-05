@@ -36,7 +36,8 @@ static void read_sensor(
   distance_in_cm_t distance = gp2y0a21yk0f_counts_to_distance(counts);
   tiny_key_value_store_write(self->key_value_store, key, &distance);
   if(channel == left_channel) {
-    tiny_key_value_store_write(self->key_value_store, key_knob_counts, &distance);
+    tiny_key_value_store_write(self->key_value_store, key_knob_counts, &counts);
+    c = counts;
   }
 }
 
