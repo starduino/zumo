@@ -38,8 +38,22 @@ static const seeking_keys_t seeking_keys = {
   .tactic = key_current_tactic
 };
 
+static const spin_on_init_keys_t spin_on_init_keys = {
+  .left_motor = key_left_motor,
+  .right_motor = key_right_motor,
+  .knob_counts = key_knob_counts,
+  .tactic = key_current_tactic,
+  .tactic_stopped = key_tactic_stopped
+};
+
 void strategy_plugin_init(strategy_plugin_t* self, i_tiny_key_value_store_t* key_value_store, tiny_timer_group_t* timer_group) {
   strategist_init(&self->strategist, key_value_store, &strategist_keys);
+
+  spin_on_init_init(
+    &self->spin_on_init,
+    key_value_store,
+    &spin_on_init_keys,
+    timer_group);
 
   line_detected_init(
     &self->line_detected,

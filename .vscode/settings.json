@@ -7,5 +7,10 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "tuning.h": "c",
+    "tiny_utils.h": "c",
+    "cstdio": "c"
+  }
 }

@@ -43,7 +43,7 @@ make -f test.mk
 
 ## Pinout
 | STM8 Pin | Zumo Pin | Peripheral | Function               |
-|----------|----------|------------|------------------------|
+| -------- | -------- | ---------- | ---------------------- |
 | PA3      | N/A      | GPIO       | Heartbeat LED          |
 | PE1      | SCL      | I2C SCL    | I2C SCL                |
 | PE2      | SDA      | I2C SDA    | I2C SDA                |
@@ -58,6 +58,7 @@ make -f test.mk
 | PB3      | ?        | AN2        | Left distance sensor   |
 | N/A      | N/A      | AN4        | Center distance sensor |
 | PB2      | ?        | AN3        | Right distance sensor  |
+| PC7      | 12       | GPIO       | Configuration pin      |
 
 ## Resources
 - [STM8S/STM8AF Reference Manual](https://www.st.com/resource/en/reference_manual/cd00190271.pdf)
