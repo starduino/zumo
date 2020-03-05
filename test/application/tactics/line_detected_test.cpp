@@ -225,6 +225,7 @@ TEST(line_detected, should_turn_right_after_it_has_backed_up_when_the_left_line_
   the_right_motor_should_be_set_to(back_up);
 
   after(back_up_time - 1);
+  given_the_left_line_has_been(not_detected);
   the_left_motor_should_be_set_to(back_up);
   the_right_motor_should_be_set_to(back_up);
 
@@ -258,6 +259,7 @@ TEST(line_detected, should_turn_left_after_it_has_backed_up_when_the_right_line_
   the_right_motor_should_be_set_to(back_up);
 
   after(back_up_time - 1);
+  given_the_right_line_has_been(not_detected);
   the_left_motor_should_be_set_to(back_up);
   the_right_motor_should_be_set_to(back_up);
 

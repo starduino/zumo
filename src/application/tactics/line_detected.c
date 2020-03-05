@@ -40,7 +40,7 @@ static void back_up_timer_expired(tiny_timer_group_t* group, void* context) {
   motor_power_t left_power;
   motor_power_t right_power;
 
-  if(the_left_line_was_detected(self)) {
+  if(self->left_line_was_detected) {
     left_power = line_detection_near_wheel_power;
     right_power = line_detection_far_wheel_power;
   }
@@ -76,6 +76,7 @@ static void data_changed(void* context, const void* _args) {
 
     if(*tactic == tactic_avoid_line) {
       motor_power_t power = motor_power_min;
+      self->left_line_was_detected = the_left_line_was_detected(self);
       tiny_key_value_store_write(
         self->key_value_store,
         self->keys->key_left_motor,
