@@ -32,7 +32,7 @@ CXXFLAGS +=
 .PHONY: test
 test: $(BUILD_DIR)/$(TARGET)
 	@echo Running tests...
-	@$(BUILD_DIR)/$(TARGET)
+	@$<
 
 $(BUILD_DIR)/$(TARGET): $(OBJS)
 	@echo Linking $@...
@@ -58,6 +58,9 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 clean:
 	@echo Cleaning...
 	@$(RM) -rf $(BUILD_DIR)
+
+.PHONY: debug-deps
+debug-deps: $(BUILD_DIR)/$(TARGET)
 
 MKDIR_P ?= mkdir -p
 
