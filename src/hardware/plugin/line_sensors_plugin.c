@@ -53,19 +53,31 @@ static void end_capture(void) {
   TIM1->CR1 &= ~TIM1_CR1_CEN;
 }
 
-static volatile uint16_t a;
-static volatile uint16_t b;
+static volatile uint8_t left_number_detected;
+static volatile uint8_t right_number_detected;
 static void measure(line_sensors_plugin_t* self) {
   uint16_t left_count = (TIM1->CCR3H << 8) + TIM1->CCR3L;
   bool left_line_detected = left_count < line_threshold;
+  if(left_line_detected) {
+    left_number_detected++;
+    left_line_detected = left_number_detected > 2;
+  }
+  else {
+    left_number_detected = 0;
+  }
   tiny_key_value_store_write(self->key_value_store, key_left_line_detected, &left_line_detected);
 
   uint16_t right_count = (TIM1->CCR4H << 8) + TIM1->CCR4L;
   bool right_line_detected = right_count < line_threshold;
+  if(right_line_detected) {
+    right_number_detected++;
+    right_line_detected = right_number_detected > 2;
+  }
+  else {
+    right_number_detected = 0;
+  }
   tiny_key_value_store_write(self->key_value_store, key_right_line_detected, &right_line_detected);
 
-  a = left_count;
-  b = right_count;
   bool line_detected = left_line_detected || right_line_detected;
   tiny_key_value_store_write(self->key_value_store, key_line_detected, &line_detected);
 }

@@ -28,7 +28,10 @@ static void update_output(motor_power_t power, reg_t* direction, uint8_t directi
     power = -power;
   }
 
-  uint16_t compare = (period * power) / motor_power_max;
+  uint16_t compare = ((uint64_t)period * power) / motor_power_max;
+  (void)compare;
+  (void)ccrh;
+  (void)ccrl;
   *ccrh = compare >> 8;
   *ccrl = compare & 0xFF;
 }

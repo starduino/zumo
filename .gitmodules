@@ -3,4 +3,4 @@
 	url = https://github.com/ryanplusplus/stm8s-header
 [submodule "lib/stm8-tiny"]
 	path = lib/stm8-tiny
-	url = https://github/com/ryanplusplus/stm8-tiny
+	url = https://github.com/ryanplusplus/stm8-tiny

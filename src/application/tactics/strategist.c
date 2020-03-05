@@ -16,15 +16,7 @@ static void change_tactic_to(strategist_t* self, tactic_t tactic) {
 }
 
 static void choose_initial_tactic(strategist_t* self) {
-  direction_t initial_direction;
-  tactic_t tactic;
-  tiny_key_value_store_read(
-    self->key_value_store,
-    self->keys->key_initial_direction,
-    &initial_direction);
-
-  tactic = initial_direction == direction_clockwise ? tactic_seek_clockwise : tactic_seek_counterclockwise;
-  change_tactic_to(self, tactic);
+  change_tactic_to(self, tactic_init);
 }
 
 static void choose_seeking_tactic(strategist_t* self) {
@@ -42,34 +34,54 @@ static bool the_enemy_is_visible(strategist_t* self) {
   return location != enemy_location_unknown;
 }
 
+static bool the_current_tactic_is(strategist_t* self, tactic_t expected) {
+  tactic_t actual;
+  tiny_key_value_store_read(
+    self->key_value_store,
+    self->keys->key_tactic,
+    &actual);
+  return expected == actual;
+}
+
 static void data_changed(void* context, const void* _args) {
   reinterpret(self, context, strategist_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
 
   if(args->key == self->keys->key_enemy_location) {
-    reinterpret(location, args->value, const enemy_location_t*);
+    // reinterpret(location, args->value, const enemy_location_t*);
 
-    if(*location == enemy_location_unknown) {
-      choose_seeking_tactic(self);
-    }
-    else {
-      change_tactic_to(self, tactic_charge);
-      self->previous_location = *location;
-    }
+    // if(!the_current_tactic_is(self, tactic_avoid_line)) {
+    //   if(*location == enemy_location_unknown) {
+    //     choose_seeking_tactic(self);
+    //   }
+    //   else {
+    //     change_tactic_to(self, tactic_charge);
+    //     self->previous_location = *location;
+    //   }
+    // }
   }
   else if(args->key == self->keys->key_robot_running) {
     choose_initial_tactic(self);
   }
-  else if(args->key == self->keys->key_line_detected) {
-    change_tactic_to(self, tactic_avoid_line);
-  }
+  // else if(args->key == self->keys->key_line_detected) {
+  //   change_tactic_to(self, tactic_avoid_line);
+  // }
   else if(args->key == self->keys->key_tactic_stopped) {
-    if(the_enemy_is_visible(self)) {
-      change_tactic_to(self, tactic_charge);
-    }
-    else {
-      choose_seeking_tactic(self);
-    }
+    int8_t power = 0;
+    tiny_key_value_store_write(
+      self->key_value_store,
+      0,
+      &power);
+    tiny_key_value_store_write(
+      self->key_value_store,
+      1,
+      &power);
+    //   if(the_enemy_is_visible(self)) {
+    //     change_tactic_to(self, tactic_charge);
+    //   }
+    //   else {
+    //     choose_seeking_tactic(self);
+    //   }
   }
 }
 

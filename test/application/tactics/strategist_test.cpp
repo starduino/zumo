@@ -123,22 +123,12 @@ TEST(strategist, should_idle_on_init) {
   the_selected_tactic_should_be(tactic_idle);
 }
 
-TEST(strategist, should_seek_clockwise_when_the_robot_is_running_and_clockwise_is_selected) {
+TEST(strategist, should_start_the_init_tactic_when_the_robot_is_running) {
   given_it_has_been_initialized();
-  given_the_initial_seeking_direction_is(direction_clockwise);
   the_selected_tactic_should_be(tactic_idle);
 
   when_the_robot_starts_running();
-  the_selected_tactic_should_become(tactic_seek_clockwise);
-}
-
-TEST(strategist, should_seek_counterclockwise_when_the_robot_is_running_and_counterclockwise_is_selected) {
-  given_it_has_been_initialized();
-  given_the_initial_seeking_direction_is(direction_counterclockwise);
-  the_selected_tactic_should_be(tactic_idle);
-
-  when_the_robot_starts_running();
-  the_selected_tactic_should_become(tactic_seek_counterclockwise);
+  the_selected_tactic_should_become(tactic_init);
 }
 
 TEST(strategist, should_charge_when_the_enemy_moves_detected) {
@@ -151,6 +141,19 @@ TEST(strategist, should_charge_when_the_enemy_moves_detected) {
 
   when_the_enemy_moves(in_front_right);
   the_selected_tactic_should_become(tactic_charge);
+}
+
+TEST(strategist, should_not_charge_when_the_enemy_is_detected_during_line_avoidance) {
+  given_it_has_been_initialized();
+  given_a_line_has(been_detected);
+  when_the_enemy_moves(in_front);
+  the_selected_tactic_should_be(tactic_avoid_line);
+
+  when_the_enemy_moves(in_front_left);
+  the_selected_tactic_should_be(tactic_avoid_line);
+
+  when_the_enemy_moves(in_front_right);
+  the_selected_tactic_should_be(tactic_avoid_line);
 }
 
 TEST(strategist, should_seek_clockwise_when_the_enemy_was_last_seen_to_the_right) {

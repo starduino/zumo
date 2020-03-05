@@ -27,6 +27,7 @@ static const detect_enemy_keys_t detect_right_keys = {
   .enemy_detected = key_right_sensor_enemy_detected
 };
 
+static volatile tiny_adc_counts_t c;
 static void read_sensor(
   distance_sensors_plugin_t* self,
   tiny_adc_channel_t channel,
@@ -34,6 +35,10 @@ static void read_sensor(
   tiny_adc_counts_t counts = tiny_adc_group_read(self->adc_group, channel);
   distance_in_cm_t distance = gp2y0a21yk0f_counts_to_distance(counts);
   tiny_key_value_store_write(self->key_value_store, key, &distance);
+  if(channel == left_channel) {
+    tiny_key_value_store_write(self->key_value_store, key_knob_counts, &counts);
+    c = counts;
+  }
 }
 
 static void poll(tiny_timer_group_t* timer_group, void* context) {
