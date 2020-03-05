@@ -72,7 +72,7 @@ static void data_changed(void* context, const void* _args) {
       tiny_timer_start(
         self->timer_group,
         &self->back_up_timer,
-        turn_time_360_degree / 4,
+        turn_time_360_degree / 3,
         stop_running_timer_expired,
         self);
     }
