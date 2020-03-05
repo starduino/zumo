@@ -7,13 +7,12 @@
 #include "enemy_location.h"
 #include "tactic.h"
 #include "tiny_utils.h"
+#include "tuning.h"
 #include "motor_power.h"
 
 enum {
-  near_wheel_power = 30,
-  far_wheel_power = 100,
-  reduced_charge = 80,
-  charge = 100,
+  reduced_charge = charge_reduced_power,
+  charge = charge_full_power,
   toward_the_left = enemy_location_front_left,
   toward_the_right = enemy_location_front_right
 };

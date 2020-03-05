@@ -8,6 +8,7 @@ extern "C" {
 #include "line_detected.h"
 #include "motor_power.h"
 #include "tactic.h"
+#include "tuning.h"
 #include "enemy_location.h"
 #include "tiny_utils.h"
 #include "tiny_ram_key_value_store.h"
@@ -25,13 +26,13 @@ enum {
   some_power = 70,
   some_other_power = -55,
   back_up = motor_power_min,
-  back_up_time = 70,
-  turn_time = 30,
+  back_up_time = line_detection_back_up_time,
+  turn_time = line_detection_turn_time,
   some_time_has_passed = 17,
   is_running = 0,
   has_stopped,
-  near_wheel_power = -30,
-  far_wheel_power = 100,
+  near_wheel_power = line_detection_near_wheel_power,
+  far_wheel_power = line_detection_far_wheel_power,
   a_long_time = 200
 };
 
@@ -71,13 +72,6 @@ static const line_detected_keys_t keys = {
   .key_tactic_stopped = key_tactic_stopped
 };
 
-static const line_detected_config_t config = {
-  .near_wheel_power = near_wheel_power,
-  .far_wheel_power = far_wheel_power,
-  .back_up_time = back_up_time,
-  .turn_time = turn_time,
-};
-
 TEST_GROUP(line_detected) {
   line_detected_t self;
 
@@ -99,7 +93,7 @@ TEST_GROUP(line_detected) {
   }
 
   void when_it_is_initialized() {
-    line_detected_init(&self, i_key_value_store, &keys, &config, &timer_group);
+    line_detected_init(&self, i_key_value_store, &keys, &timer_group);
   }
 
   void given_it_has_been_initialized() {
@@ -164,12 +158,12 @@ TEST_GROUP(line_detected) {
 
   void the_motors_should_be_turning(uint8_t direction) {
     if (direction == right) {
-      the_left_motor_should_be_set_to(far_wheel_power);
-      the_right_motor_should_be_set_to(near_wheel_power);
-    }
-    else {
       the_left_motor_should_be_set_to(near_wheel_power);
       the_right_motor_should_be_set_to(far_wheel_power);
+    }
+    else {
+      the_left_motor_should_be_set_to(far_wheel_power);
+      the_right_motor_should_be_set_to(near_wheel_power);
     }
   }
 
@@ -227,6 +221,9 @@ TEST(line_detected, should_turn_right_after_it_has_backed_up_when_the_left_line_
   given_the_left_line_has_been(detected);
   given_this_tactic_is_active();
 
+  the_left_motor_should_be_set_to(back_up);
+  the_right_motor_should_be_set_to(back_up);
+
   after(back_up_time - 1);
   the_left_motor_should_be_set_to(back_up);
   the_right_motor_should_be_set_to(back_up);
@@ -256,6 +253,9 @@ TEST(line_detected, should_turn_left_after_it_has_backed_up_when_the_right_line_
   after(some_time_has_passed);
   given_the_right_line_has_been(detected);
   given_this_tactic_is_active();
+
+  the_left_motor_should_be_set_to(back_up);
+  the_right_motor_should_be_set_to(back_up);
 
   after(back_up_time - 1);
   the_left_motor_should_be_set_to(back_up);

@@ -22,7 +22,7 @@
       "name": "Test",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/zumo_tests",
+      "program": "${workspaceFolder}/build/test/zumo_tests",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
