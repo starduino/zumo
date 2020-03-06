@@ -53,9 +53,9 @@ static void spin(spin_on_init_t* self, bool spin_right) {
     &right_power);
 }
 
-// static tiny_timer_ticks_t counts_to_ticks(tiny_adc_counts_t counts) {
-//   return (((uint64_t)counts) * (uint64_t)turn_time_360_degree) / (uint64_t)max_counts;
-// }
+static tiny_timer_ticks_t counts_to_ticks(tiny_adc_counts_t counts) {
+  return (((uint64_t)counts) * (uint64_t)turn_time_360_degree) / (uint64_t)max_counts;
+}
 
 static void data_changed(void* context, const void* _args) {
   reinterpret(self, context, spin_on_init_t*);
@@ -72,7 +72,7 @@ static void data_changed(void* context, const void* _args) {
       tiny_timer_start(
         self->timer_group,
         &self->back_up_timer,
-        turn_time_360_degree / 3,
+        counts_to_ticks(counts),
         stop_running_timer_expired,
         self);
     }

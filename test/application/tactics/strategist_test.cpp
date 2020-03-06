@@ -240,4 +240,3 @@ TEST(strategist, should_continue_seeking_clockwise_when_line_avoidance_stops_run
   when_the_tactic_stops();
   the_selected_tactic_should_become(tactic_seek_clockwise);
 }
-

@@ -67,21 +67,12 @@ static void data_changed(void* context, const void* _args) {
     change_tactic_to(self, tactic_avoid_line);
   }
   else if(args->key == self->keys->key_tactic_stopped) {
-    int8_t power = 0;
-    // tiny_key_value_store_write(
-    //   self->key_value_store,
-    //   0,
-    //   &power);
-    // tiny_key_value_store_write(
-    //   self->key_value_store,
-    //   1,
-    //   &power);
-      if(the_enemy_is_visible(self)) {
-        change_tactic_to(self, tactic_charge);
-      }
-      else {
-        choose_seeking_tactic(self);
-      }
+    if(the_enemy_is_visible(self)) {
+      change_tactic_to(self, tactic_charge);
+    }
+    else {
+      choose_seeking_tactic(self);
+    }
   }
 }
 
