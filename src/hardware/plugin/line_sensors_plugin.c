@@ -53,8 +53,8 @@ static void end_capture(void) {
   TIM1->CR1 &= ~TIM1_CR1_CEN;
 }
 
-static volatile uint8_t left_number_detected;
-static volatile uint8_t right_number_detected;
+static uint8_t left_number_detected; // extremely advanced filtering
+static uint8_t right_number_detected;
 static void measure(line_sensors_plugin_t* self) {
   uint16_t left_count = (TIM1->CCR3H << 8) + TIM1->CCR3L;
   bool left_line_detected = left_count < line_threshold;
