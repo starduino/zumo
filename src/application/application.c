@@ -13,7 +13,7 @@ void application_init(application_t* self, tiny_timer_group_t* timer_group) {
 
   motors_plugin_init(&self->motors_plugin, store);
   line_sensors_plugin_init(&self->line_sensors_plugin, store, timer_group);
-  // distance_sensors_plugin_init(&self->distance_sensors_plugin, store, timer_group);
+  distance_sensors_plugin_init(&self->distance_sensors_plugin, store, timer_group);
   accelerometer_plugin_init(&self->accelerometer_plugin, store, timer_group);
   buzzer_plugin_init(&self->buzzer_plugin, store);
   strategy_plugin_init(&self->strategy_plugin, store, timer_group);
