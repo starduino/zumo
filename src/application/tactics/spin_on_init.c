@@ -8,7 +8,7 @@
 #include "tiny_utils.h"
 #include "tuning.h"
 #include "i_tiny_adc.h"
-#include <stdio.h>
+#include <stdlib.h>
 
 enum {
   max_counts = 0xFFFF
@@ -54,7 +54,7 @@ static void spin(spin_on_init_t* self, bool spin_right) {
 }
 
 static tiny_timer_ticks_t counts_to_ticks(tiny_adc_counts_t counts) {
-  return (((uint64_t)counts) * (uint64_t)turn_time_360_degree) / (uint64_t)max_counts;
+  return abs(counts - max_counts / 2) * (turn_time_360_degree / 2) / (max_counts / 2);
 }
 
 static void data_changed(void* context, const void* _args) {
@@ -66,7 +66,7 @@ static void data_changed(void* context, const void* _args) {
 
     if(*tactic == tactic_init) {
       tiny_adc_counts_t counts = potentiometer_counts(self);
-      bool spin_right = counts < (0xFFFF / 2);
+      bool spin_right = counts < (max_counts / 2);
       spin(self, spin_right);
 
       tiny_timer_start(

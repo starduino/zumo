@@ -192,17 +192,17 @@ TEST(spin_on_init, should_spin_right_when_the_tactic_is_selected) {
 TEST(spin_on_init, should_spin_right_at_another_angle) {
    given_it_has_been_initialized_and_the_knob_is_set_to(110 degrees);
    when_this_tactic_is_selected();
-   the_robot_should_spin(right, 110 degrees);
+   the_robot_should_spin(right, 70 degrees);
 }
 
 TEST(spin_on_init, should_spin_left_when_the_tactic_is_selected) {
    given_it_has_been_initialized_and_the_knob_is_set_to(270 degrees);
    when_this_tactic_is_selected();
-   the_robot_should_spin(left, 270 degrees);
+   the_robot_should_spin(left, 90 degrees);
 }
 
 TEST(spin_on_init, should_spin_left_at_another_angle) {
-   given_it_has_been_initialized_and_the_knob_is_set_to(181 degrees);
+   given_it_has_been_initialized_and_the_knob_is_set_to(182 degrees);
    when_this_tactic_is_selected();
-   the_robot_should_spin(left, 181 degrees);
+   the_robot_should_spin(left, 2 degrees);
 }
