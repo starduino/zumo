@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 enum {
-  max_counts = 0xFFFF
+  max_counts = UINT16_MAX
 };
 
 static void stop_running_timer_expired(tiny_timer_group_t* group, void* context) {
