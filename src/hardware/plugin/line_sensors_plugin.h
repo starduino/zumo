@@ -15,6 +15,8 @@
 typedef struct {
   tiny_timer_t timer;
   i_tiny_key_value_store_t* key_value_store;
+  uint8_t left_number_detected;
+  uint8_t right_number_detected;
 } line_sensors_plugin_t;
 
 void line_sensors_plugin_init(

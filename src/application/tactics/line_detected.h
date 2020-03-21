@@ -29,6 +29,7 @@ typedef struct {
   tiny_timer_t back_up_timer;
   tiny_timer_t stop_running_timer;
   tiny_timer_group_t* timer_group;
+  bool left_line_was_detected;
 } line_detected_t;
 
 void line_detected_init(

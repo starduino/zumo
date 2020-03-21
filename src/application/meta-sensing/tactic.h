@@ -10,6 +10,7 @@
 
 enum {
   tactic_idle,
+  tactic_init,
   tactic_seek_clockwise,
   tactic_seek_counterclockwise,
   tactic_charge,

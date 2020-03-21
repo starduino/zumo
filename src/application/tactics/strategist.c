@@ -16,15 +16,7 @@ static void change_tactic_to(strategist_t* self, tactic_t tactic) {
 }
 
 static void choose_initial_tactic(strategist_t* self) {
-  direction_t initial_direction;
-  tactic_t tactic;
-  tiny_key_value_store_read(
-    self->key_value_store,
-    self->keys->key_initial_direction,
-    &initial_direction);
-
-  tactic = initial_direction == direction_clockwise ? tactic_seek_clockwise : tactic_seek_counterclockwise;
-  change_tactic_to(self, tactic);
+  change_tactic_to(self, tactic_init);
 }
 
 static void choose_seeking_tactic(strategist_t* self) {
