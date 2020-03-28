@@ -23,6 +23,6 @@ LIB_DIRS := \
   $(STM8_TINY)/src/peripheral \
 
 INC_DIRS := \
-  lib/stm8/inc \
+  $(STM8_TINY)/lib/stm8/inc \
 
 include makefile-worker.mk
