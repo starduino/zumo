@@ -25,4 +25,4 @@ LIB_DIRS := \
 INC_DIRS := \
   $(STM8_TINY)/lib/stm8/inc \
 
-include makefile-worker.mk
+include $(STM8_TINY)/makefile-worker.mk
