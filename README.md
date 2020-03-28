@@ -13,7 +13,7 @@ https://www.pololu.com/product/2508
 - Install [`openocd`](https://github.com/ntfreak/openocd) (may need to build from source to get STM8 support)
 - Install [`stm8flash`](https://github.com/ryanplusplus/stm8flash)
 - Install [`stm8-gdb`](https://stm8-binutils-gdb.sourceforge.io/)
-- Copy `./udev/70-st-link.rules` to `/etc/udev/` and run `udevadm control --reload-rules`
+- Copy `./lib/stm8-tiny/udev/70-st-link.rules` to `/etc/udev/` and run `udevadm control --reload-rules`
 
 ## Use
 ### Compile
@@ -43,7 +43,7 @@ make -f test.mk
 
 ## Pinout
 | STM8 Pin | Zumo Pin | Peripheral | Function               |
-| -------- | -------- | ---------- | ---------------------- |
+|----------|----------|------------|------------------------|
 | PA3      | N/A      | GPIO       | Heartbeat LED          |
 | PE1      | SCL      | I2C SCL    | I2C SCL                |
 | PE2      | SDA      | I2C SDA    | I2C SDA                |

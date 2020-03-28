@@ -6,7 +6,7 @@ TINY = $(STM8_TINY)/lib/tiny
 DEVICE := stm8s207cb
 DEVICE_TYPE := STM8S207
 STLINK := stlinkv2
-OPENOCD_CFG := openocd/stm8s207.cfg
+OPENOCD_CFG := $(STM8_TINY)/openocd/stm8s207.cfg
 
 MAIN := src/main.c
 
