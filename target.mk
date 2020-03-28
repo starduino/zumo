@@ -17,19 +17,12 @@ SRC_DIRS := \
   src/hardware \
 
 LIB_FILES := \
-  $(STM8_TINY)/src/peripheral/adc2.c \
-  $(STM8_TINY)/src/peripheral/clock.c \
-  $(STM8_TINY)/src/peripheral/i2c.c \
-  $(STM8_TINY)/src/peripheral/pa3_heartbeat.c \
-  $(STM8_TINY)/src/peripheral/pc5_heartbeat.c \
-  $(STM8_TINY)/src/peripheral/tim4_system_tick.c \
-  $(STM8_TINY)/src/peripheral/watchdog.c \
 
 LIB_DIRS := \
   $(TINY)/src \
+  $(STM8_TINY)/src/peripheral \
 
 INC_DIRS := \
   lib/stm8/inc \
-  $(STM8_TINY)/src/peripheral \
 
 include makefile-worker.mk
