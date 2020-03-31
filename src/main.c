@@ -37,7 +37,7 @@ void main(void) {
   }
   enableInterrupts();
 
-  tiny_timer_start(&timer_group, &timer, 1, kick_watchdog, NULL);
+  kick_watchdog(&timer_group, NULL);
 
   while(true) {
     tiny_timer_group_run(&timer_group);
