@@ -29,9 +29,9 @@ static const detect_enemy_keys_t detect_right_keys = {
 
 static void read_sensor(
   distance_sensors_plugin_t* self,
-  tiny_adc_channel_t channel,
+  tiny_analog_input_channel_t channel,
   tiny_key_value_store_key_t key) {
-  tiny_adc_counts_t counts = tiny_adc_group_read(self->adc_group, channel);
+  tiny_analog_input_counts_t counts = tiny_analog_input_group_read(self->adc_group, channel);
   distance_in_cm_t distance = gp2y0a21yk0f_counts_to_distance(counts);
   tiny_key_value_store_write(self->key_value_store, key, &distance);
   if(channel == left_channel) {

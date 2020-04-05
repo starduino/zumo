@@ -7,7 +7,7 @@
 #include "tactic.h"
 #include "tiny_utils.h"
 #include "tuning.h"
-#include "hal/i_tiny_adc.h"
+#include "hal/i_tiny_analog_input.h"
 #include <stdlib.h>
 
 enum {
@@ -31,8 +31,8 @@ static void stop_running_timer_expired(tiny_timer_group_t* group, void* context)
     &stopped);
 }
 
-static tiny_adc_counts_t potentiometer_counts(spin_on_init_t* self) {
-  tiny_adc_counts_t counts;
+static tiny_analog_input_counts_t potentiometer_counts(spin_on_init_t* self) {
+  tiny_analog_input_counts_t counts;
   tiny_key_value_store_read(
     self->key_value_store,
     self->keys->knob_counts,
@@ -53,7 +53,7 @@ static void spin(spin_on_init_t* self, bool spin_right) {
     &right_power);
 }
 
-static tiny_timer_ticks_t counts_to_ticks(tiny_adc_counts_t counts) {
+static tiny_timer_ticks_t counts_to_ticks(tiny_analog_input_counts_t counts) {
   return abs(counts - max_counts / 2) * (turn_time_360_degree / 2) / (max_counts / 2);
 }
 
@@ -65,7 +65,7 @@ static void data_changed(void* context, const void* _args) {
     reinterpret(tactic, args->value, const tactic_t*);
 
     if(*tactic == tactic_init) {
-      tiny_adc_counts_t counts = potentiometer_counts(self);
+      tiny_analog_input_counts_t counts = potentiometer_counts(self);
       bool spin_right = counts < (max_counts / 2);
       spin(self, spin_right);
 

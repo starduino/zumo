@@ -12,7 +12,7 @@ extern "C" {
 #include "enemy_location.h"
 #include "tiny_utils.h"
 #include "tiny_ram_key_value_store.h"
-#include "hal/i_tiny_adc.h"
+#include "hal/i_tiny_analog_input.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -43,7 +43,7 @@ enum {
 // clang-format off
 #define data_model_key_value_pairs(pair) \
   pair(key_tactic,              tactic_t) \
-  pair(key_knob_counts,              tiny_adc_counts_t) \
+  pair(key_knob_counts,              tiny_analog_input_counts_t) \
   pair(key_left_motor,          motor_power_t) \
   pair(key_right_motor,         motor_power_t) \
   pair(key_tactic_stopped,      uint8_t) \
@@ -95,7 +95,7 @@ TEST_GROUP(spin_on_init) {
   }
 
   void when_it_is_initialized_and_the_knob_is_set_to(uint64_t degree) {
-    tiny_adc_counts_t counts = ((uint64_t)max_counts * degree) / 360;
+    tiny_analog_input_counts_t counts = ((uint64_t)max_counts * degree) / 360;
     spin_on_init_init(&self, i_key_value_store, &keys, &timer_group);
     tiny_key_value_store_write(i_key_value_store, key_knob_counts, &counts);
   }
