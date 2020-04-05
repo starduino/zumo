@@ -17,7 +17,7 @@
 #include "direction.h"
 #include "distance_in_cm.h"
 #include "buzzer_frequency.h"
-#include "i_tiny_adc.h"
+#include "hal/i_tiny_adc.h"
 
 // clang-format off
 #define data_model_key_value_pairs(pair) \

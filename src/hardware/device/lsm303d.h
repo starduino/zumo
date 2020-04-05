@@ -7,7 +7,7 @@
 #define lsm303d_h
 
 #include <stdbool.h>
-#include "i_tiny_i2c.h"
+#include "hal/i_tiny_i2c.h"
 #include "tiny_timer.h"
 #include "tiny_single_subscriber_event.h"
 

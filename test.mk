@@ -15,6 +15,7 @@ INC_DIRS ?= \
   src/hardware/device \
   src/double/inc \
   $(STM8_TINY)/src/peripheral \
+	$(TINY)/include \
 
 LDFLAGS := -lstdc++ -lCppUTest -lCppUTestExt -lm
 

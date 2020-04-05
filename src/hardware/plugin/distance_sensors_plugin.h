@@ -8,7 +8,7 @@
 
 #include "i_tiny_key_value_store.h"
 #include "tiny_timer.h"
-#include "i_tiny_adc_group.h"
+#include "hal/i_tiny_adc_group.h"
 #include "detect_enemy.h"
 
 typedef struct {

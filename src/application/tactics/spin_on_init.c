@@ -7,7 +7,7 @@
 #include "tactic.h"
 #include "tiny_utils.h"
 #include "tuning.h"
-#include "i_tiny_adc.h"
+#include "hal/i_tiny_adc.h"
 #include <stdlib.h>
 
 enum {

@@ -12,7 +12,7 @@ extern "C" {
 #include "enemy_location.h"
 #include "tiny_utils.h"
 #include "tiny_ram_key_value_store.h"
-#include "i_tiny_adc.h"
+#include "hal/i_tiny_adc.h"
 }
 
 #include "CppUTest/TestHarness.h"
