@@ -9,7 +9,7 @@
 #include "i_tiny_key_value_store.h"
 #include "tiny_event_subscription.h"
 #include "lsm303d.h"
-#include "i2c.h"
+#include "async_i2c.h"
 
 typedef struct {
   lsm303d_t lsm303;
