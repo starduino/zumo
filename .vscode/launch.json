@@ -11,6 +11,7 @@
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",
+      "serverpath": "${workspaceFolder}/build/target/openocd/bin/openocd",
       "runToMain": true,
       "armToolchainPath": "${workspaceRoot}/build/target",
       "configFiles": [
