@@ -1,12 +1,13 @@
 TARGET := zumo
 BUILD_DIR := ./build/target
+TOOLS_DIR := tools
 STM8_TINY := lib/stm8-tiny
 TINY := $(STM8_TINY)/lib/tiny
 
 DEVICE := stm8s207cb
 DEVICE_TYPE := STM8S207
 STLINK := stlinkv2
-OPENOCD_CFG := $(STM8_TINY)/openocd/stm8s207.cfg
+OPENOCD_CFG := $(TOOLS_DIR)/openocd/stm8s207.cfg
 TOOLCHAIN_VERSION := 4.0.0
 
 MAIN := src/main.c
@@ -21,10 +22,9 @@ LIB_FILES := \
 
 LIB_DIRS := \
   $(TINY)/src \
-  $(STM8_TINY)/src/peripheral \
+  $(STM8_TINY)/src \
 
 INC_DIRS := \
-  $(STM8_TINY)/lib/stm8/inc \
 	$(TINY)/include \
 
-include $(STM8_TINY)/makefile-worker.mk
+include $(TOOLS_DIR)/makefile-worker.mk
