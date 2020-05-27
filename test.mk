@@ -17,8 +17,6 @@ INC_DIRS ?= \
   $(STM8_TINY)/src \
   $(TINY)/include \
 
-LDFLAGS := -lstdc++ -lCppUTest -lCppUTestExt -lm
-
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
@@ -27,8 +25,10 @@ INC_DIRS += $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CFLAGS +=
+CPPFLAGS += -fsanitize=address -fno-omit-frame-pointer
 CPPFLAGS += $(INC_FLAGS) -MMD -MP -g -Wall -Wextra -Wcast-qual -Werror
 CXXFLAGS +=
+LDFLAGS := -fsanitize=address -lstdc++ -lCppUTest -lCppUTestExt -lm
 
 .PHONY: test
 test: $(BUILD_DIR)/$(TARGET)

@@ -18,7 +18,8 @@ static const buzzer_frequency_t frequency_map[] = {
   523,
   659,
   784,
-  880
+  880,
+  16160
 };
 
 static void arm_timer(tactic_feedback_plugin_t* self, tiny_timer_group_t* timer_group);
