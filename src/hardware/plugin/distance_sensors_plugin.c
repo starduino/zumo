@@ -30,7 +30,8 @@ static const detect_enemy_keys_t detect_right_keys = {
 static void read_sensor(
   distance_sensors_plugin_t* self,
   tiny_analog_input_channel_t channel,
-  tiny_key_value_store_key_t key) {
+  tiny_key_value_store_key_t key)
+{
   tiny_analog_input_counts_t counts = tiny_analog_input_group_read(self->adc_group, channel);
   distance_in_cm_t distance = gp2y0a21yk0f_counts_to_distance(counts);
   tiny_key_value_store_write(self->key_value_store, key, &distance);
@@ -39,7 +40,8 @@ static void read_sensor(
   }
 }
 
-static void poll(tiny_timer_group_t* timer_group, void* context) {
+static void poll(tiny_timer_group_t* timer_group, void* context)
+{
   reinterpret(self, context, distance_sensors_plugin_t*);
 
   read_sensor(self, left_channel, key_left_sensor_distance);
@@ -52,7 +54,8 @@ static void poll(tiny_timer_group_t* timer_group, void* context) {
 void distance_sensors_plugin_init(
   distance_sensors_plugin_t* self,
   i_tiny_key_value_store_t* key_value_store,
-  tiny_timer_group_t* timer_group) {
+  tiny_timer_group_t* timer_group)
+{
   self->key_value_store = key_value_store;
   self->adc_group = adc2_init();
 

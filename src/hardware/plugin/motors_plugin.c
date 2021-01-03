@@ -19,7 +19,8 @@ enum {
 
 typedef volatile uint8_t reg_t;
 
-static void update_output(motor_power_t power, reg_t* direction, uint8_t direction_pin, reg_t* ccrh, reg_t* ccrl) {
+static void update_output(motor_power_t power, reg_t* direction, uint8_t direction_pin, reg_t* ccrh, reg_t* ccrl)
+{
   if(power >= 0) {
     *direction &= ~direction_pin;
   }
@@ -33,7 +34,8 @@ static void update_output(motor_power_t power, reg_t* direction, uint8_t directi
   *ccrl = compare & 0xFF;
 }
 
-static bool the_robot_is_running(motors_plugin_t* self) {
+static bool the_robot_is_running(motors_plugin_t* self)
+{
   bool is_running;
   tiny_key_value_store_read(
     self->key_value_store,
@@ -42,7 +44,8 @@ static bool the_robot_is_running(motors_plugin_t* self) {
   return is_running;
 }
 
-static void data_changed(void* self, const void* _args) {
+static void data_changed(void* self, const void* _args)
+{
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
   reinterpret(power, args->value, const motor_power_t*);
 
@@ -59,7 +62,8 @@ static void data_changed(void* self, const void* _args) {
   }
 }
 
-static void initialize_gpio(void) {
+static void initialize_gpio(void)
+{
   // PD0 push/pull output
   GPIOD->CR1 |= pin_0;
   GPIOD->DDR |= pin_0;
@@ -69,7 +73,8 @@ static void initialize_gpio(void) {
   GPIOE->DDR |= pin_3;
 }
 
-static void initialize_tim2(void) {
+static void initialize_tim2(void)
+{
   // Un-gate clock for TIM2
   CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_TIMER2);
 
@@ -86,7 +91,8 @@ static void initialize_tim2(void) {
   TIM2->CR1 = TIM2_CR1_CEN | TIM2_CR1_ARPE;
 }
 
-static void initialize_tim2_channel2(void) {
+static void initialize_tim2_channel2(void)
+{
   // Default to 0% duty cycle
   TIM2->CCR2H = 0;
   TIM2->CCR2L = 0;
@@ -99,7 +105,8 @@ static void initialize_tim2_channel2(void) {
   TIM2->CCER1 |= TIM2_CCER1_CC2E;
 }
 
-void initialize_tim2_channel1(void) {
+void initialize_tim2_channel1(void)
+{
   // Default to 0% duty cycle
   TIM2->CCR1H = 0;
   TIM2->CCR1L = 0;
@@ -112,7 +119,8 @@ void initialize_tim2_channel1(void) {
   TIM2->CCER1 |= TIM2_CCER1_CC1E;
 }
 
-void motors_plugin_init(motors_plugin_t* self, i_tiny_key_value_store_t* key_value_store) {
+void motors_plugin_init(motors_plugin_t* self, i_tiny_key_value_store_t* key_value_store)
+{
   self->key_value_store = key_value_store;
   initialize_gpio();
   initialize_tim2();

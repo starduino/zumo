@@ -28,7 +28,8 @@ enum {
 #define data_model_key_value_pairs(pair) \
   pair(key_tactic,              tactic_t) \
   pair(key_left_motor,          motor_power_t) \
-  pair(key_right_motor,         motor_power_t) \
+  pair(key_right_motor,         motor_power_t)
+
 // clang-format on
 
 enumerate_ram_key_value_pairs(data_model_key_value_pairs);
@@ -54,13 +55,15 @@ static const seeking_keys_t keys = {
   .tactic = key_tactic
 };
 
-TEST_GROUP(seeking) {
+TEST_GROUP(seeking)
+{
   seeking_t self;
 
   tiny_ram_key_value_store_t ram_key_value_store;
   i_tiny_key_value_store_t* i_key_value_store;
 
-  void setup() {
+  void setup()
+  {
     tiny_ram_key_value_store_init(
       &ram_key_value_store,
       &store_config,
@@ -68,40 +71,48 @@ TEST_GROUP(seeking) {
     i_key_value_store = &ram_key_value_store.interface;
   }
 
-  void when_it_is_initialized() {
+  void when_it_is_initialized()
+  {
     seeking_init(&self, i_key_value_store, &keys);
   }
 
-  void given_it_has_been_initialized() {
+  void given_it_has_been_initialized()
+  {
     when_it_is_initialized();
   }
 
-  void given_the_left_motor_has_been_set_to(motor_power_t value) {
+  void given_the_left_motor_has_been_set_to(motor_power_t value)
+  {
     tiny_key_value_store_write(i_key_value_store, key_left_motor, &value);
   }
 
-  void given_the_right_motor_has_been_set_to(motor_power_t value) {
+  void given_the_right_motor_has_been_set_to(motor_power_t value)
+  {
     tiny_key_value_store_write(i_key_value_store, key_right_motor, &value);
   }
 
-  void when_the_tactic_is(tactic_t tactic) {
+  void when_the_tactic_is(tactic_t tactic)
+  {
     tiny_key_value_store_write(i_key_value_store, key_tactic, &tactic);
   }
 
-  void the_left_motor_should_be_set_to(motor_power_t expected) {
+  void the_left_motor_should_be_set_to(motor_power_t expected)
+  {
     motor_power_t actual;
     tiny_key_value_store_read(i_key_value_store, key_left_motor, &actual);
     CHECK_EQUAL(expected, actual);
   }
 
-  void the_right_motor_should_be_set_to(motor_power_t expected) {
+  void the_right_motor_should_be_set_to(motor_power_t expected)
+  {
     motor_power_t actual;
     tiny_key_value_store_read(i_key_value_store, key_right_motor, &actual);
     CHECK_EQUAL(expected, actual);
   }
 };
 
-TEST(seeking, should_do_nothing_when_another_tactic_becomes_active) {
+TEST(seeking, should_do_nothing_when_another_tactic_becomes_active)
+{
   given_it_has_been_initialized();
   given_the_left_motor_has_been_set_to(some_power);
   given_the_right_motor_has_been_set_to(some_other_power);
@@ -111,7 +122,8 @@ TEST(seeking, should_do_nothing_when_another_tactic_becomes_active) {
   the_right_motor_should_be_set_to(some_other_power);
 }
 
-TEST(seeking, should_turn_clockwise_when_the_clockwise_tactic_is_selected) {
+TEST(seeking, should_turn_clockwise_when_the_clockwise_tactic_is_selected)
+{
   given_it_has_been_initialized();
 
   when_the_tactic_is(tactic_seek_clockwise);
@@ -119,7 +131,8 @@ TEST(seeking, should_turn_clockwise_when_the_clockwise_tactic_is_selected) {
   the_right_motor_should_be_set_to(near_wheel_power);
 }
 
-TEST(seeking, should_turn_counterclockwise_when_the_counterclockwise_tactic_is_selected) {
+TEST(seeking, should_turn_counterclockwise_when_the_counterclockwise_tactic_is_selected)
+{
   given_it_has_been_initialized();
 
   when_the_tactic_is(tactic_seek_counterclockwise);

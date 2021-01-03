@@ -20,20 +20,23 @@ enum {
   line_threshold = 10000
 };
 
-static void start_charge(void) {
+static void start_charge(void)
+{
   // Configure pins as push pull outputs, output high
   GPIOC->CR1 |= pin_3 | pin_4;
   GPIOC->ODR |= pin_3 | pin_4;
   GPIOC->DDR |= pin_3 | pin_4;
 }
 
-static void stop_charge(void) {
+static void stop_charge(void)
+{
   // Configure pins as floating inputs
   GPIOC->CR1 &= ~(pin_3 | pin_4);
   GPIOC->DDR &= ~(pin_3 | pin_4);
 }
 
-static void start_capture(void) {
+static void start_capture(void)
+{
   // Enable capture on channels 1 and 2
   TIM1->CCER2 |= TIM1_CCER2_CC3E | TIM1_CCER2_CC4E;
 
@@ -45,7 +48,8 @@ static void start_capture(void) {
   TIM1->CR1 |= TIM1_CR1_CEN;
 }
 
-static void end_capture(void) {
+static void end_capture(void)
+{
   // Disable capture on channels 1 and 2
   TIM1->CCER2 &= ~(TIM1_CCER2_CC3E | TIM1_CCER2_CC4E);
 
@@ -53,7 +57,8 @@ static void end_capture(void) {
   TIM1->CR1 &= ~TIM1_CR1_CEN;
 }
 
-static bool filter_counts(uint16_t count, uint8_t* number_detected) {
+static bool filter_counts(uint16_t count, uint8_t* number_detected)
+{
   bool line_detected = count < line_threshold;
   if(line_detected) {
     *number_detected++;
@@ -65,7 +70,8 @@ static bool filter_counts(uint16_t count, uint8_t* number_detected) {
   return line_detected;
 }
 
-static void measure(line_sensors_plugin_t* self) {
+static void measure(line_sensors_plugin_t* self)
+{
   uint16_t left_count = (TIM1->CCR3H << 8) + TIM1->CCR3L;
   bool left_line_detected = filter_counts(left_count, &self->left_number_detected);
   tiny_key_value_store_write(self->key_value_store, key_left_line_detected, &left_line_detected);
@@ -80,7 +86,8 @@ static void measure(line_sensors_plugin_t* self) {
 
 static void sample(tiny_timer_group_t* timer_group, void* context);
 
-static void setup(tiny_timer_group_t* timer_group, void* context) {
+static void setup(tiny_timer_group_t* timer_group, void* context)
+{
   reinterpret(self, context, line_sensors_plugin_t*);
 
   end_capture();
@@ -90,7 +97,8 @@ static void setup(tiny_timer_group_t* timer_group, void* context) {
   tiny_timer_start(timer_group, &self->timer, setup_period, sample, self);
 }
 
-static void sample(tiny_timer_group_t* timer_group, void* context) {
+static void sample(tiny_timer_group_t* timer_group, void* context)
+{
   reinterpret(self, context, line_sensors_plugin_t*);
 
   stop_charge();
@@ -99,7 +107,8 @@ static void sample(tiny_timer_group_t* timer_group, void* context) {
   tiny_timer_start(timer_group, &self->timer, sample_period, setup, self);
 }
 
-static void initialize_tim1(void) {
+static void initialize_tim1(void)
+{
   // Un-gate clock for TIM1
   CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_TIMER1);
 
@@ -111,7 +120,8 @@ static void initialize_tim1(void) {
   TIM1->CR1 = TIM1_CR1_UDIS;
 }
 
-static void initialize_tim1_channel3(void) {
+static void initialize_tim1_channel3(void)
+{
   // Direct input capture, filter of 8, no prescalar
   TIM1->CCMR3 = TIM1_ICSELECTION_DIRECTTI | input_filter_8;
 
@@ -119,7 +129,8 @@ static void initialize_tim1_channel3(void) {
   TIM1->CCER2 |= TIM1_CCER2_CC3P;
 }
 
-static void initialize_tim1_channel2(void) {
+static void initialize_tim1_channel2(void)
+{
   // Direct input capture, filter of 8, no prescalar
   TIM1->CCMR4 = TIM1_ICSELECTION_DIRECTTI | input_filter_8;
 
@@ -130,7 +141,8 @@ static void initialize_tim1_channel2(void) {
 void line_sensors_plugin_init(
   line_sensors_plugin_t* self,
   i_tiny_key_value_store_t* key_value_store,
-  tiny_timer_group_t* timer_group) {
+  tiny_timer_group_t* timer_group)
+{
   self->key_value_store = key_value_store;
 
   initialize_tim1();

@@ -10,7 +10,8 @@
 #include "data_model.h"
 #include "tiny_utils.h"
 
-static void data_changed(void* context, const void* _args) {
+static void data_changed(void* context, const void* _args)
+{
   (void)context;
 
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
@@ -38,7 +39,8 @@ static void data_changed(void* context, const void* _args) {
   }
 }
 
-static void initialize_tim3(void) {
+static void initialize_tim3(void)
+{
   // Un-gate clock for TIM3
   CLK->PCKENR1 |= (1 << CLK_PERIPHERAL_TIMER3);
 
@@ -61,7 +63,8 @@ static void initialize_tim3(void) {
   TIM3->CR1 = TIM3_CR1_CEN | TIM3_CR1_ARPE;
 }
 
-void buzzer_plugin_init(buzzer_plugin_t* self, i_tiny_key_value_store_t* key_value_store) {
+void buzzer_plugin_init(buzzer_plugin_t* self, i_tiny_key_value_store_t* key_value_store)
+{
   initialize_tim3();
 
   tiny_event_subscription_init(&self->on_change_subscription, self, data_changed);

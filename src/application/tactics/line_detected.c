@@ -8,7 +8,8 @@
 #include "tiny_utils.h"
 #include "tuning.h"
 
-static void stop_running_timer_expired(tiny_timer_group_t* group, void* context) {
+static void stop_running_timer_expired(tiny_timer_group_t* group, void* context)
+{
   reinterpret(self, context, line_detected_t*);
   (void)group;
   uint8_t stopped;
@@ -25,7 +26,8 @@ static void stop_running_timer_expired(tiny_timer_group_t* group, void* context)
     &stopped);
 }
 
-static bool the_left_line_was_detected(line_detected_t* self) {
+static bool the_left_line_was_detected(line_detected_t* self)
+{
   bool detected;
   tiny_key_value_store_read(
     self->key_value_store,
@@ -34,7 +36,8 @@ static bool the_left_line_was_detected(line_detected_t* self) {
   return detected;
 }
 
-static void back_up_timer_expired(tiny_timer_group_t* group, void* context) {
+static void back_up_timer_expired(tiny_timer_group_t* group, void* context)
+{
   (void)group;
   reinterpret(self, context, line_detected_t*);
   motor_power_t left_power;
@@ -67,7 +70,8 @@ static void back_up_timer_expired(tiny_timer_group_t* group, void* context) {
     self);
 }
 
-static void data_changed(void* context, const void* _args) {
+static void data_changed(void* context, const void* _args)
+{
   reinterpret(self, context, line_detected_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
 
@@ -100,7 +104,8 @@ void line_detected_init(
   line_detected_t* self,
   i_tiny_key_value_store_t* key_value_store,
   const line_detected_keys_t* keys,
-  tiny_timer_group_t* timer_group) {
+  tiny_timer_group_t* timer_group)
+{
   self->key_value_store = key_value_store;
   self->keys = keys;
   self->timer_group = timer_group;

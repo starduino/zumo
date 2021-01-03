@@ -5,7 +5,8 @@
 
 #include "lookup_table.h"
 
-uint16_t lookup_table_lookup(const lookup_table_t* table, uint16_t x) {
+uint16_t lookup_table_lookup(const lookup_table_t* table, uint16_t x)
+{
   if(x < table->entries[0].x) {
     return table->entries[0].y;
   }

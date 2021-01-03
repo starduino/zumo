@@ -24,7 +24,8 @@ static const buzzer_frequency_t frequency_map[] = {
 
 static void arm_timer(tactic_feedback_plugin_t* self, tiny_timer_group_t* timer_group);
 
-static void update_frequency(tiny_timer_group_t* timer_group, void* context) {
+static void update_frequency(tiny_timer_group_t* timer_group, void* context)
+{
   reinterpret(self, context, tactic_feedback_plugin_t*);
 
   self->at_base_frequency = !self->at_base_frequency;
@@ -37,11 +38,13 @@ static void update_frequency(tiny_timer_group_t* timer_group, void* context) {
   arm_timer(self, timer_group);
 }
 
-static void arm_timer(tactic_feedback_plugin_t* self, tiny_timer_group_t* timer_group) {
+static void arm_timer(tactic_feedback_plugin_t* self, tiny_timer_group_t* timer_group)
+{
   tiny_timer_start(timer_group, &self->timer, half_period, update_frequency, self);
 }
 
-static void data_changed(void* context, const void* _args) {
+static void data_changed(void* context, const void* _args)
+{
   reinterpret(self, context, tactic_feedback_plugin_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
   reinterpret(tactic, args->value, const tactic_t*);
@@ -54,7 +57,8 @@ static void data_changed(void* context, const void* _args) {
 void tactic_feedback_plugin_init(
   tactic_feedback_plugin_t* self,
   i_tiny_key_value_store_t* key_value_store,
-  tiny_timer_group_t* timer_group) {
+  tiny_timer_group_t* timer_group)
+{
   self->key_value_store = key_value_store;
 
   tiny_event_subscription_init(&self->subscription, self, data_changed);

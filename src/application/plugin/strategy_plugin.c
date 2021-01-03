@@ -46,7 +46,8 @@ static const spin_on_init_keys_t spin_on_init_keys = {
   .tactic_stopped = key_tactic_stopped
 };
 
-void strategy_plugin_init(strategy_plugin_t* self, i_tiny_key_value_store_t* key_value_store, tiny_timer_group_t* timer_group) {
+void strategy_plugin_init(strategy_plugin_t* self, i_tiny_key_value_store_t* key_value_store, tiny_timer_group_t* timer_group)
+{
   strategist_init(&self->strategist, key_value_store, &strategist_keys);
 
   spin_on_init_init(

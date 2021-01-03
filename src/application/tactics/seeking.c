@@ -14,15 +14,18 @@ enum {
   far_wheel_power = seeking_far_wheel_power
 };
 
-static void set_right_motor_to(seeking_t* self, motor_power_t power) {
+static void set_right_motor_to(seeking_t* self, motor_power_t power)
+{
   tiny_key_value_store_write(self->key_value_store, self->keys->right_motor, &power);
 }
 
-static void set_left_motor_to(seeking_t* self, motor_power_t power) {
+static void set_left_motor_to(seeking_t* self, motor_power_t power)
+{
   tiny_key_value_store_write(self->key_value_store, self->keys->left_motor, &power);
 }
 
-static void data_changed(void* context, const void* _args) {
+static void data_changed(void* context, const void* _args)
+{
   reinterpret(self, context, seeking_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
 
@@ -43,7 +46,8 @@ static void data_changed(void* context, const void* _args) {
 void seeking_init(
   seeking_t* self,
   i_tiny_key_value_store_t* key_value_store,
-  const seeking_keys_t* keys) {
+  const seeking_keys_t* keys)
+{
   self->key_value_store = key_value_store;
   self->keys = keys;
   tiny_event_subscription_init(&self->on_change_subscription, self, data_changed);

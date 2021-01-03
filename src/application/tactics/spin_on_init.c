@@ -14,7 +14,8 @@ enum {
   max_counts = UINT16_MAX
 };
 
-static void stop_running_timer_expired(tiny_timer_group_t* group, void* context) {
+static void stop_running_timer_expired(tiny_timer_group_t* group, void* context)
+{
   reinterpret(self, context, spin_on_init_t*);
   (void)group;
   uint8_t stopped;
@@ -31,7 +32,8 @@ static void stop_running_timer_expired(tiny_timer_group_t* group, void* context)
     &stopped);
 }
 
-static tiny_analog_input_counts_t potentiometer_counts(spin_on_init_t* self) {
+static tiny_analog_input_counts_t potentiometer_counts(spin_on_init_t* self)
+{
   tiny_analog_input_counts_t counts;
   tiny_key_value_store_read(
     self->key_value_store,
@@ -40,7 +42,8 @@ static tiny_analog_input_counts_t potentiometer_counts(spin_on_init_t* self) {
   return counts;
 }
 
-static void spin(spin_on_init_t* self, bool spin_right) {
+static void spin(spin_on_init_t* self, bool spin_right)
+{
   motor_power_t left_power = spin_right ? spin_on_init_near_wheel_power : spin_on_init_far_wheel_power;
   motor_power_t right_power = spin_right ? spin_on_init_far_wheel_power : spin_on_init_near_wheel_power;
   tiny_key_value_store_write(
@@ -53,11 +56,13 @@ static void spin(spin_on_init_t* self, bool spin_right) {
     &right_power);
 }
 
-static tiny_timer_ticks_t counts_to_ticks(tiny_analog_input_counts_t counts) {
+static tiny_timer_ticks_t counts_to_ticks(tiny_analog_input_counts_t counts)
+{
   return abs(counts - max_counts / 2) * (turn_time_360_degree / 2) / (max_counts / 2);
 }
 
-static void data_changed(void* context, const void* _args) {
+static void data_changed(void* context, const void* _args)
+{
   reinterpret(self, context, spin_on_init_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
 
@@ -83,7 +88,8 @@ void spin_on_init_init(
   spin_on_init_t* self,
   i_tiny_key_value_store_t* key_value_store,
   const spin_on_init_keys_t* keys,
-  tiny_timer_group_t* timer_group) {
+  tiny_timer_group_t* timer_group)
+{
   self->key_value_store = key_value_store;
   self->keys = keys;
   self->timer_group = timer_group;

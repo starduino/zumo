@@ -11,7 +11,8 @@ enum {
   threshold = 30
 };
 
-static void data_changed(void* context, const void* _args) {
+static void data_changed(void* context, const void* _args)
+{
   reinterpret(self, context, detect_enemy_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
 
@@ -25,7 +26,8 @@ static void data_changed(void* context, const void* _args) {
 void detect_enemy_init(
   detect_enemy_t* self,
   i_tiny_key_value_store_t* key_value_store,
-  const detect_enemy_keys_t* keys) {
+  const detect_enemy_keys_t* keys)
+{
   self->key_value_store = key_value_store;
   self->keys = keys;
 

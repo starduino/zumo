@@ -35,7 +35,8 @@ enum {
   pair(key_tactic,              tactic_t) \
   pair(key_left_motor,          motor_power_t) \
   pair(key_right_motor,         motor_power_t) \
-  pair(key_enemy_location,      enemy_location_t) \
+  pair(key_enemy_location,      enemy_location_t)
+
 // clang-format on
 
 enumerate_ram_key_value_pairs(data_model_key_value_pairs);
@@ -62,13 +63,15 @@ static const charge_keys_t keys = {
   .enemy_location = key_enemy_location
 };
 
-TEST_GROUP(charge) {
+TEST_GROUP(charge)
+{
   charge_t self;
 
   tiny_ram_key_value_store_t ram_key_value_store;
   i_tiny_key_value_store_t* i_key_value_store;
 
-  void setup() {
+  void setup()
+  {
     tiny_ram_key_value_store_init(
       &ram_key_value_store,
       &store_config,
@@ -76,48 +79,58 @@ TEST_GROUP(charge) {
     i_key_value_store = &ram_key_value_store.interface;
   }
 
-  void when_it_is_initialized() {
+  void when_it_is_initialized()
+  {
     charge_init(&self, i_key_value_store, &keys);
   }
 
-  void given_it_has_been_initialized() {
+  void given_it_has_been_initialized()
+  {
     when_it_is_initialized();
   }
 
-  void given_the_left_motor_has_been_set_to(motor_power_t value) {
+  void given_the_left_motor_has_been_set_to(motor_power_t value)
+  {
     tiny_key_value_store_write(i_key_value_store, key_left_motor, &value);
   }
 
-  void given_the_right_motor_has_been_set_to(motor_power_t value) {
+  void given_the_right_motor_has_been_set_to(motor_power_t value)
+  {
     tiny_key_value_store_write(i_key_value_store, key_right_motor, &value);
   }
 
-  void when_the_enemy_is_seen(enemy_location_t location) {
+  void when_the_enemy_is_seen(enemy_location_t location)
+  {
     tiny_key_value_store_write(i_key_value_store, key_enemy_location, &location);
   }
 
-  void when_the_tactic_is(tactic_t tactic) {
+  void when_the_tactic_is(tactic_t tactic)
+  {
     tiny_key_value_store_write(i_key_value_store, key_tactic, &tactic);
   }
 
-  void given_the_tactic_is(tactic_t tactic) {
+  void given_the_tactic_is(tactic_t tactic)
+  {
     when_the_tactic_is(tactic);
   }
 
-  void the_left_motor_should_be_set_to(motor_power_t expected) {
+  void the_left_motor_should_be_set_to(motor_power_t expected)
+  {
     motor_power_t actual;
     tiny_key_value_store_read(i_key_value_store, key_left_motor, &actual);
     CHECK_EQUAL(expected, actual);
   }
 
-  void the_right_motor_should_be_set_to(motor_power_t expected) {
+  void the_right_motor_should_be_set_to(motor_power_t expected)
+  {
     motor_power_t actual;
     tiny_key_value_store_read(i_key_value_store, key_right_motor, &actual);
     CHECK_EQUAL(expected, actual);
   }
 };
 
-TEST(charge, should_do_nothing_when_another_tactic_becomes_active) {
+TEST(charge, should_do_nothing_when_another_tactic_becomes_active)
+{
   given_it_has_been_initialized();
   given_the_left_motor_has_been_set_to(some_power);
   given_the_right_motor_has_been_set_to(some_other_power);
@@ -127,7 +140,8 @@ TEST(charge, should_do_nothing_when_another_tactic_becomes_active) {
   the_right_motor_should_be_set_to(some_other_power);
 }
 
-TEST(charge, should_charge_forward_when_the_enemy_is_in_front) {
+TEST(charge, should_charge_forward_when_the_enemy_is_in_front)
+{
   given_it_has_been_initialized();
   given_the_tactic_is(tactic_charge);
 
@@ -136,7 +150,8 @@ TEST(charge, should_charge_forward_when_the_enemy_is_in_front) {
   the_right_motor_should_be_set_to(charge);
 }
 
-TEST(charge, should_charge_left_when_the_enemy_is_in_front_and_to_the_left) {
+TEST(charge, should_charge_left_when_the_enemy_is_in_front_and_to_the_left)
+{
   given_it_has_been_initialized();
   given_the_tactic_is(tactic_charge);
 
@@ -145,7 +160,8 @@ TEST(charge, should_charge_left_when_the_enemy_is_in_front_and_to_the_left) {
   the_right_motor_should_be_set_to(charge);
 }
 
-TEST(charge, should_charge_right_when_the_enemy_is_in_front_and_to_the_right) {
+TEST(charge, should_charge_right_when_the_enemy_is_in_front_and_to_the_right)
+{
   given_it_has_been_initialized();
   given_the_tactic_is(tactic_charge);
 
@@ -153,4 +169,3 @@ TEST(charge, should_charge_right_when_the_enemy_is_in_front_and_to_the_right) {
   the_left_motor_should_be_set_to(charge);
   the_right_motor_should_be_set_to(a_reduced_charge);
 }
-

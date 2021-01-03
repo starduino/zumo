@@ -7,7 +7,8 @@
 #include <stdlib.h>
 #include "application.h"
 
-void application_init(application_t* self, tiny_timer_group_t* timer_group) {
+void application_init(application_t* self, tiny_timer_group_t* timer_group)
+{
   data_model_init(&self->data_model);
   i_tiny_key_value_store_t* store = data_model_key_value_store(&self->data_model);
 

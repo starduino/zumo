@@ -24,6 +24,7 @@ static const lookup_table_t lookup_table = {
   element_count(entries)
 };
 
-distance_in_cm_t gp2y0a21yk0f_counts_to_distance(tiny_analog_input_counts_t counts) {
+distance_in_cm_t gp2y0a21yk0f_counts_to_distance(tiny_analog_input_counts_t counts)
+{
   return (distance_in_cm_t)lookup_table_lookup(&lookup_table, counts);
 }

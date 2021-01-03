@@ -8,24 +8,28 @@
 #include "tiny_utils.h"
 #include "tactic.h"
 
-static void change_tactic_to(strategist_t* self, tactic_t tactic) {
+static void change_tactic_to(strategist_t* self, tactic_t tactic)
+{
   tiny_key_value_store_write(
     self->key_value_store,
     self->keys->key_tactic,
     &tactic);
 }
 
-static void choose_initial_tactic(strategist_t* self) {
+static void choose_initial_tactic(strategist_t* self)
+{
   change_tactic_to(self, tactic_init);
 }
 
-static void choose_seeking_tactic(strategist_t* self) {
+static void choose_seeking_tactic(strategist_t* self)
+{
   bool previously_seen_on_right = self->previous_location == enemy_location_front_right;
   tactic_t tactic = previously_seen_on_right ? tactic_seek_clockwise : tactic_seek_counterclockwise;
   change_tactic_to(self, tactic);
 }
 
-static bool the_enemy_is_visible(strategist_t* self) {
+static bool the_enemy_is_visible(strategist_t* self)
+{
   enemy_location_t location;
   tiny_key_value_store_read(
     self->key_value_store,
@@ -34,7 +38,8 @@ static bool the_enemy_is_visible(strategist_t* self) {
   return location != enemy_location_unknown;
 }
 
-static bool the_current_tactic_is(strategist_t* self, tactic_t expected) {
+static bool the_current_tactic_is(strategist_t* self, tactic_t expected)
+{
   tactic_t actual;
   tiny_key_value_store_read(
     self->key_value_store,
@@ -43,7 +48,8 @@ static bool the_current_tactic_is(strategist_t* self, tactic_t expected) {
   return expected == actual;
 }
 
-static void data_changed(void* context, const void* _args) {
+static void data_changed(void* context, const void* _args)
+{
   reinterpret(self, context, strategist_t*);
   reinterpret(args, _args, const tiny_key_value_store_on_change_args_t*);
 
@@ -79,7 +85,8 @@ static void data_changed(void* context, const void* _args) {
 void strategist_init(
   strategist_t* self,
   i_tiny_key_value_store_t* key_value_store,
-  const strategist_keys_t* keys) {
+  const strategist_keys_t* keys)
+{
   self->key_value_store = key_value_store;
   self->keys = keys;
 
