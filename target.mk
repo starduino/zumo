@@ -1,7 +1,5 @@
 TARGET := zumo
 BUILD_DIR := ./build
-STM8_TINY := lib/stm8-tiny
-TINY := $(STM8_TINY)/lib/tiny
 
 DEVICE := stm8s207cb
 DEVICE_TYPE := STM8S207
