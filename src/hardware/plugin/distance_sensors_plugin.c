@@ -48,7 +48,7 @@ static void poll(tiny_timer_group_t* timer_group, void* context)
   read_sensor(self, center_channel, key_center_sensor_distance);
   read_sensor(self, right_channel, key_right_sensor_distance);
 
-  tiny_timer_start(timer_group, &self->timer, period, poll, self);
+  tiny_timer_start(timer_group, &self->timer, period, self, poll);
 }
 
 void distance_sensors_plugin_init(

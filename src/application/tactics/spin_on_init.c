@@ -78,8 +78,8 @@ static void data_changed(void* context, const void* _args)
         self->timer_group,
         &self->back_up_timer,
         counts_to_ticks(counts),
-        stop_running_timer_expired,
-        self);
+        self,
+        stop_running_timer_expired);
     }
   }
 }

@@ -94,7 +94,7 @@ static void setup(tiny_timer_group_t* timer_group, void* context)
   measure(self);
   start_charge();
 
-  tiny_timer_start(timer_group, &self->timer, setup_period, sample, self);
+  tiny_timer_start(timer_group, &self->timer, setup_period, self, sample);
 }
 
 static void sample(tiny_timer_group_t* timer_group, void* context)
@@ -104,7 +104,7 @@ static void sample(tiny_timer_group_t* timer_group, void* context)
   stop_charge();
   start_capture();
 
-  tiny_timer_start(timer_group, &self->timer, sample_period, setup, self);
+  tiny_timer_start(timer_group, &self->timer, sample_period, self, setup);
 }
 
 static void initialize_tim1(void)

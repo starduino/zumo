@@ -54,8 +54,8 @@ static void set_up_acceleration_read_complete(void* context, bool success)
       false,
       self->read_buffer.raw,
       sizeof(self->read_buffer),
-      read_acceleration_complete,
-      self);
+      self,
+      read_acceleration_complete);
   }
 }
 
@@ -73,8 +73,8 @@ static void set_up_acceleration_read(lsm303d_t* self)
     true,
     buffer,
     sizeof(buffer),
-    set_up_acceleration_read_complete,
-    self);
+    self,
+    set_up_acceleration_read_complete);
 }
 
 static void arm_poll_timer(lsm303d_t* self, tiny_timer_group_t* timer_group);
@@ -104,7 +104,7 @@ static void poll(tiny_timer_group_t* timer_group, void* context)
 
 static void arm_poll_timer(lsm303d_t* self, tiny_timer_group_t* timer_group)
 {
-  tiny_timer_start(timer_group, &self->timer, period, poll, self);
+  tiny_timer_start(timer_group, &self->timer, period, self, poll);
 }
 
 static void initialize_accelerometer(lsm303d_t* self);
@@ -136,8 +136,8 @@ static void initialize_accelerometer(lsm303d_t* self)
     false,
     buffer,
     sizeof(buffer),
-    configuration_complete,
-    self);
+    self,
+    configuration_complete);
 }
 
 static void startup_delay_complete(tiny_timer_group_t* timer_group, void* context)
@@ -155,7 +155,7 @@ void lsm303d_init(lsm303d_t* self, tiny_timer_group_t* timer_group, i_tiny_async
 
   tiny_single_subscriber_event_init(&self->acceleration_update);
 
-  tiny_timer_start(timer_group, &self->timer, startup_delay, startup_delay_complete, self);
+  tiny_timer_start(timer_group, &self->timer, startup_delay, self, startup_delay_complete);
 }
 
 i_tiny_event_t* lsm303d_on_acceleration_update(lsm303d_t* self)

@@ -66,8 +66,8 @@ static void back_up_timer_expired(tiny_timer_group_t* group, void* context)
     self->timer_group,
     &self->stop_running_timer,
     line_detection_turn_time,
-    stop_running_timer_expired,
-    self);
+    self,
+    stop_running_timer_expired);
 }
 
 static void data_changed(void* context, const void* _args)
@@ -94,8 +94,8 @@ static void data_changed(void* context, const void* _args)
         self->timer_group,
         &self->back_up_timer,
         line_detection_back_up_time,
-        back_up_timer_expired,
-        self);
+        self,
+        back_up_timer_expired);
     }
   }
 }

@@ -40,7 +40,7 @@ static void update_frequency(tiny_timer_group_t* timer_group, void* context)
 
 static void arm_timer(tactic_feedback_plugin_t* self, tiny_timer_group_t* timer_group)
 {
-  tiny_timer_start(timer_group, &self->timer, half_period, update_frequency, self);
+  tiny_timer_start(timer_group, &self->timer, half_period, self, update_frequency);
 }
 
 static void data_changed(void* context, const void* _args)

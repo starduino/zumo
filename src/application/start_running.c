@@ -27,5 +27,5 @@ void start_running_init(
   i_tiny_key_value_store_t* key_value_store)
 {
   self->key_value_store = key_value_store;
-  tiny_timer_start(timer_group, &self->timer, 5000, timer_expired, self);
+  tiny_timer_start(timer_group, &self->timer, 5000, self, timer_expired);
 }
