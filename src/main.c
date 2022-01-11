@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include "stm8s.h"
 #include "clock.h"
+#include "interrupts.h"
 #include "tim4_system_tick.h"
 #include "pa3_heartbeat.h"
 #include "pc5_heartbeat.h"
@@ -20,7 +21,7 @@ static tiny_timer_group_t timer_group;
 
 void main(void)
 {
-  disableInterrupts();
+  interrupts_disable();
   {
     clock_init();
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
@@ -29,10 +30,10 @@ void main(void)
     pc5_heartbeat_init(&timer_group);
     application_init(&application, &timer_group);
   }
-  enableInterrupts();
+  interrupts_enable();
 
   while(true) {
     tiny_timer_group_run(&timer_group);
-    wfi();
+    interrupts_wait_for_interrupt();
   }
 }
