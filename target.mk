@@ -6,7 +6,7 @@ DEVICE_TYPE := STM8S207
 STLINK := stlinkv2
 OPENOCD_CFG := tools/openocd/stm8s207.cfg
 SVD := tools/svd/stm8s207k8.svd
-TOOLCHAIN_VERSION := 4.1.0
+TOOLCHAIN_VERSION := 4.0.0
 
 include tools/defaults.mk
 
