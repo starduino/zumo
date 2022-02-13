@@ -1,3 +1,5 @@
+include tools/setup.mk
+
 TARGET := zumo
 BUILD_DIR := ./build
 
