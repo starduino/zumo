@@ -84,9 +84,9 @@ static void measure(line_sensors_plugin_t* self)
   tiny_key_value_store_write(self->key_value_store, key_line_detected, &line_detected);
 }
 
-static void sample(tiny_timer_group_t* timer_group, void* context);
+static void sample(void* context);
 
-static void setup(tiny_timer_group_t* timer_group, void* context)
+static void setup(void* context)
 {
   reinterpret(self, context, line_sensors_plugin_t*);
 
@@ -94,17 +94,17 @@ static void setup(tiny_timer_group_t* timer_group, void* context)
   measure(self);
   start_charge();
 
-  tiny_timer_start(timer_group, &self->timer, setup_period, self, sample);
+  tiny_timer_start(self->timer_group, &self->timer, setup_period, self, sample);
 }
 
-static void sample(tiny_timer_group_t* timer_group, void* context)
+static void sample(void* context)
 {
   reinterpret(self, context, line_sensors_plugin_t*);
 
   stop_charge();
   start_capture();
 
-  tiny_timer_start(timer_group, &self->timer, sample_period, self, setup);
+  tiny_timer_start(self->timer_group, &self->timer, sample_period, self, setup);
 }
 
 static void initialize_tim1(void)
@@ -144,10 +144,11 @@ void line_sensors_plugin_init(
   tiny_timer_group_t* timer_group)
 {
   self->key_value_store = key_value_store;
+  self->timer_group = timer_group;
 
   initialize_tim1();
   initialize_tim1_channel3();
   initialize_tim1_channel2();
 
-  setup(timer_group, self);
+  setup(self);
 }

@@ -9,9 +9,8 @@
 #include "tiny_utils.h"
 #include "data_model.h"
 
-static void timer_expired(tiny_timer_group_t* group, void* context)
+static void timer_expired(void* context)
 {
-  (void)group;
   reinterpret(self, context, start_running_t*);
   bool ready = true;
 

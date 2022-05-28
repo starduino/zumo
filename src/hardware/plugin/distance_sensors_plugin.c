@@ -40,15 +40,13 @@ static void read_sensor(
   }
 }
 
-static void poll(tiny_timer_group_t* timer_group, void* context)
+static void poll(void* context)
 {
   reinterpret(self, context, distance_sensors_plugin_t*);
 
   read_sensor(self, left_channel, key_left_sensor_distance);
   read_sensor(self, center_channel, key_center_sensor_distance);
   read_sensor(self, right_channel, key_right_sensor_distance);
-
-  tiny_timer_start(timer_group, &self->timer, period, self, poll);
 }
 
 void distance_sensors_plugin_init(
@@ -59,7 +57,7 @@ void distance_sensors_plugin_init(
   self->key_value_store = key_value_store;
   self->adc_group = adc2_init();
 
-  poll(timer_group, self);
+  tiny_timer_start_periodic(timer_group, &self->timer, period, self, poll);
   detect_enemy_init(&self->detect_left, key_value_store, &detect_left_keys);
   detect_enemy_init(&self->detect_right, key_value_store, &detect_right_keys);
 }

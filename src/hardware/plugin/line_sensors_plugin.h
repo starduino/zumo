@@ -14,6 +14,7 @@
 
 typedef struct {
   tiny_timer_t timer;
+  tiny_timer_group_t* timer_group;
   i_tiny_key_value_store_t* key_value_store;
   uint8_t left_number_detected;
   uint8_t right_number_detected;

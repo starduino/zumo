@@ -8,10 +8,9 @@
 #include "tiny_utils.h"
 #include "tuning.h"
 
-static void stop_running_timer_expired(tiny_timer_group_t* group, void* context)
+static void stop_running_timer_expired(void* context)
 {
   reinterpret(self, context, line_detected_t*);
-  (void)group;
   uint8_t stopped;
   tiny_key_value_store_read(
     self->key_value_store,
@@ -36,9 +35,8 @@ static bool the_left_line_was_detected(line_detected_t* self)
   return detected;
 }
 
-static void back_up_timer_expired(tiny_timer_group_t* group, void* context)
+static void back_up_timer_expired(void* context)
 {
-  (void)group;
   reinterpret(self, context, line_detected_t*);
   motor_power_t left_power;
   motor_power_t right_power;

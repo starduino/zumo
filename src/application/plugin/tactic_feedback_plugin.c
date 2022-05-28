@@ -22,9 +22,7 @@ static const buzzer_frequency_t frequency_map[] = {
   16160
 };
 
-static void arm_timer(tactic_feedback_plugin_t* self, tiny_timer_group_t* timer_group);
-
-static void update_frequency(tiny_timer_group_t* timer_group, void* context)
+static void update_frequency(void* context)
 {
   reinterpret(self, context, tactic_feedback_plugin_t*);
 
@@ -34,13 +32,11 @@ static void update_frequency(tiny_timer_group_t* timer_group, void* context)
     self->key_value_store,
     key_buzzer_frequency,
     self->at_base_frequency ? &base_frequency : &self->frequency);
-
-  arm_timer(self, timer_group);
 }
 
 static void arm_timer(tactic_feedback_plugin_t* self, tiny_timer_group_t* timer_group)
 {
-  tiny_timer_start(timer_group, &self->timer, half_period, self, update_frequency);
+  tiny_timer_start_periodic(timer_group, &self->timer, half_period, self, update_frequency);
 }
 
 static void data_changed(void* context, const void* _args)

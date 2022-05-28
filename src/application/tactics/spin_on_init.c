@@ -14,10 +14,9 @@ enum {
   max_counts = UINT16_MAX
 };
 
-static void stop_running_timer_expired(tiny_timer_group_t* group, void* context)
+static void stop_running_timer_expired(void* context)
 {
   reinterpret(self, context, spin_on_init_t*);
-  (void)group;
   uint8_t stopped;
   tiny_key_value_store_read(
     self->key_value_store,

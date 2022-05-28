@@ -77,9 +77,7 @@ static void set_up_acceleration_read(lsm303d_t* self)
     set_up_acceleration_read_complete);
 }
 
-static void arm_poll_timer(lsm303d_t* self, tiny_timer_group_t* timer_group);
-
-static void poll(tiny_timer_group_t* timer_group, void* context)
+static void poll(void* context)
 {
   reinterpret(self, context, lsm303d_t*);
 
@@ -98,13 +96,11 @@ static void poll(tiny_timer_group_t* timer_group, void* context)
   if(!self->busy) {
     set_up_acceleration_read(self);
   }
-
-  arm_poll_timer(self, timer_group);
 }
 
-static void arm_poll_timer(lsm303d_t* self, tiny_timer_group_t* timer_group)
+static void arm_poll_timer(lsm303d_t* self)
 {
-  tiny_timer_start(timer_group, &self->timer, period, self, poll);
+  tiny_timer_start_periodic(self->timer_group, &self->timer, period, self, poll);
 }
 
 static void initialize_accelerometer(lsm303d_t* self);
@@ -140,11 +136,11 @@ static void initialize_accelerometer(lsm303d_t* self)
     configuration_complete);
 }
 
-static void startup_delay_complete(tiny_timer_group_t* timer_group, void* context)
+static void startup_delay_complete(void* context)
 {
   reinterpret(self, context, lsm303d_t*);
   initialize_accelerometer(self);
-  arm_poll_timer(self, timer_group);
+  arm_poll_timer(self);
 }
 
 void lsm303d_init(lsm303d_t* self, tiny_timer_group_t* timer_group, i_tiny_async_i2c_t* i2c)
@@ -152,6 +148,7 @@ void lsm303d_init(lsm303d_t* self, tiny_timer_group_t* timer_group, i_tiny_async
   self->i2c = i2c;
   self->busy = false;
   self->data_ready = false;
+  self->timer_group = timer_group;
 
   tiny_single_subscriber_event_init(&self->acceleration_update);
 
