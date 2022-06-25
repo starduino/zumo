@@ -5,9 +5,18 @@ TINY = $(STM8_TINY)/lib/tiny
 
 SRC_DIRS ?= \
   $(TINY)/src \
-  $(TINY)/test/double \
+  $(TINY)/test/src \
   src/application \
-  test \
+  src/application/meta-sensing \
+  src/application/plugin \
+  src/application/tactics \
+  src/application/unit \
+  src/application/utility \
+  test/application \
+  test/application/meta-sensing \
+  test/application/tactics \
+  test/application/utility \
+  test/hardware \
 
 INC_DIRS ?= \
   src/hardware \
@@ -16,9 +25,10 @@ INC_DIRS ?= \
   src/double/inc \
   $(STM8_TINY)/src \
   $(TINY)/include \
+  $(TINY)/test/include \
 
 SRC_FILES := \
-  $(TINY)/test/test_runner.cpp \
+  $(TINY)/test/tests/test_runner.cpp \
 
 include $(TINY)/Makefile
 

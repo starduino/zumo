@@ -13,7 +13,7 @@ extern "C" {
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
-#include "tiny_time_source_double.h"
+#include "double/tiny_time_source_double.h"
 
 enum {
   startup_delay = 5 * 1000,
